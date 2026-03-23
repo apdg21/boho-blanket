@@ -337,6 +337,9 @@
     /* Numeric cells */
     td.num { font-variant-numeric: tabular-nums; color: var(--text-secondary); }
     td.rev { font-variant-numeric: tabular-nums; font-weight: 500; }
+    td.unsub { font-variant-numeric: tabular-nums; color: #a33820; font-weight: 500; }
+    td.net-pos { font-variant-numeric: tabular-nums; color: var(--moss); font-weight: 600; }
+    td.net-neg { font-variant-numeric: tabular-nums; color: var(--terracotta); font-weight: 600; }
 
     /* Status badges */
     .badge {
@@ -437,7 +440,9 @@
         <thead>
           <tr>
             <th>Month</th>
-            <th>New Subs</th>
+            <th>Subscribed</th>
+            <th>Unsubscribed</th>
+            <th>Net Change</th>
             <th>Engaged List*</th>
             <th>Campaigns (€)</th>
             <th>Automation (€)</th>
@@ -584,9 +589,15 @@
 
   document.getElementById('tableBody').innerHTML = enriched.map((item, idx) => {
     const s = getStatus(item, idx);
+    const subGain = item.unsub + item.newNet; // gross subscribed = net + unsubs
+    const net = item.newNet; // net change already stored as newNet
+    const netClass = net >= 0 ? 'net-pos' : 'net-neg';
+    const netStr = (net >= 0 ? '+' : '') + net.toLocaleString();
     return `<tr>
       <td>${item.month}</td>
-      <td class="num">${item.newNet.toLocaleString()}</td>
+      <td class="num">+${subGain.toLocaleString()}</td>
+      <td class="unsub">−${item.unsub.toLocaleString()}</td>
+      <td class="${netClass}">${netStr}</td>
       <td class="num">${item.engaged.toLocaleString()}</td>
       <td class="rev">${fmt(item.camp)}</td>
       <td class="rev">${fmt(item.auto)}</td>
