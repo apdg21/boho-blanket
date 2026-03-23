@@ -470,148 +470,112 @@
   Chart.defaults.plugins.legend.labels.padding = 16;
   Chart.defaults.plugins.legend.labels.font = { size: 11 };
 
-  const monthlyRaw = [
-    { month: "Jan '25", omni: 13818.02, camp: 8137.56, auto: 5680.46, store: 34117.21, emailSubs: 12301, newNet: 341, unsub: 698 },
-    { month: "Feb '25", omni: 26092.03, camp: 14664.36, auto: 11427.67, store: 78444.30, emailSubs: 14454, newNet: 2153, unsub: 1095 },
-    { month: "Mar '25", omni: 16976.24, camp: 9150.71, auto: 7825.53, store: 45458.74, emailSubs: 15707, newNet: 1253, unsub: 732 },
-    { month: "Apr '25", omni: 14042.72, camp: 7786.31, auto: 6256.41, store: 34741.49, emailSubs: 16355, newNet: 611, unsub: 733 },
-    { month: "May '25", omni: 10535.75, camp: 6025.63, auto: 4510.12, store: 26996.76, emailSubs: 16785, newNet: 430, unsub: 511 },
-    { month: "Jun '25", omni: 12705.31, camp: 6874.95, auto: 5830.36, store: 35259.70, emailSubs: 17695, newNet: 910, unsub: 400 },
-    { month: "Jul '25", omni: 14440.95, camp: 6990.24, auto: 7450.71, store: 47488.58, emailSubs: 19331, newNet: 1636, unsub: 515 },
-    { month: "Aug '25", omni: 15110.00, camp: 5751.49, auto: 9358.51, store: 60405.98, emailSubs: 21706, newNet: 2375, unsub: 572 },
-    { month: "Sep '25", omni: 21068.92, camp: 7859.15, auto: 13209.77, store: 84653.82, emailSubs: 25244, newNet: 3538, unsub: 683 },
-    { month: "Oct '25", omni: 19440.20, camp: 7560.68, auto: 11879.52, store: 70098.19, emailSubs: 27685, newNet: 2441, unsub: 678 },
-    { month: "Nov '25", omni: 14218.65, camp: 6798.14, auto: 7420.51, store: 42011.62, emailSubs: 28714, newNet: 1029, unsub: 801 },
-    { month: "Dec '25", omni: 9791.83, camp: 5170.66, auto: 4621.17, store: 31852.92, emailSubs: 29499, newNet: 785, unsub: 617 },
-    { month: "Jan '26", omni: 15412.07, camp: 7457.12, auto: 7954.95, store: 56014.00, emailSubs: 31482, newNet: 1983, unsub: 715 },
-    { month: "Feb '26", omni: 14073.31, camp: 6133.66, auto: 7939.65, store: 50885.36, emailSubs: 33089, newNet: 1607, unsub: 735 }
-  ];
-
+  const palette = { clay:'#c07a5b', terracotta:'#b85c38', moss:'#3d5e40', sage:'#7a9e7e', gold:'#c9973a', sand:'#d4b896' };
   const computeEngaged = (email, newNet) => Math.min(email, Math.max(750, Math.floor(email * 0.32 + newNet * 1.4)));
-  const enriched = monthlyRaw.map(m => ({ ...m, engaged: computeEngaged(m.emailSubs, m.newNet) }));
+  const fmt = n => `€${n.toLocaleString('en-EU', { minimumFractionDigits:2, maximumFractionDigits:2 })}`;
 
-  const latest = enriched[enriched.length - 1];
-  const prev   = enriched[enriched.length - 2];
-  const omniChange = ((latest.omni - prev.omni) / prev.omni * 100).toFixed(1);
-  const avgNew3 = enriched.slice(-3).reduce((s,i) => s + i.newNet, 0) / 3;
-  const autoPct = (latest.auto / latest.omni * 100).toFixed(0);
-
-  // KPI Cards
-  const kpis = [
-    { icon: '📬', label: 'Latest Omnisend', value: `€${latest.omni.toLocaleString('en-EU', {minimumFractionDigits:2,maximumFractionDigits:2})}`, trend: `${omniChange >= 0 ? '▲' : '▼'} ${Math.abs(omniChange)}% MoM`, trendClass: omniChange >= 0 ? 'trend-up' : 'trend-down' },
-    { icon: '🆕', label: 'New Subscribers', value: latest.newNet.toLocaleString(), trend: `Avg last 3 mo: ${Math.round(avgNew3)}`, trendClass: 'trend-neutral' },
-    { icon: '👥', label: 'Engaged List', value: latest.engaged.toLocaleString(), trend: 'Target: 6,000+', trendClass: latest.engaged >= 6000 ? 'trend-up' : 'trend-neutral' },
-    { icon: '⚙️', label: 'Automation Share', value: `${autoPct}%`, trend: 'of Omnisend revenue', trendClass: 'trend-neutral' }
-  ];
-  document.getElementById('kpiContainer').innerHTML = kpis.map(k => `
-    <div class="kpi-card">
-      <span class="kpi-icon">${k.icon}</span>
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-value">${k.value}</div>
-      <div class="kpi-trend ${k.trendClass}">${k.trend}</div>
-    </div>`).join('');
-
-  const months  = enriched.map(d => d.month);
-  const palette = {
-    clay: '#c07a5b', terracotta: '#b85c38', moss: '#3d5e40', sage: '#7a9e7e',
-    gold: '#c9973a', sand: '#d4b896', espresso: '#2c1e14'
-  };
-
-  // Chart 1
-  new Chart(document.getElementById('subscriberTrendChart'), {
-    type: 'line',
-    data: {
-      labels: months,
-      datasets: [
-        { label: 'New Subscribers', data: enriched.map(d => d.newNet), borderColor: palette.moss, backgroundColor: 'rgba(61,94,64,0.06)', tension: 0.35, fill: true, pointRadius: 3, pointBackgroundColor: palette.moss, pointBorderColor: '#fff', pointBorderWidth: 1.5 },
-        { label: 'Engaged List (30d)', data: enriched.map(d => d.engaged), borderColor: palette.clay, backgroundColor: 'rgba(192,122,91,0.06)', tension: 0.35, fill: true, pointRadius: 3, pointBackgroundColor: palette.clay, pointBorderColor: '#fff', pointBorderWidth: 1.5 }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: true,
-      plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } },
-      scales: { x: { grid: { color: 'rgba(180,145,115,0.1)' }, ticks: { maxRotation: 45 } }, y: { grid: { color: 'rgba(180,145,115,0.1)' } } }
-    }
-  });
-
-  // Chart 2
-  new Chart(document.getElementById('revenueTypeChart'), {
-    type: 'bar',
-    data: {
-      labels: months,
-      datasets: [
-        { label: 'Campaigns', data: enriched.map(d => d.camp), backgroundColor: palette.sand, borderRadius: 4, borderSkipped: false },
-        { label: 'Automation', data: enriched.map(d => d.auto), backgroundColor: palette.sage, borderRadius: 4, borderSkipped: false }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: true,
-      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => `€ ${ctx.raw.toFixed(2)}` } } },
-      scales: { x: { stacked: false, grid: { display: false }, ticks: { maxRotation: 45 } }, y: { grid: { color: 'rgba(180,145,115,0.1)' }, ticks: { callback: v => `€${(v/1000).toFixed(0)}k` } } }
-    }
-  });
-
-  // Chart 3
-  new Chart(document.getElementById('correlationChart'), {
-    type: 'line',
-    data: {
-      labels: months,
-      datasets: [
-        { label: 'New Subscribers', data: enriched.map(d => d.newNet), borderColor: palette.bark || '#5c3d28', yAxisID: 'y', tension: 0.3, pointRadius: 3, pointBackgroundColor: '#5c3d28', pointBorderColor: '#fff', pointBorderWidth: 1.5, backgroundColor: 'rgba(92,61,40,0.05)', fill: true },
-        { label: 'Omnisend Revenue (€)', data: enriched.map(d => d.omni), borderColor: palette.terracotta, yAxisID: 'y1', tension: 0.3, borderDash: [5,4], pointRadius: 3, pointBackgroundColor: palette.terracotta, pointBorderColor: '#fff', pointBorderWidth: 1.5, backgroundColor: 'transparent', fill: false }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: true,
-      interaction: { mode: 'index', intersect: false },
-      plugins: { legend: { position: 'top' } },
-      scales: {
-        x: { grid: { color: 'rgba(180,145,115,0.1)' }, ticks: { maxRotation: 45 } },
-        y:  { grid: { color: 'rgba(180,145,115,0.1)' }, title: { display: true, text: 'New Subs', font: { size: 11 } } },
-        y1: { position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Revenue (€)', font: { size: 11 } }, ticks: { callback: v => `€${(v/1000).toFixed(0)}k` } }
-      }
-    }
-  });
-
-  // Table
   const getStatus = (item, idx) => {
     const n = item.newNet;
-    if (item.month === "Feb '26") return { text: '✦ Revival',        cls: 'badge-revival' };
-    if (n > 1500 && item.omni > 18000) return { text: '● Healthy',   cls: 'badge-healthy' };
-    if (n > 900  && item.omni > 14000) return { text: '● Healthy',   cls: 'badge-healthy' };
-    if (n > 500  && item.omni > 10000) return { text: '◑ Stable',    cls: 'badge-stable' };
-    if (n < 450  && item.omni < 12000 && idx > 2) return { text: '▼ Declining', cls: 'badge-declining' };
-    if (n < 350  && item.omni < 10000) return { text: '✕ Critical',  cls: 'badge-death' };
-    return { text: '◑ Moderate', cls: 'badge-stable' };
+    if (item.month === "Feb '26") return { text:'✦ Revival', cls:'badge-revival' };
+    if (n > 1500 && item.omni > 18000) return { text:'● Healthy', cls:'badge-healthy' };
+    if (n > 900  && item.omni > 14000) return { text:'● Healthy', cls:'badge-healthy' };
+    if (n > 500  && item.omni > 10000) return { text:'◑ Stable',  cls:'badge-stable' };
+    if (n < 450  && item.omni < 12000 && idx > 2) return { text:'▼ Declining', cls:'badge-declining' };
+    if (n < 350  && item.omni < 10000) return { text:'✕ Critical', cls:'badge-death' };
+    return { text:'◑ Moderate', cls:'badge-stable' };
   };
 
-  const fmt = n => `€${n.toLocaleString('en-EU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  function renderAll(monthlyRaw) {
+    const enriched = monthlyRaw.map(m => ({ ...m, engaged: computeEngaged(m.emailSubs, m.newNet) }));
+    const latest   = enriched[enriched.length - 1];
+    const prev     = enriched[enriched.length - 2];
+    const omniChange = ((latest.omni - prev.omni) / prev.omni * 100).toFixed(1);
+    const avgNew3    = enriched.slice(-3).reduce((s,i) => s + i.newNet, 0) / 3;
+    const autoPct    = (latest.auto / latest.omni * 100).toFixed(0);
+    const months     = enriched.map(d => d.month);
 
-  document.getElementById('tableBody').innerHTML = enriched.map((item, idx) => {
-    const s = getStatus(item, idx);
-    const subGain = item.unsub + item.newNet; // gross subscribed = net + unsubs
-    const net = item.newNet; // net change already stored as newNet
-    const netClass = net >= 0 ? 'net-pos' : 'net-neg';
-    const netStr = (net >= 0 ? '+' : '') + net.toLocaleString();
-    return `<tr>
-      <td>${item.month}</td>
-      <td class="num">+${subGain.toLocaleString()}</td>
-      <td class="unsub">−${item.unsub.toLocaleString()}</td>
-      <td class="${netClass}">${netStr}</td>
-      <td class="num">${item.engaged.toLocaleString()}</td>
-      <td class="rev">${fmt(item.camp)}</td>
-      <td class="rev">${fmt(item.auto)}</td>
-      <td class="rev"><strong>${fmt(item.omni)}</strong></td>
-      <td class="rev">${fmt(item.store)}</td>
-      <td><span class="badge ${s.cls}">${s.text}</span></td>
-    </tr>`;
-  }).join('');
+    // KPIs
+    const kpis = [
+      { icon:'📬', label:'Latest Omnisend', value:`€${latest.omni.toLocaleString('en-EU',{minimumFractionDigits:2,maximumFractionDigits:2})}`, trend:`${omniChange>=0?'▲':'▼'} ${Math.abs(omniChange)}% MoM`, trendClass: omniChange>=0?'trend-up':'trend-down' },
+      { icon:'🆕', label:'New Subscribers', value:latest.newNet.toLocaleString(), trend:`Avg last 3 mo: ${Math.round(avgNew3)}`, trendClass:'trend-neutral' },
+      { icon:'👥', label:'Engaged List',    value:latest.engaged.toLocaleString(), trend:'Target: 6,000+', trendClass: latest.engaged>=6000?'trend-up':'trend-neutral' },
+      { icon:'⚙️', label:'Automation Share', value:`${autoPct}%`, trend:'of Omnisend revenue', trendClass:'trend-neutral' }
+    ];
+    document.getElementById('kpiContainer').innerHTML = kpis.map(k=>`
+      <div class="kpi-card">
+        <span class="kpi-icon">${k.icon}</span>
+        <div class="kpi-label">${k.label}</div>
+        <div class="kpi-value">${k.value}</div>
+        <div class="kpi-trend ${k.trendClass}">${k.trend}</div>
+      </div>`).join('');
+
+    // Chart 1
+    new Chart(document.getElementById('subscriberTrendChart'), {
+      type:'line', data:{ labels:months, datasets:[
+        { label:'New Subscribers', data:enriched.map(d=>d.newNet), borderColor:palette.moss, backgroundColor:'rgba(61,94,64,0.06)', tension:0.35, fill:true, pointRadius:3, pointBackgroundColor:palette.moss, pointBorderColor:'#fff', pointBorderWidth:1.5 },
+        { label:'Engaged List (30d)', data:enriched.map(d=>d.engaged), borderColor:palette.clay, backgroundColor:'rgba(192,122,91,0.06)', tension:0.35, fill:true, pointRadius:3, pointBackgroundColor:palette.clay, pointBorderColor:'#fff', pointBorderWidth:1.5 }
+      ]}, options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{position:'top'}, tooltip:{mode:'index',intersect:false} }, scales:{ x:{grid:{color:'rgba(180,145,115,0.1)'},ticks:{maxRotation:45}}, y:{grid:{color:'rgba(180,145,115,0.1)'}} } }
+    });
+
+    // Chart 2
+    new Chart(document.getElementById('revenueTypeChart'), {
+      type:'bar', data:{ labels:months, datasets:[
+        { label:'Campaigns', data:enriched.map(d=>d.camp), backgroundColor:palette.sand, borderRadius:4, borderSkipped:false },
+        { label:'Automation', data:enriched.map(d=>d.auto), backgroundColor:palette.sage, borderRadius:4, borderSkipped:false }
+      ]}, options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{position:'top'}, tooltip:{callbacks:{label:ctx=>`€ ${ctx.raw.toFixed(2)}`}} }, scales:{ x:{stacked:false,grid:{display:false},ticks:{maxRotation:45}}, y:{grid:{color:'rgba(180,145,115,0.1)'},ticks:{callback:v=>`€${(v/1000).toFixed(0)}k`}} } }
+    });
+
+    // Chart 3
+    new Chart(document.getElementById('correlationChart'), {
+      type:'line', data:{ labels:months, datasets:[
+        { label:'New Subscribers', data:enriched.map(d=>d.newNet), borderColor:'#5c3d28', yAxisID:'y', tension:0.3, pointRadius:3, pointBackgroundColor:'#5c3d28', pointBorderColor:'#fff', pointBorderWidth:1.5, backgroundColor:'rgba(92,61,40,0.05)', fill:true },
+        { label:'Omnisend Revenue (€)', data:enriched.map(d=>d.omni), borderColor:palette.terracotta, yAxisID:'y1', tension:0.3, borderDash:[5,4], pointRadius:3, pointBackgroundColor:palette.terracotta, pointBorderColor:'#fff', pointBorderWidth:1.5, fill:false }
+      ]}, options:{ responsive:true, maintainAspectRatio:true, interaction:{mode:'index',intersect:false}, plugins:{legend:{position:'top'}}, scales:{ x:{grid:{color:'rgba(180,145,115,0.1)'},ticks:{maxRotation:45}}, y:{grid:{color:'rgba(180,145,115,0.1)'},title:{display:true,text:'New Subs',font:{size:11}}}, y1:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'Revenue (€)',font:{size:11}},ticks:{callback:v=>`€${(v/1000).toFixed(0)}k`}} } }
+    });
+
+    // Table
+    document.getElementById('tableBody').innerHTML = enriched.map((item, idx) => {
+      const s = getStatus(item, idx);
+      const subGain = item.unsub + item.newNet;
+      const net = item.newNet;
+      const netClass = net >= 0 ? 'net-pos' : 'net-neg';
+      const netStr = (net >= 0 ? '+' : '') + net.toLocaleString();
+      return `<tr>
+        <td>${item.month}</td>
+        <td class="num">+${subGain.toLocaleString()}</td>
+        <td class="unsub">−${item.unsub.toLocaleString()}</td>
+        <td class="${netClass}">${netStr}</td>
+        <td class="num">${item.engaged.toLocaleString()}</td>
+        <td class="rev">${fmt(item.camp)}</td>
+        <td class="rev">${fmt(item.auto)}</td>
+        <td class="rev"><strong>${fmt(item.omni)}</strong></td>
+        <td class="rev">${fmt(item.store)}</td>
+        <td><span class="badge ${s.cls}">${s.text}</span></td>
+      </tr>`;
+    }).join('');
+
+    // also save monthly to localStorage for homepage
+    try { localStorage.setItem('boho_monthly_v1', JSON.stringify(monthlyRaw)); } catch(e) {}
+  }
+
+  // ── LOAD: try data.json first, fall back to localStorage ──
+  fetch('data.json')
+    .then(r => r.json())
+    .then(d => renderAll(d.monthly))
+    .catch(() => {
+      try {
+        const saved = localStorage.getItem('boho_monthly_v1');
+        if (saved) renderAll(JSON.parse(saved));
+        else renderAll([]); // empty fallback
+      } catch(e) { renderAll([]); }
+    });
 </script>
-  <!-- ── FLOATING HOME BUTTON ── -->
+
+<!-- ── FLOATING HOME BUTTON ── -->
 <style>
   .home-fab {
     position: fixed;
-    top: 1.75rem;
+    bottom: 1.75rem;
     right: 1.75rem;
     z-index: 9999;
     display: flex;
@@ -663,7 +627,7 @@
   }
 </style>
 <a class="home-fab" href="/index.html" title="Back to Home">
-  <div class="home-fab-btn">🏚️</div>
+  <div class="home-fab-btn">🧵</div>
   <span class="home-fab-label">Home</span>
 </a>
 </body>
