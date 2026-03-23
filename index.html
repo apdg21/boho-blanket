@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boho Blanket · Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f7f2ea;
+      --warm-white: #fdfaf5;
+      --sand: #e8ddd0;
+      --clay: #c07a5b;
+      --terracotta: #b85c38;
+      --espresso: #2c1e14;
+      --bark: #5c3d28;
+      --moss: #3d5e40;
+      --sage: #7a9e7e;
+      --gold: #c9973a;
+      --sms-blue: #3a6fa8;
+      --text-primary: #1e1510;
+      --text-secondary: #7a6555;
+      --text-muted: #a8937f;
+      --border: rgba(180,145,115,0.2);
+      --card-bg: rgba(255,252,247,0.95);
+      --shadow: 0 2px 20px rgba(44,30,20,0.06);
+      --shadow-hover: 0 12px 40px rgba(44,30,20,0.13);
+      --radius: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--cream);
+      background-image:
+        radial-gradient(ellipse 70% 55% at 8% 0%,  rgba(192,122,91,0.09) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 60% at 92% 100%, rgba(61,94,64,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(201,151,58,0.04) 0%, transparent 70%);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, var(--espresso) 0%, var(--bark) 60%, #3e2718 100%);
+      padding: 3rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: rgba(192,122,91,0.12);
+      pointer-events: none;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 20%;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: rgba(61,94,64,0.09);
+      pointer-events: none;
+    }
+    /* decorative thread lines */
+    .header-thread {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .header-thread::before {
+      content: '';
+      position: absolute;
+      top: 30%; left: -5%;
+      width: 110%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(232,221,208,0.06), rgba(192,122,91,0.15), rgba(232,221,208,0.06), transparent);
+      transform: rotate(-2deg);
+    }
+    .header-thread::after {
+      content: '';
+      position: absolute;
+      top: 60%; left: -5%;
+      width: 110%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(61,94,64,0.1), rgba(232,221,208,0.08), transparent);
+      transform: rotate(1deg);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    .header-eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(232,221,208,0.45);
+      font-weight: 500;
+      margin-bottom: 0.9rem;
+    }
+    .header-logo {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+    }
+    .header-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      color: var(--warm-white);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 0.6rem;
+    }
+    .header-title span { color: var(--clay); }
+    .header-subtitle {
+      font-size: clamp(0.82rem, 2vw, 0.95rem);
+      color: rgba(232,221,208,0.55);
+      font-weight: 400;
+      margin-bottom: 2rem;
+      font-style: italic;
+      font-family: 'Fraunces', serif;
+    }
+    .header-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,252,247,0.07);
+      border: 1px solid rgba(232,221,208,0.15);
+      border-radius: 100px;
+      padding: 0.4rem 1.1rem;
+      font-size: 0.7rem;
+      color: rgba(232,221,208,0.6);
+      font-weight: 500;
+    }
+    .meta-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--sage);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      width: 100%;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 0.6rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── REPORT CARDS ── */
+    .reports-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    @media (max-width: 680px) { .reports-grid { grid-template-columns: 1fr; } }
+
+    .report-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.8rem 1.6rem;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.28s, transform 0.28s, border-color 0.28s;
+      cursor: pointer;
+    }
+    .report-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-4px);
+      border-color: rgba(180,145,115,0.45);
+    }
+    .report-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      transition: height 0.25s;
+    }
+    .report-card:hover::before { height: 5px; }
+    .card-daily::before  { background: linear-gradient(90deg, var(--clay), var(--gold), var(--clay)); background-size: 200%; animation: shimmer 3s linear infinite; }
+    .card-monthly::before { background: linear-gradient(90deg, var(--moss), var(--sage), var(--moss)); background-size: 200%; animation: shimmer 3s linear infinite; }
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* corner glow */
+    .report-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: -40px;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+    .card-daily::after  { background: radial-gradient(circle, rgba(192,122,91,0.1), transparent 70%); }
+    .card-monthly::after { background: radial-gradient(circle, rgba(61,94,64,0.1), transparent 70%); }
+    .report-card:hover::after { opacity: 1; }
+
+    .card-icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+    }
+    .card-daily  .card-icon-wrap { background: linear-gradient(135deg, rgba(192,122,91,0.15), rgba(201,151,58,0.12)); }
+    .card-monthly .card-icon-wrap { background: linear-gradient(135deg, rgba(61,94,64,0.15), rgba(122,158,126,0.12)); }
+
+    .card-tag {
+      font-size: 0.58rem;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .card-daily  .card-tag { color: var(--clay); }
+    .card-monthly .card-tag { color: var(--moss); }
+
+    .card-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1.6rem;
+    }
+    .card-feature {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.73rem;
+      color: var(--text-secondary);
+    }
+    .feature-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .card-daily  .feature-dot { background: var(--clay); }
+    .card-monthly .feature-dot { background: var(--moss); }
+
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.3rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      text-decoration: none;
+      transition: opacity 0.15s, gap 0.2s;
+      align-self: flex-start;
+    }
+    .card-cta:hover { opacity: 0.88; gap: 0.75rem; }
+    .card-daily  .card-cta { background: linear-gradient(135deg, var(--clay), var(--terracotta)); color: white; }
+    .card-monthly .card-cta { background: linear-gradient(135deg, var(--moss), #2d4a30); color: white; }
+    .cta-arrow { font-size: 1rem; transition: transform 0.2s; }
+    .card-cta:hover .cta-arrow { transform: translateX(3px); }
+
+    /* ── QUICK STATS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    @media (max-width: 800px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 440px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.1rem 1rem 1rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      border-radius: 20px 20px 0 0;
+    }
+    .stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--clay), var(--gold)); }
+    .stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--moss), var(--sage)); }
+    .stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--gold), var(--clay)); }
+    .stat-card:nth-child(4)::before { background: linear-gradient(90deg, var(--sage), var(--moss)); }
+
+    .stat-icon { font-size: 0.9rem; margin-bottom: 0.4rem; display: block; }
+    .stat-label {
+      font-size: 0.58rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .stat-val {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+    .stat-sub { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .stat-trend {
+      font-size: 0.68rem;
+      font-weight: 600;
+      margin-top: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .trend-up { color: var(--moss); }
+    .trend-down { color: var(--terracotta); }
+
+    /* ── ACTIVITY TIMELINE ── */
+    .timeline-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 3rem;
+    }
+    .timeline-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+    .timeline-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 1.4rem;
+    }
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .tl-item {
+      display: grid;
+      grid-template-columns: 80px 1px 1fr;
+      gap: 0 1.2rem;
+      align-items: stretch;
+      padding-bottom: 1.2rem;
+    }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-date {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-align: right;
+      padding-top: 2px;
+      line-height: 1.3;
+    }
+    .tl-date strong {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .tl-line-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .tl-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 3px;
+      border: 2px solid var(--card-bg);
+    }
+    .tl-dot-email  { background: var(--clay); box-shadow: 0 0 0 2px rgba(192,122,91,0.25); }
+    .tl-dot-sms    { background: var(--sms-blue); box-shadow: 0 0 0 2px rgba(58,111,168,0.2); }
+    .tl-dot-both   { background: var(--gold); box-shadow: 0 0 0 2px rgba(201,151,58,0.25); }
+    .tl-connector {
+      flex: 1;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+      min-height: 8px;
+    }
+    .tl-item:last-child .tl-connector { display: none; }
+    .tl-content {
+      padding-top: 0;
+    }
+    .tl-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 0.25rem;
+    }
+    .tl-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .tl-pill {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 0.12rem 0.5rem;
+      border-radius: 100px;
+      font-size: 0.62rem; font-weight: 600;
+    }
+    .pill-email { background: #f3e4da; color: var(--terracotta); }
+    .pill-sms   { background: #d6e8f8; color: var(--sms-blue); }
+    .tl-rev {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--moss);
+      font-variant-numeric: tabular-nums;
+    }
+    .tl-open {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--espresso);
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-brand {
+      font-family: 'Fraunces', serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: rgba(232,221,208,0.7);
+    }
+    .footer-brand span { color: var(--clay); }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-link {
+      font-size: 0.7rem;
+      color: rgba(232,221,208,0.45);
+      text-decoration: none;
+      transition: color 0.15s;
+      font-weight: 500;
+    }
+    .footer-link:hover { color: rgba(232,221,208,0.8); }
+    .footer-copy {
+      font-size: 0.65rem;
+      color: rgba(232,221,208,0.3);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .report-card  { animation: fadeUp 0.45s ease both; }
+    .report-card:nth-child(1) { animation-delay: 0.05s; }
+    .report-card:nth-child(2) { animation-delay: 0.12s; }
+    .stat-card    { animation: fadeUp 0.4s ease both; }
+    .stat-card:nth-child(1) { animation-delay: 0.18s; }
+    .stat-card:nth-child(2) { animation-delay: 0.22s; }
+    .stat-card:nth-child(3) { animation-delay: 0.26s; }
+    .stat-card:nth-child(4) { animation-delay: 0.30s; }
+    .timeline-card { animation: fadeUp 0.45s 0.35s ease both; }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-thread"></div>
+  <div class="header-inner">
+    <div class="header-eyebrow">Analytics Hub · Omnisend</div>
+    <span class="header-logo">🧵</span>
+    <h1 class="header-title">Boho Blanket <span>·</span> Dashboard</h1>
+    <p class="header-subtitle">Email & SMS performance at a glance</p>
+    <div class="header-meta">
+      <span class="meta-dot"></span>
+      Jan 2025 – Mar 2026 · Omnisend Data
+    </div>
+  </div>
+</header>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- QUICK STATS -->
+  <div class="section-label">Snapshot · Latest Data</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">📬</span>
+      <div class="stat-label">Omnisend Revenue</div>
+      <div class="stat-val">€14,073</div>
+      <div class="stat-sub">Feb 2026</div>
+      <div class="stat-trend trend-down">▼ 2.5% MoM</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">👥</span>
+      <div class="stat-label">Email Subscribers</div>
+      <div class="stat-val">33,089</div>
+      <div class="stat-sub">Feb 2026</div>
+      <div class="stat-trend trend-up">▲ +1,607 net new</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">📧</span>
+      <div class="stat-label">Mar Campaigns</div>
+      <div class="stat-val">14</div>
+      <div class="stat-sub">Email & SMS · Mar 2026</div>
+      <div class="stat-trend" style="color:var(--text-muted)">13 email · 1 SMS</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">👁</span>
+      <div class="stat-label">Avg Open Rate</div>
+      <div class="stat-val">71.9%</div>
+      <div class="stat-sub">Mar 2026 email avg</div>
+      <div class="stat-trend trend-up">⬆ Strong engagement</div>
+    </div>
+  </div>
+
+  <!-- REPORT CARDS -->
+  <div class="section-label">Reports</div>
+  <div class="reports-grid">
+
+    <!-- Daily Campaign Report -->
+    <a class="report-card card-daily" href="https://boho-blanket.pages.dev/daily-data" target="_blank">
+      <div class="card-icon-wrap">📅</div>
+      <div class="card-tag">Campaign · Daily View</div>
+      <div class="card-title">Campaign Performance</div>
+      <div class="card-desc">
+        Track every individual email and SMS campaign — open rates, click rates, revenue, orders, and performance scoring per send.
+      </div>
+      <div class="card-features">
+        <div class="card-feature"><span class="feature-dot"></span>Per-campaign revenue & orders</div>
+        <div class="card-feature"><span class="feature-dot"></span>Open rate & click rate with visual bars</div>
+        <div class="card-feature"><span class="feature-dot"></span>Email vs SMS channel breakdown</div>
+        <div class="card-feature"><span class="feature-dot"></span>Add, edit & delete campaigns</div>
+        <div class="card-feature"><span class="feature-dot"></span>Saves automatically · Export to JSON</div>
+      </div>
+      <span class="card-cta">
+        Open Report <span class="cta-arrow">→</span>
+      </span>
+    </a>
+
+    <!-- Monthly Revenue Report -->
+    <a class="report-card card-monthly" href="https://boho-blanket.pages.dev/revenue-report" target="_blank">
+      <div class="card-icon-wrap">📈</div>
+      <div class="card-tag">Revenue · Monthly View</div>
+      <div class="card-title">Email Health Report</div>
+      <div class="card-desc">
+        A full picture of subscriber growth, list health, and Omnisend revenue trends from January 2025 through February 2026.
+      </div>
+      <div class="card-features">
+        <div class="card-feature"><span class="feature-dot"></span>Monthly Omnisend & store revenue</div>
+        <div class="card-feature"><span class="feature-dot"></span>Subscriber growth vs unsubscribes</div>
+        <div class="card-feature"><span class="feature-dot"></span>Campaigns vs Automation split</div>
+        <div class="card-feature"><span class="feature-dot"></span>Engaged list trend & health status</div>
+        <div class="card-feature"><span class="feature-dot"></span>Revenue correlation charts</div>
+      </div>
+      <span class="card-cta">
+        Open Report <span class="cta-arrow">→</span>
+      </span>
+    </a>
+
+  </div>
+
+  <!-- RECENT CAMPAIGNS TIMELINE -->
+  <div class="section-label">Recent Activity · March 2026</div>
+  <div class="timeline-card">
+    <div class="timeline-title">Latest Campaigns</div>
+    <div class="timeline-sub">Most recent sends from the daily report — open the full report to manage all data</div>
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-date"><strong>21 Mar</strong>2:00 PM</div>
+        <div class="tl-line-wrap"><div class="tl-dot tl-dot-sms"></div><div class="tl-connector"></div></div>
+        <div class="tl-content">
+          <div class="tl-name">MAR_NAT_QUILT_DAY_2026</div>
+          <div class="tl-meta">
+            <span class="tl-pill pill-sms">💬 SMS</span>
+            <span class="tl-rev">€218.85</span>
+            <span class="tl-open">CTR 40.6% · 6,752 sent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date"><strong>21 Mar</strong>8:00 AM</div>
+        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
+        <div class="tl-content">
+          <div class="tl-name">National Quilting Day — The Spring Edit Launch</div>
+          <div class="tl-meta">
+            <span class="tl-pill pill-email">📧 Email</span>
+            <span class="tl-rev">€261.66</span>
+            <span class="tl-open">72.5% open · 9,882 sent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date"><strong>20 Mar</strong>9:00 AM</div>
+        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
+        <div class="tl-content">
+          <div class="tl-name">National Quilting Day Teaser</div>
+          <div class="tl-meta">
+            <span class="tl-pill pill-email">📧 Email</span>
+            <span class="tl-rev">€193.32</span>
+            <span class="tl-open">73.0% open · 10.2K sent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date"><strong>17 Mar</strong>9:00 AM</div>
+        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
+        <div class="tl-content">
+          <div class="tl-name">The Lucky Green Edit [St. Patrick's Day]</div>
+          <div class="tl-meta">
+            <span class="tl-pill pill-email">📧 Email</span>
+            <span class="tl-rev">€265.39</span>
+            <span class="tl-open">74.2% open · 10.2K sent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date"><strong>15 Mar</strong>12:00 PM</div>
+        <div class="tl-line-wrap"><div class="tl-dot tl-dot-both"></div><div class="tl-connector"></div></div>
+        <div class="tl-content">
+          <div class="tl-name">March Maker Tiered Event [FINAL CALL]</div>
+          <div class="tl-meta">
+            <span class="tl-pill pill-email">📧 Email</span>
+            <span class="tl-rev">€324.91</span>
+            <span class="tl-open">2 sends · engaged + less engaged</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date"><strong>13 Mar</strong>8:00 AM</div>
+        <div class="tl-line-wrap"><div class="tl-dot tl-dot-both"></div><div class="tl-connector"></div></div>
+        <div class="tl-content">
+          <div class="tl-name">March Maker Tiered Event</div>
+          <div class="tl-meta">
+            <span class="tl-pill pill-email">📧 Email</span>
+            <span class="tl-rev">€495.30</span>
+            <span class="tl-open">2 sends · engaged + less engaged</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date"><strong>11 Mar</strong>10:00 AM</div>
+        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
+        <div class="tl-content">
+          <div class="tl-name">The "No-Fuss" Quilt Fringe (Rag Edge)</div>
+          <div class="tl-meta">
+            <span class="tl-pill pill-email">📧 Email</span>
+            <span class="tl-rev">€236.01</span>
+            <span class="tl-open">81.7% open · 8,104 sent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date"><strong>5 Mar</strong>9:00 AM</div>
+        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
+        <div class="tl-content">
+          <div class="tl-name">Spring Palette Reveal</div>
+          <div class="tl-meta">
+            <span class="tl-pill pill-email">📧 Email</span>
+            <span class="tl-rev">€370.10</span>
+            <span class="tl-open">80.4% open · 8,360 sent</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">🧵 Boho Blanket <span>·</span> Analytics</div>
+    <div class="footer-links">
+      <a class="footer-link" href="https://boho-blanket.pages.dev/daily-data" target="_blank">Campaign Report</a>
+      <a class="footer-link" href="https://boho-blanket.pages.dev/revenue-report" target="_blank">Monthly Report</a>
+    </div>
+    <div class="footer-copy">Omnisend · Jan 2025 – Mar 2026</div>
+  </div>
+</footer>
+
+</body>
+</html>
