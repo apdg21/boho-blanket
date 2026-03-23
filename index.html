@@ -563,35 +563,12 @@
 
   <!-- QUICK STATS -->
   <div class="section-label">Snapshot · Latest Data</div>
-  <div class="stats-grid">
-    <div class="stat-card">
-      <span class="stat-icon">📬</span>
-      <div class="stat-label">Omnisend Revenue</div>
-      <div class="stat-val">€14,073</div>
-      <div class="stat-sub">Feb 2026</div>
-      <div class="stat-trend trend-down">▼ 2.5% MoM</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-icon">👥</span>
-      <div class="stat-label">Email Subscribers</div>
-      <div class="stat-val">33,089</div>
-      <div class="stat-sub">Feb 2026</div>
-      <div class="stat-trend trend-up">▲ +1,607 net new</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-icon">📧</span>
-      <div class="stat-label">Mar Campaigns</div>
-      <div class="stat-val">14</div>
-      <div class="stat-sub">Email & SMS · Mar 2026</div>
-      <div class="stat-trend" style="color:var(--text-muted)">13 email · 1 SMS</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-icon">👁</span>
-      <div class="stat-label">Avg Open Rate</div>
-      <div class="stat-val">71.9%</div>
-      <div class="stat-sub">Mar 2026 email avg</div>
-      <div class="stat-trend trend-up">⬆ Strong engagement</div>
-    </div>
+  <div class="stats-grid" id="statsGrid">
+    <!-- rendered by JS -->
+    <div class="stat-card"><span class="stat-icon">⏳</span><div class="stat-label">Loading…</div><div class="stat-val">—</div></div>
+    <div class="stat-card"><span class="stat-icon">⏳</span><div class="stat-label">Loading…</div><div class="stat-val">—</div></div>
+    <div class="stat-card"><span class="stat-icon">⏳</span><div class="stat-label">Loading…</div><div class="stat-val">—</div></div>
+    <div class="stat-card"><span class="stat-icon">⏳</span><div class="stat-label">Loading…</div><div class="stat-val">—</div></div>
   </div>
 
   <!-- REPORT CARDS -->
@@ -613,9 +590,7 @@
         <div class="card-feature"><span class="feature-dot"></span>Add, edit & delete campaigns</div>
         <div class="card-feature"><span class="feature-dot"></span>Saves automatically · Export to JSON</div>
       </div>
-      <span class="card-cta">
-        Open Report <span class="cta-arrow">→</span>
-      </span>
+      <span class="card-cta">Open Report <span class="cta-arrow">→</span></span>
     </a>
 
     <!-- Monthly Revenue Report -->
@@ -633,124 +608,18 @@
         <div class="card-feature"><span class="feature-dot"></span>Engaged list trend & health status</div>
         <div class="card-feature"><span class="feature-dot"></span>Revenue correlation charts</div>
       </div>
-      <span class="card-cta">
-        Open Report <span class="cta-arrow">→</span>
-      </span>
+      <span class="card-cta">Open Report <span class="cta-arrow">→</span></span>
     </a>
 
   </div>
 
   <!-- RECENT CAMPAIGNS TIMELINE -->
-  <div class="section-label">Recent Activity · March 2026</div>
+  <div class="section-label">Recent Activity</div>
   <div class="timeline-card">
     <div class="timeline-title">Latest Campaigns</div>
-    <div class="timeline-sub">Most recent sends from the daily report — open the full report to manage all data</div>
-    <div class="timeline">
-
-      <div class="tl-item">
-        <div class="tl-date"><strong>21 Mar</strong>2:00 PM</div>
-        <div class="tl-line-wrap"><div class="tl-dot tl-dot-sms"></div><div class="tl-connector"></div></div>
-        <div class="tl-content">
-          <div class="tl-name">MAR_NAT_QUILT_DAY_2026</div>
-          <div class="tl-meta">
-            <span class="tl-pill pill-sms">💬 SMS</span>
-            <span class="tl-rev">€218.85</span>
-            <span class="tl-open">CTR 40.6% · 6,752 sent</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date"><strong>21 Mar</strong>8:00 AM</div>
-        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
-        <div class="tl-content">
-          <div class="tl-name">National Quilting Day — The Spring Edit Launch</div>
-          <div class="tl-meta">
-            <span class="tl-pill pill-email">📧 Email</span>
-            <span class="tl-rev">€261.66</span>
-            <span class="tl-open">72.5% open · 9,882 sent</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date"><strong>20 Mar</strong>9:00 AM</div>
-        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
-        <div class="tl-content">
-          <div class="tl-name">National Quilting Day Teaser</div>
-          <div class="tl-meta">
-            <span class="tl-pill pill-email">📧 Email</span>
-            <span class="tl-rev">€193.32</span>
-            <span class="tl-open">73.0% open · 10.2K sent</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date"><strong>17 Mar</strong>9:00 AM</div>
-        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
-        <div class="tl-content">
-          <div class="tl-name">The Lucky Green Edit [St. Patrick's Day]</div>
-          <div class="tl-meta">
-            <span class="tl-pill pill-email">📧 Email</span>
-            <span class="tl-rev">€265.39</span>
-            <span class="tl-open">74.2% open · 10.2K sent</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date"><strong>15 Mar</strong>12:00 PM</div>
-        <div class="tl-line-wrap"><div class="tl-dot tl-dot-both"></div><div class="tl-connector"></div></div>
-        <div class="tl-content">
-          <div class="tl-name">March Maker Tiered Event [FINAL CALL]</div>
-          <div class="tl-meta">
-            <span class="tl-pill pill-email">📧 Email</span>
-            <span class="tl-rev">€324.91</span>
-            <span class="tl-open">2 sends · engaged + less engaged</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date"><strong>13 Mar</strong>8:00 AM</div>
-        <div class="tl-line-wrap"><div class="tl-dot tl-dot-both"></div><div class="tl-connector"></div></div>
-        <div class="tl-content">
-          <div class="tl-name">March Maker Tiered Event</div>
-          <div class="tl-meta">
-            <span class="tl-pill pill-email">📧 Email</span>
-            <span class="tl-rev">€495.30</span>
-            <span class="tl-open">2 sends · engaged + less engaged</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date"><strong>11 Mar</strong>10:00 AM</div>
-        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
-        <div class="tl-content">
-          <div class="tl-name">The "No-Fuss" Quilt Fringe (Rag Edge)</div>
-          <div class="tl-meta">
-            <span class="tl-pill pill-email">📧 Email</span>
-            <span class="tl-rev">€236.01</span>
-            <span class="tl-open">81.7% open · 8,104 sent</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date"><strong>5 Mar</strong>9:00 AM</div>
-        <div class="tl-line-wrap"><div class="tl-dot tl-dot-email"></div><div class="tl-connector"></div></div>
-        <div class="tl-content">
-          <div class="tl-name">Spring Palette Reveal</div>
-          <div class="tl-meta">
-            <span class="tl-pill pill-email">📧 Email</span>
-            <span class="tl-rev">€370.10</span>
-            <span class="tl-open">80.4% open · 8,360 sent</span>
-          </div>
-        </div>
-      </div>
-
+    <div class="timeline-sub" id="timelineSub">Most recent sends — open the Campaign Report to manage all data</div>
+    <div class="timeline" id="timelineEl">
+      <div style="padding:1.5rem 0;color:var(--text-muted);font-size:0.8rem;font-style:italic">Loading campaigns…</div>
     </div>
   </div>
 
@@ -764,9 +633,131 @@
       <a class="footer-link" href="https://boho-blanket.pages.dev/daily-data" target="_blank">Campaign Report</a>
       <a class="footer-link" href="https://boho-blanket.pages.dev/revenue-report" target="_blank">Monthly Report</a>
     </div>
-    <div class="footer-copy">Omnisend · Jan 2025 – Mar 2026</div>
+    <div class="footer-copy" id="footerCopy">Omnisend · Jan 2025 – Mar 2026</div>
   </div>
 </footer>
 
-</body>
-</html>
+<script>
+  const fmtEur = n => `€${Number(n).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+  const fmtK   = n => n >= 1000 ? (n/1000).toFixed(1)+'K' : String(n);
+  const mo     = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dateLabel = d => { const [,m,day] = d.split('-'); return `${+day} ${mo[+m-1]}`; };
+  const timeLabel = t => { if (!t) return ''; const [h,min] = t.split(':'); const hr = +h; return `${hr>12?hr-12:hr||12}:${min} ${hr>=12?'PM':'AM'}`; };
+
+  function renderStats(monthly, campaigns) {
+    // Monthly KPIs from latest month
+    const latest = monthly[monthly.length - 1];
+    const prev   = monthly[monthly.length - 2];
+    const omniChange = prev ? ((latest.omni - prev.omni) / prev.omni * 100) : 0;
+    const omniDir    = omniChange >= 0 ? 'trend-up' : 'trend-down';
+    const omniArrow  = omniChange >= 0 ? '▲' : '▼';
+
+    // Campaign KPIs from localStorage data
+    const emailCamps = campaigns.filter(c => c.channel === 'Email' && c.openPct != null);
+    const avgOpen    = emailCamps.length ? emailCamps.reduce((s,c) => s + c.openPct, 0) / emailCamps.length : null;
+    const totalCampRev = campaigns.reduce((s,c) => s + c.rev, 0);
+    const campPeriod = campaigns.length ? (() => {
+      const dates = campaigns.map(c => c.date).sort();
+      const [,sm,] = dates[0].split('-');
+      const [,em,] = dates[dates.length-1].split('-');
+      return sm === em ? `${mo[+sm-1]} campaigns` : `${mo[+sm-1]}–${mo[+em-1]} campaigns`;
+    })() : 'campaigns';
+
+    document.getElementById('statsGrid').innerHTML = `
+      <div class="stat-card">
+        <span class="stat-icon">📬</span>
+        <div class="stat-label">Omnisend Revenue</div>
+        <div class="stat-val">${fmtEur(latest.omni)}</div>
+        <div class="stat-sub">${latest.month}</div>
+        <div class="stat-trend ${omniDir}">${omniArrow} ${Math.abs(omniChange).toFixed(1)}% MoM</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">👥</span>
+        <div class="stat-label">Email Subscribers</div>
+        <div class="stat-val">${latest.emailSubs.toLocaleString()}</div>
+        <div class="stat-sub">${latest.month}</div>
+        <div class="stat-trend trend-up">▲ +${latest.newNet.toLocaleString()} net new</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📧</span>
+        <div class="stat-label">Campaign Revenue</div>
+        <div class="stat-val">${fmtEur(totalCampRev)}</div>
+        <div class="stat-sub">${campaigns.length} sends · ${campPeriod}</div>
+        <div class="stat-trend" style="color:var(--text-muted)">${campaigns.filter(c=>c.channel==='Email').length} email · ${campaigns.filter(c=>c.channel==='SMS').length} SMS</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">👁</span>
+        <div class="stat-label">Avg Open Rate</div>
+        <div class="stat-val">${avgOpen != null ? avgOpen.toFixed(1)+'%' : '—'}</div>
+        <div class="stat-sub">Email campaigns</div>
+        <div class="stat-trend trend-up">${avgOpen >= 70 ? '⬆ Strong' : avgOpen >= 55 ? '● Good' : '◑ Average'} engagement</div>
+      </div>`;
+  }
+
+  function renderTimeline(campaigns) {
+    const sorted = [...campaigns].sort((a,b) => (b.date+b.time) > (a.date+a.time) ? 1 : -1).slice(0, 8);
+    if (!sorted.length) {
+      document.getElementById('timelineEl').innerHTML = '<div style="padding:1rem 0;color:var(--text-muted);font-size:0.8rem;font-style:italic">No campaigns found. Visit the Campaign Report to add data.</div>';
+      return;
+    }
+    document.getElementById('timelineSub').textContent = `${sorted.length} most recent sends · open the Campaign Report to manage all data`;
+    document.getElementById('timelineEl').innerHTML = sorted.map((c, i) => {
+      const dotClass = c.channel === 'SMS' ? 'tl-dot-sms' : 'tl-dot-email';
+      const pillClass = c.channel === 'SMS' ? 'pill-sms' : 'pill-email';
+      const pillIcon  = c.channel === 'SMS' ? '💬' : '📧';
+      const engStr    = c.channel === 'SMS'
+        ? `CTR ${c.clickPct ?? '—'}% · ${fmtK(c.sent)} sent`
+        : `${c.openPct ?? '—'}% open · ${fmtK(c.sent)} sent`;
+      const isLast = i === sorted.length - 1;
+      return `<div class="tl-item">
+        <div class="tl-date"><strong>${dateLabel(c.date)}</strong>${timeLabel(c.time)}</div>
+        <div class="tl-line-wrap">
+          <div class="tl-dot ${dotClass}"></div>
+          ${isLast ? '' : '<div class="tl-connector"></div>'}
+        </div>
+        <div class="tl-content">
+          <div class="tl-name">${c.name}</div>
+          <div class="tl-meta">
+            <span class="tl-pill ${pillClass}">${pillIcon} ${c.channel}</span>
+            <span class="tl-rev">${fmtEur(c.rev)}</span>
+            <span class="tl-open">${engStr}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function loadAndRender() {
+    // Read from localStorage (written by the other two pages)
+    let monthly = [], campaigns = [];
+    try {
+      const m = localStorage.getItem('boho_monthly_v1');
+      if (m) monthly = JSON.parse(m);
+    } catch(e) {}
+    try {
+      const c = localStorage.getItem('boho_campaigns_v1');
+      if (c) { const p = JSON.parse(c); campaigns = p.campaigns ?? p; }
+    } catch(e) {}
+
+    // Fall back to data.json if localStorage is empty
+    if (!monthly.length || !campaigns.length) {
+      fetch('data.json')
+        .then(r => r.json())
+        .then(d => {
+          if (!monthly.length) monthly = d.monthly;
+          if (!campaigns.length) campaigns = d.campaigns;
+          if (monthly.length) renderStats(monthly, campaigns);
+          if (campaigns.length) renderTimeline(campaigns);
+        })
+        .catch(() => {
+          if (monthly.length) renderStats(monthly, campaigns);
+          renderTimeline(campaigns);
+        });
+      return;
+    }
+    renderStats(monthly, campaigns);
+    renderTimeline(campaigns);
+  }
+
+  loadAndRender();
+</script>

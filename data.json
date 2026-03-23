@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "source": "Boho Blanket · Omnisend Analytics",
+    "version": "1.0",
+    "updated": "2026-03-23"
+  },
+  "monthly": [
+    { "month": "Jan '25", "omni": 13818.02, "camp": 8137.56, "auto": 5680.46, "store": 34117.21, "emailSubs": 12301, "newNet": 341, "unsub": 698 },
+    { "month": "Feb '25", "omni": 26092.03, "camp": 14664.36, "auto": 11427.67, "store": 78444.30, "emailSubs": 14454, "newNet": 2153, "unsub": 1095 },
+    { "month": "Mar '25", "omni": 16976.24, "camp": 9150.71, "auto": 7825.53, "store": 45458.74, "emailSubs": 15707, "newNet": 1253, "unsub": 732 },
+    { "month": "Apr '25", "omni": 14042.72, "camp": 7786.31, "auto": 6256.41, "store": 34741.49, "emailSubs": 16355, "newNet": 611, "unsub": 733 },
+    { "month": "May '25", "omni": 10535.75, "camp": 6025.63, "auto": 4510.12, "store": 26996.76, "emailSubs": 16785, "newNet": 430, "unsub": 511 },
+    { "month": "Jun '25", "omni": 12705.31, "camp": 6874.95, "auto": 5830.36, "store": 35259.70, "emailSubs": 17695, "newNet": 910, "unsub": 400 },
+    { "month": "Jul '25", "omni": 14440.95, "camp": 6990.24, "auto": 7450.71, "store": 47488.58, "emailSubs": 19331, "newNet": 1636, "unsub": 515 },
+    { "month": "Aug '25", "omni": 15110.00, "camp": 5751.49, "auto": 9358.51, "store": 60405.98, "emailSubs": 21706, "newNet": 2375, "unsub": 572 },
+    { "month": "Sep '25", "omni": 21068.92, "camp": 7859.15, "auto": 13209.77, "store": 84653.82, "emailSubs": 25244, "newNet": 3538, "unsub": 683 },
+    { "month": "Oct '25", "omni": 19440.20, "camp": 7560.68, "auto": 11879.52, "store": 70098.19, "emailSubs": 27685, "newNet": 2441, "unsub": 678 },
+    { "month": "Nov '25", "omni": 14218.65, "camp": 6798.14, "auto": 7420.51, "store": 42011.62, "emailSubs": 28714, "newNet": 1029, "unsub": 801 },
+    { "month": "Dec '25", "omni": 9791.83, "camp": 5170.66, "auto": 4621.17, "store": 31852.92, "emailSubs": 29499, "newNet": 785, "unsub": 617 },
+    { "month": "Jan '26", "omni": 15412.07, "camp": 7457.12, "auto": 7954.95, "store": 56014.00, "emailSubs": 31482, "newNet": 1983, "unsub": 715 },
+    { "month": "Feb '26", "omni": 14073.31, "camp": 6133.66, "auto": 7939.65, "store": 50885.36, "emailSubs": 33089, "newNet": 1607, "unsub": 735 }
+  ],
+  "campaigns": [
+    { "id": 1,  "date": "2026-03-01", "time": "08:00", "name": "March 1st – New Beginnings",                          "channel": "Email", "sent": 8511,  "openPct": 79.8, "openN": 6799, "clickPct": 3.0,  "clickN": 257,  "rev": 334.74, "orders": 20, "segment": "Active & Engaged, VIP, +others" },
+    { "id": 2,  "date": "2026-03-03", "time": "08:00", "name": "National Craft Month Kickoff",                         "channel": "Email", "sent": 8448,  "openPct": 79.5, "openN": 6724, "clickPct": 3.0,  "clickN": 261,  "rev": 288.63, "orders": 12, "segment": "Active & Engaged, VIP, +others" },
+    { "id": 3,  "date": "2026-03-05", "time": "09:00", "name": "Spring Palette Reveal",                                "channel": "Email", "sent": 8360,  "openPct": 80.4, "openN": 6723, "clickPct": 2.3,  "clickN": 198,  "rev": 370.10, "orders": 21, "segment": "Active & Engaged, VIP, +others" },
+    { "id": 4,  "date": "2026-03-07", "time": "08:00", "name": "International Women's Day Celebration",               "channel": "Email", "sent": 8203,  "openPct": 79.2, "openN": 6499, "clickPct": 3.1,  "clickN": 260,  "rev": 344.88, "orders": 20, "segment": "Active & Engaged, VIP, +others" },
+    { "id": 5,  "date": "2026-03-09", "time": "10:00", "name": "International Women's Day [FINAL CALL]",              "channel": "Email", "sent": 8135,  "openPct": 79.8, "openN": 6496, "clickPct": 3.3,  "clickN": 269,  "rev": 103.82, "orders": 7,  "segment": "Active & Engaged, VIP, +others" },
+    { "id": 6,  "date": "2026-03-11", "time": "10:00", "name": "The \"No-Fuss\" Quilt Fringe (Rag Edge)",             "channel": "Email", "sent": 8104,  "openPct": 81.7, "openN": 6624, "clickPct": 2.9,  "clickN": 237,  "rev": 236.01, "orders": 19, "segment": "Active & Engaged, VIP, +others" },
+    { "id": 7,  "date": "2026-03-13", "time": "08:00", "name": "March Maker Tiered Event",                             "channel": "Email", "sent": 8050,  "openPct": 80.2, "openN": 6464, "clickPct": 3.1,  "clickN": 250,  "rev": 273.61, "orders": 17, "segment": "Active & Engaged, VIP, +others" },
+    { "id": 8,  "date": "2026-03-13", "time": "10:00", "name": "March Maker Tiered Event — Less Engaged",             "channel": "Email", "sent": 11300, "openPct": 16.2, "openN": 1837, "clickPct": 1.7,  "clickN": 195,  "rev": 221.69, "orders": 8,  "segment": "Less Engaged (re-engagement)" },
+    { "id": 9,  "date": "2026-03-15", "time": "12:00", "name": "March Maker Tiered Event [FINAL CALL]",               "channel": "Email", "sent": 9527,  "openPct": 76.7, "openN": 7311, "clickPct": 2.2,  "clickN": 210,  "rev": 226.45, "orders": 13, "segment": "Active & Engaged, VIP, +others" },
+    { "id": 10, "date": "2026-03-15", "time": "12:00", "name": "March Maker Tiered Event [FINAL CALL] — Less Engaged","channel": "Email", "sent": 9914,  "openPct": 9.0,  "openN": 899,  "clickPct": 0.72, "clickN": 72,   "rev": 98.46,  "orders": 4,  "segment": "Less Engaged (re-engagement)" },
+    { "id": 11, "date": "2026-03-17", "time": "09:00", "name": "The Lucky Green Edit [St. Patrick's Day]",            "channel": "Email", "sent": 10200, "openPct": 74.2, "openN": 7624, "clickPct": 1.9,  "clickN": 197,  "rev": 265.39, "orders": 19, "segment": "Active & Engaged, VIP, +others" },
+    { "id": 12, "date": "2026-03-20", "time": "09:00", "name": "National Quilting Day Teaser",                         "channel": "Email", "sent": 10200, "openPct": 73.0, "openN": 7521, "clickPct": 1.3,  "clickN": 140,  "rev": 193.32, "orders": 8,  "segment": "Active & Engaged, VIP, +others" },
+    { "id": 13, "date": "2026-03-21", "time": "08:00", "name": "National Quilting Day — The Spring Edit Launch",      "channel": "Email", "sent": 9882,  "openPct": 72.5, "openN": 7170, "clickPct": 2.3,  "clickN": 234,  "rev": 261.66, "orders": 13, "segment": "Active & Engaged, VIP, +others" },
+    { "id": 14, "date": "2026-03-21", "time": "14:00", "name": "MAR_NAT_QUILT_DAY_2026",                              "channel": "SMS",   "sent": 6752,  "openPct": null, "openN": null, "clickPct": 40.6, "clickN": 2748, "rev": 218.85, "orders": 11, "segment": "Engaged SMS Subscribers" }
+  ]
+}
