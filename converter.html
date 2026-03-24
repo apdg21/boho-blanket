@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign JSON Converter</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; background: #eceff1; color: #37474f; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        textarea { width: 100%; height: 180px; margin-bottom: 15px; border: 1px solid #cfd8dc; border-radius: 6px; padding: 12px; font-family: monospace; box-sizing: border-box; resize: vertical; }
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; }
+        button { background: #2196f3; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        button:hover { background: #1976d2; }
+        button.secondary { background: #546e7a; }
+        button.secondary:hover { background: #455a64; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.6; border-left: 5px solid #2196f3; }
+        h1 { margin-top: 0; font-size: 24px; color: #1a237e; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Campaign JSON Converter</h1>
+    <textarea id="inputData" placeholder="Paste your Google Sheets data here..."></textarea>
+    
+    <div class="controls">
+        <button onclick="convertData()">Convert to JSON</button>
+        <button class="secondary" onclick="copyToClipboard()">Copy JSON</button>
+    </div>
+
+    <pre id="outputJson">{ "campaigns": [] }</pre>
+</div>
+
+<script>
+function convertData() {
+    const rawText = document.getElementById('inputData').value.trim();
+    const lines = rawText.split('\n').map(line => line.trim());
+    const campaigns = [];
+    let idCounter = 1;
+
+    const cleanNum = (str) => {
+        if (!str || str === "null") return "null";
+        const cleaned = str.replace(/[^-0-9.]/g, '');
+        return cleaned === "" ? 0 : parseFloat(cleaned);
+    };
+
+    for (let i = 0; i < lines.length; i++) {
+        // Look for the "Sent" marker to identify a block
+        if (lines[i+3] === "Sent" || (lines[i+4] && lines[i+4].includes(" at "))) {
+            const dateLine = lines[i+4] || "";
+            const [datePart, timePart] = dateLine.split(' at ');
+            
+            let formattedDate = "";
+            if (datePart) {
+                const d = new Date(datePart);
+                formattedDate = d.getFullYear() + '-' + 
+                                String(d.getMonth() + 1).padStart(2, '0') + '-' + 
+                                String(d.getDate()).padStart(2, '0');
+            }
+
+            // Create the object
+            const obj = {
+                "id": idCounter++,
+                "date": formattedDate,
+                "time": timePart ? timePart.replace(/\s+/g, ' ') : "12:00 PM",
+                "name": lines[i],
+                "channel": lines[i+2],
+                "sent": cleanNum(lines[i+5]),
+                "openPct": cleanNum(lines[i+6]),
+                "openN": cleanNum(lines[i+8]), // Based on your image A9
+                "clickPct": cleanNum(lines[i+9]),
+                "clickN": cleanNum(lines[i+11]),
+                "rev": cleanNum(lines[i+12]),
+                "orders": cleanNum(lines[i+14]),
+                "segment": lines[i+1]
+            };
+            
+            // Push as a stringified single line
+            campaigns.push(JSON.stringify(obj));
+            i += 15; // Move to next potential block
+        }
+    }
+
+    // Wrap the one-liners into the final format
+    const finalOutput = `"campaigns": [\n  ` + campaigns.join(',\n  ') + `\n]`;
+    document.getElementById('outputJson').textContent = finalOutput;
+}
+
+function copyToClipboard() {
+    const text = document.getElementById('outputJson').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        alert("JSON copied to clipboard!");
+    });
+}
+</script>
+
+</body>
+</html>
