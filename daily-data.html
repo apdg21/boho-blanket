@@ -686,10 +686,14 @@
   </div>
 
   <div class="add-section">
-    <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.5rem">
-      <button class="add-toggle-btn" id="toggleFormBtn" onclick="toggleForm()"><span class="btn-icon">＋</span> Add New Campaign</button>
-      <div><button class="add-toggle-btn" style="background:var(--moss)" onclick="exportJSON()">⬇ Export JSON</button>
-      <label class="add-toggle-btn" style="background:var(--bark);margin-left:6px" for="importFileInput">⬆ Import JSON</label></div>
+    <div class="add-toggle" style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+      <button class="add-toggle-btn" id="toggleFormBtn" onclick="toggleForm()">
+        <span class="btn-icon">＋</span> Add New Campaign
+      </button>
+      <div class="data-btns">
+        <button class="btn-export" onclick="exportJSON()">⬇ Export JSON</button>
+        <label class="btn-import-label" for="importFileInput">⬆ Import JSON</label>
+      </div>
     </div>
     <div class="form-panel" id="formPanel"><div class="form-title" id="formTitle">✏️ Campaign Entry</div><div class="edit-mode-banner" id="editBanner" style="display:none">✎ Editing mode</div>
       <div class="form-grid">
