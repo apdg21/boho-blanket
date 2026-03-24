@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boho Blanket · Campaign Converter</title>
+  <title>Boho Blanket · Data Converter</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -68,6 +68,56 @@
     .page-sub {
       font-size: 0.78rem; color: rgba(232,221,208,0.55);
       margin-top: 0.4rem; position: relative; z-index: 1;
+    }
+
+    /* tabs */
+    .tabs {
+      display: flex; gap: 0.5rem; margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border); padding-bottom: 0;
+    }
+    .tab-btn {
+      border: none; background: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600;
+      color: var(--text-muted); padding: 0.65rem 1.2rem 0.75rem;
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      border-radius: 8px 8px 0 0;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .tab-btn:hover { color: var(--bark); background: var(--sand); }
+    .tab-btn.active { color: var(--bark); border-bottom-color: var(--clay); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* monthly form grid */
+    .monthly-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1.2rem;
+    }
+    .m-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .m-label {
+      font-size: 0.6rem; letter-spacing: 1.4px; text-transform: uppercase;
+      font-weight: 700; color: var(--text-muted);
+    }
+    .m-label .req { color: var(--clay); }
+    .m-input {
+      border: 1.5px solid var(--border); background: var(--warm-white);
+      border-radius: 10px; padding: 0.5rem 0.8rem;
+      font-size: 0.78rem; font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary); outline: none; width: 100%;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .m-input:focus { border-color: var(--clay); box-shadow: 0 0 0 3px rgba(192,122,91,0.12); }
+    .m-input::placeholder { color: var(--text-muted); }
+    .m-input.parsed { border-color: var(--moss); background: #f0faf3; }
+    .m-input.error  { border-color: var(--terracotta); background: #fff5f3; }
+
+    .paste-area-wrap { position: relative; }
+    .paste-overlay {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      font-size: 0.62rem; color: var(--text-muted); pointer-events: none;
     }
 
     /* cards */
@@ -248,9 +298,20 @@
   <!-- HEADER -->
   <div class="page-header">
     <div class="page-eyebrow">Boho Blanket · Tools</div>
-    <h1 class="page-title">Campaign JSON <span>Converter</span></h1>
-    <p class="page-sub">Paste raw Omnisend campaign data → get clean JSON ready for data.json</p>
+    <h1 class="page-title">Data JSON <span>Converter</span></h1>
+    <p class="page-sub">Paste raw Omnisend data → get clean JSON ready for data.json · Campaigns & Monthly</p>
   </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('campaign', this)">📅 Campaign (Daily)</button>
+    <button class="tab-btn" onclick="switchTab('monthly', this)">📈 Monthly Report</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       TAB: CAMPAIGN (existing content wrapped)
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-panel active" id="tab-campaign">
 
   <!-- HOW TO USE -->
   <div class="card">
@@ -341,7 +402,137 @@ Mar 5, 2026 at 9:00 AM
     </div>
   </div>
 
-</div>
+</div><!-- end tab-campaign -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     TAB: MONTHLY REPORT
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-monthly">
+
+  <!-- HOW TO USE -->
+  <div class="card">
+    <div class="card-title">How to use — Monthly</div>
+    <div class="card-sub">Paste your full Omnisend monthly summary block below. The converter will auto-detect all values. You only need to confirm the month label.</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><span>In Omnisend, open the monthly overview for the month you want to add and copy all the text.</span></div>
+      <div class="step"><div class="step-num">2</div><span>Paste into the text area below — the converter reads the raw block and fills all fields automatically.</span></div>
+      <div class="step"><div class="step-num">3</div><span>Check the parsed fields, correct anything if needed, then set the <strong>Month label</strong> (e.g. <code>Mar '26</code>).</span></div>
+      <div class="step"><div class="step-num">4</div><span>Click <strong>Convert</strong> → copy the output and add it to the <code>monthly</code> array in your <code>data.json</code>.</span></div>
+    </div>
+    <div class="card-title" style="margin-bottom:0.5rem">What gets extracted</div>
+    <div class="col-map">
+      <div class="col-item"><strong>omni</strong><span>Revenue from Omnisend (€)</span></div>
+      <div class="col-item"><strong>camp</strong><span>Campaigns revenue (€)</span></div>
+      <div class="col-item"><strong>auto</strong><span>Automation revenue (€)</span></div>
+      <div class="col-item"><strong>store</strong><span>Total store revenue (€)</span></div>
+      <div class="col-item"><strong>emailSubs</strong><span>Email subscribers total</span></div>
+      <div class="col-item"><strong>newNet</strong><span>Net new email subscribers</span></div>
+      <div class="col-item"><strong>unsub</strong><span>Email unsubscribes</span></div>
+    </div>
+  </div>
+
+  <!-- PASTE + PARSED FIELDS -->
+  <div class="card">
+    <div class="card-title">Paste Monthly Data</div>
+    <div class="card-sub">Paste the raw Omnisend monthly block — values will be auto-detected and shown below for review.</div>
+
+    <div class="paste-area-wrap">
+      <textarea id="m_rawInput" placeholder="Paste your Omnisend monthly data here...
+
+Example:
+Revenue from Omnisend
+€14,073.31
+-9.51%
+780 orders
+Campaigns
+€6,133.66
+352 orders
+Automation
+€7,939.65
+428 orders
+Total store revenue
+€50,885.36
+3,073 orders
+
+Email subscribers
+33K
++1,607
+2,342 subscribed|735 unsubscribed
+SMS subscribers
+10.9K
+..." oninput="parseMonthlyLive()"></textarea>
+    </div>
+
+    <div style="margin-top:1rem;margin-bottom:0.4rem">
+      <div class="card-title" style="font-size:0.82rem;margin-bottom:0.6rem">Parsed Fields — review & correct if needed</div>
+      <div class="monthly-grid">
+        <div class="m-group">
+          <label class="m-label">Month Label <span class="req">*</span></label>
+          <input class="m-input" id="m_month" type="text" placeholder="e.g. Mar '26">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Omnisend Revenue (€) <span class="req">*</span></label>
+          <input class="m-input" id="m_omni" type="number" step="0.01" placeholder="e.g. 14073.31">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Campaigns Revenue (€)</label>
+          <input class="m-input" id="m_camp" type="number" step="0.01" placeholder="e.g. 6133.66">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Automation Revenue (€)</label>
+          <input class="m-input" id="m_auto" type="number" step="0.01" placeholder="e.g. 7939.65">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Store Revenue (€)</label>
+          <input class="m-input" id="m_store" type="number" step="0.01" placeholder="e.g. 50885.36">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Email Subscribers (total)</label>
+          <input class="m-input" id="m_emailSubs" type="number" placeholder="e.g. 33089">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Net New Subscribers</label>
+          <input class="m-input" id="m_newNet" type="number" placeholder="e.g. 1607">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Unsubscribed (email)</label>
+          <input class="m-input" id="m_unsub" type="number" placeholder="e.g. 735">
+        </div>
+      </div>
+      <div style="font-size:0.68rem;color:var(--text-muted);line-height:1.6;margin-top:0.25rem">
+        ⚠️ <strong>Email Subscribers total:</strong> Omnisend sometimes shows <code>33K</code> — enter the exact number from the detailed view (e.g. <code>33089</code>). Check your previous month's data for context.
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="convertMonthly()">⚡ Convert</button>
+      <button class="btn btn-ghost" onclick="clearMonthly()">✕ Clear</button>
+      <button class="btn btn-ghost" onclick="loadMonthlyExample()">📋 Load Example</button>
+    </div>
+  </div>
+
+  <!-- MONTHLY OUTPUT -->
+  <div class="card">
+    <div class="output-header">
+      <div class="output-label">JSON Output</div>
+      <div class="output-badge" id="m_statusBadge">Waiting for input</div>
+    </div>
+    <pre id="m_outputJson">// Output will appear here after conversion</pre>
+    <div class="validation" id="m_validationPanel"></div>
+    <div class="btn-row" style="margin-top:1rem">
+      <button class="btn btn-secondary" onclick="copyMonthlyObj()">📋 Copy monthly object</button>
+      <button class="btn btn-green" onclick="copyMonthlyPatch()">⬇ Copy as data.json patch</button>
+    </div>
+    <div style="font-size:0.68rem;color:var(--text-muted);margin-top:0.6rem;line-height:1.6">
+      <strong>Copy monthly object</strong> — copies just the <code>{...}</code> object to paste as a new entry in your data.json monthly array.<br>
+      <strong>Copy as data.json patch</strong> — copies the full wrapper with _meta ready to reference.
+    </div>
+  </div>
+
+</div><!-- end tab-monthly -->
+
+</div><!-- end .page -->
 
 <div class="toast" id="toast"></div>
 
@@ -627,6 +818,206 @@ N/A
 (11)`;
     document.getElementById('startId').value = '15';
     showToast('📋 Example loaded', '');
+  }
+
+  // ── TAB SWITCHER ─────────────────────────────────────────────────
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── MONTHLY: LIVE PARSER ─────────────────────────────────────────
+  let lastMonthly = null;
+
+  function parseMonthlyLive() {
+    const raw = document.getElementById('m_rawInput').value;
+    const lines = raw.split('\n').map(l => l.trim()).filter(l => l !== '');
+
+    // Grab first €X.XX — that's omni
+    const euroLines = lines.filter(l => /^€[\d,]+\.\d{2}$/.test(l));
+    const pctLines  = lines.filter(l => /^[+-]?\d+(\.\d+)?%$/.test(l) && !l.includes('orders'));
+
+    // Revenue block: Revenue from Omnisend → €X / % / orders / Campaigns / €X / Automation / €X / store / €X
+    const setIfFound = (id, val) => {
+      if (val === null || val === undefined) return;
+      const el = document.getElementById(id);
+      el.value = val;
+      el.classList.add('parsed');
+      setTimeout(() => el.classList.remove('parsed'), 1500);
+    };
+
+    // Find "Revenue from Omnisend" anchor
+    const omniIdx = lines.findIndex(l => /revenue from omnisend/i.test(l));
+    if (omniIdx > -1) {
+      setIfFound('m_omni',  cleanNum(lines[omniIdx + 1]));
+    }
+
+    // Find "Campaigns" anchor
+    const campIdx = lines.findIndex(l => /^campaigns$/i.test(l));
+    if (campIdx > -1) setIfFound('m_camp', cleanNum(lines[campIdx + 1]));
+
+    // Find "Automation" anchor
+    const autoIdx = lines.findIndex(l => /^automation$/i.test(l));
+    if (autoIdx > -1) setIfFound('m_auto', cleanNum(lines[autoIdx + 1]));
+
+    // Find "Total store revenue" anchor
+    const storeIdx = lines.findIndex(l => /total store revenue/i.test(l));
+    if (storeIdx > -1) setIfFound('m_store', cleanNum(lines[storeIdx + 1]));
+
+    // Find "Email subscribers" anchor
+    const emailSubIdx = lines.findIndex(l => /^email subscribers$/i.test(l));
+    if (emailSubIdx > -1) {
+      // Next line is total (may be "33K" or "33,089")
+      const subsRaw = lines[emailSubIdx + 1] || '';
+      const subsNum = parseKNum(subsRaw);
+      if (subsNum) setIfFound('m_emailSubs', subsNum);
+
+      // Net new: line starting with + (e.g. "+1,607")
+      for (let j = emailSubIdx + 1; j < Math.min(emailSubIdx + 6, lines.length); j++) {
+        if (/^\+[\d,]+$/.test(lines[j])) { setIfFound('m_newNet', cleanInt(lines[j])); break; }
+      }
+
+      // Unsubscribed: look for "X subscribed|Y unsubscribed" or "X unsubscribed"
+      for (let j = emailSubIdx + 1; j < Math.min(emailSubIdx + 8, lines.length); j++) {
+        const m = lines[j].match(/(\d[\d,]*)\s*unsubscribed/i);
+        if (m) { setIfFound('m_unsub', cleanInt(m[1])); break; }
+        // pipe-separated: "2,342 subscribed|735 unsubscribed"
+        const pm = lines[j].match(/\|?\s*(\d[\d,]*)\s*unsubscribed/i);
+        if (pm) { setIfFound('m_unsub', cleanInt(pm[1])); break; }
+      }
+    }
+  }
+
+  // Parse "33K" → 33000, "10.9K" → 10900, "33,089" → 33089
+  function parseKNum(str) {
+    if (!str) return null;
+    const s = str.trim().replace(/,/g, '');
+    const km = s.match(/^([\d.]+)[kK]$/);
+    if (km) return Math.round(parseFloat(km[1]) * 1000);
+    const n = parseFloat(s);
+    return isNaN(n) ? null : Math.round(n);
+  }
+
+  // ── MONTHLY: CONVERT ─────────────────────────────────────────────
+  function convertMonthly() {
+    const month    = document.getElementById('m_month').value.trim();
+    const omni     = parseFloat(document.getElementById('m_omni').value);
+    const camp     = parseFloat(document.getElementById('m_camp').value) || null;
+    const auto     = parseFloat(document.getElementById('m_auto').value) || null;
+    const store    = parseFloat(document.getElementById('m_store').value) || null;
+    const emailSubs= parseInt(document.getElementById('m_emailSubs').value)  || null;
+    const newNet   = parseInt(document.getElementById('m_newNet').value)  || null;
+    const unsub    = parseInt(document.getElementById('m_unsub').value)   || null;
+
+    const warnings = [];
+    if (!month)       warnings.push({ type:'err',  msg:'Month label is required (e.g. Mar \'26)' });
+    if (isNaN(omni))  warnings.push({ type:'err',  msg:'Omnisend revenue is required' });
+    if (!camp)        warnings.push({ type:'warn', msg:'Campaigns revenue is empty' });
+    if (!auto)        warnings.push({ type:'warn', msg:'Automation revenue is empty' });
+    if (!store)       warnings.push({ type:'warn', msg:'Store revenue is empty' });
+    if (!emailSubs)   warnings.push({ type:'warn', msg:'Email subscribers total is empty — enter exact number' });
+    if (!newNet)      warnings.push({ type:'warn', msg:'Net new subscribers is empty' });
+    if (!unsub)       warnings.push({ type:'warn', msg:'Unsubscribes is empty' });
+
+    const hasError = warnings.some(w => w.type === 'err');
+    if (hasError) {
+      document.getElementById('m_statusBadge').className = 'output-badge error';
+      document.getElementById('m_statusBadge').textContent = '⚠ Fix errors first';
+      renderMonthlyValidation(warnings);
+      showToast('⚠️ Fix required fields first', 'error');
+      return;
+    }
+
+    const obj = { month, omni, camp, auto, store, emailSubs, newNet, unsub };
+    lastMonthly = obj;
+
+    const pretty = JSON.stringify(obj);
+    document.getElementById('m_outputJson').innerHTML = highlight(pretty);
+    document.getElementById('m_statusBadge').className = 'output-badge success';
+    document.getElementById('m_statusBadge').textContent = `✅ ${month} converted`;
+    renderMonthlyValidation(warnings);
+    showToast(`✅ ${month} converted`, 'success');
+  }
+
+  function renderMonthlyValidation(warnings) {
+    const panel = document.getElementById('m_validationPanel');
+    if (!warnings.length) { panel.innerHTML = ''; return; }
+    panel.innerHTML = '<div style="margin-top:1rem;border-top:1px solid var(--border);padding-top:0.85rem">' +
+      '<div style="font-size:0.6rem;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;color:var(--text-muted);margin-bottom:0.6rem">Validation</div>' +
+      warnings.map(w => `<div class="val-item"><span class="val-${w.type}">${w.type==='err'?'✕':'⚠'}</span>${w.msg}</div>`).join('') +
+      '</div>';
+  }
+
+  // ── MONTHLY: COPY ────────────────────────────────────────────────
+  function copyMonthlyObj() {
+    if (!lastMonthly) { showToast('Nothing to copy — convert first', 'error'); return; }
+    navigator.clipboard.writeText('    ' + JSON.stringify(lastMonthly))
+      .then(() => showToast('📋 Monthly object copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed', 'error'));
+  }
+
+  function copyMonthlyPatch() {
+    if (!lastMonthly) { showToast('Nothing to copy — convert first', 'error'); return; }
+    const patch = {
+      _meta: {
+        source: 'Boho Blanket · Omnisend Analytics',
+        version: '1.0',
+        note: 'Add this object to the monthly array in your data.json',
+        converted: new Date().toISOString().slice(0, 10)
+      },
+      monthly_entry: lastMonthly
+    };
+    navigator.clipboard.writeText(JSON.stringify(patch, null, 2))
+      .then(() => showToast('⬇ Monthly patch copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed', 'error'));
+  }
+
+  function clearMonthly() {
+    document.getElementById('m_rawInput').value = '';
+    ['m_month','m_omni','m_camp','m_auto','m_store','m_emailSubs','m_newNet','m_unsub']
+      .forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).classList.remove('parsed','error'); });
+    document.getElementById('m_outputJson').innerHTML = '// Output will appear here after conversion';
+    document.getElementById('m_statusBadge').className = 'output-badge';
+    document.getElementById('m_statusBadge').textContent = 'Waiting for input';
+    document.getElementById('m_validationPanel').innerHTML = '';
+    lastMonthly = null;
+  }
+
+  function loadMonthlyExample() {
+    document.getElementById('m_rawInput').value =
+`Revenue from Omnisend
+€14,073.31
+-9.51%
+780 orders
+Campaigns
+€6,133.66
+352 orders
+Automation
+€7,939.65
+428 orders
+Total store revenue
+€50,885.36
+3,073 orders
+
+Email subscribers
+33K
++1,607
+2,342 subscribed|735 unsubscribed
+SMS subscribers
+10.9K
++597
+944 subscribed|347 unsubscribed
+Push subscribers
+9,461
++625
+635 subscribed|10 unsubscribed`;
+    // trigger live parse
+    parseMonthlyLive();
+    // set month manually since raw data has no month label
+    document.getElementById('m_month').value = "Feb '26";
+    showToast('📋 Example loaded — set the month label', '');
   }
 </script>
 </body>
