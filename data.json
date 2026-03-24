@@ -18,7 +18,8 @@
     { "month": "Nov '25", "omni": 14218.65, "camp": 6798.14, "auto": 7420.51, "store": 42011.62, "emailSubs": 28714, "newNet": 1029, "unsub": 801 },
     { "month": "Dec '25", "omni": 9791.83, "camp": 5170.66, "auto": 4621.17, "store": 31852.92, "emailSubs": 29499, "newNet": 785, "unsub": 617 },
     { "month": "Jan '26", "omni": 15412.07, "camp": 7457.12, "auto": 7954.95, "store": 56014.00, "emailSubs": 31482, "newNet": 1983, "unsub": 715 },
-    { "month": "Feb '26", "omni": 14073.31, "camp": 6133.66, "auto": 7939.65, "store": 50885.36, "emailSubs": 33089, "newNet": 1607, "unsub": 735 }
+    { "month": "Feb '26", "omni": 14073.31, "camp": 6133.66, "auto": 7939.65, "store": 50885.36, "emailSubs": 33089, "newNet": 1607, "unsub": 735 },
+    {"month":"Mar '26","omni":8185.98,"camp":3716.54,"auto":4469.44,"store":27586.52,"emailSubs":33600,"newNet":546,"unsub":676}
   ],
   "campaigns": [
     { "id": 1,  "date": "2026-03-01", "time": "08:00", "name": "March 1st – New Beginnings",                          "channel": "Email", "sent": 8511,  "openPct": 79.8, "openN": 6799, "clickPct": 3.0,  "clickN": 257,  "rev": 334.74, "orders": 20, "segment": "Active & Engaged, VIP, +others" },
