@@ -2,12 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boho Blanket · Campaign Performance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Boho Blanket · Campaign Performance | Enhanced Metrics</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     :root {
       --cream: #f7f2ea;
       --warm-white: #fdfaf5;
@@ -26,26 +32,23 @@
       --text-primary: #1e1510;
       --text-secondary: #7a6555;
       --text-muted: #a8937f;
-      --border: rgba(180,145,115,0.2);
-      --card-bg: rgba(255,252,247,0.95);
-      --shadow: 0 2px 20px rgba(44,30,20,0.06);
-      --shadow-hover: 0 8px 32px rgba(44,30,20,0.12);
+      --border: rgba(180, 145, 115, 0.2);
+      --card-bg: rgba(255, 252, 247, 0.95);
+      --shadow: 0 2px 20px rgba(44, 30, 20, 0.06);
+      --shadow-hover: 0 8px 32px rgba(44, 30, 20, 0.12);
       --radius: 20px;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       background: var(--cream);
-      background-image:
-        radial-gradient(ellipse 80% 50% at 5% 0%, rgba(192,122,91,0.08) 0%, transparent 55%),
-        radial-gradient(ellipse 50% 60% at 95% 100%, rgba(61,94,64,0.07) 0%, transparent 55%);
+      background-image: radial-gradient(ellipse 80% 50% at 5% 0%, rgba(192, 122, 91, 0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 60% at 95% 100%, rgba(61, 94, 64, 0.07) 0%, transparent 55%);
       font-family: 'DM Sans', sans-serif;
       color: var(--text-primary);
       min-height: 100vh;
     }
 
-    /* ── HEADER ── */
+    /* header, cards, etc — same elegant style */
     .header {
       background: linear-gradient(135deg, var(--espresso) 0%, var(--bark) 100%);
       padding: 2.5rem 2rem 2rem;
@@ -55,19 +58,23 @@
     .header::before {
       content: '';
       position: absolute;
-      top: -50px; right: -50px;
-      width: 240px; height: 240px;
+      top: -50px;
+      right: -50px;
+      width: 240px;
+      height: 240px;
       border-radius: 50%;
-      background: rgba(192,122,91,0.13);
+      background: rgba(192, 122, 91, 0.13);
       pointer-events: none;
     }
     .header::after {
       content: '';
       position: absolute;
-      bottom: -80px; left: 25%;
-      width: 320px; height: 320px;
+      bottom: -80px;
+      left: 25%;
+      width: 320px;
+      height: 320px;
       border-radius: 50%;
-      background: rgba(61,94,64,0.09);
+      background: rgba(61, 94, 64, 0.09);
       pointer-events: none;
     }
     .header-inner {
@@ -88,7 +95,7 @@
       font-size: 0.62rem;
       letter-spacing: 2.5px;
       text-transform: uppercase;
-      color: rgba(232,221,208,0.5);
+      color: rgba(232, 221, 208, 0.5);
       font-weight: 500;
       margin-bottom: 0.4rem;
     }
@@ -100,14 +107,16 @@
       line-height: 1.1;
       letter-spacing: -0.5px;
     }
-    .brand-name span { color: var(--clay); }
+    .brand-name span {
+      color: var(--clay);
+    }
     .header-badge {
-      background: rgba(255,252,247,0.08);
-      border: 1px solid rgba(232,221,208,0.18);
+      background: rgba(255, 252, 247, 0.08);
+      border: 1px solid rgba(232, 221, 208, 0.18);
       border-radius: 100px;
       padding: 0.4rem 1rem;
       font-size: 0.7rem;
-      color: rgba(232,221,208,0.7);
+      color: rgba(232, 221, 208, 0.7);
       letter-spacing: 0.3px;
       font-weight: 500;
       white-space: nowrap;
@@ -127,7 +136,7 @@
       font-size: 0.6rem;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: rgba(232,221,208,0.45);
+      color: rgba(232, 221, 208, 0.45);
       font-weight: 500;
     }
     .hstat-val {
@@ -138,26 +147,32 @@
     }
     .hstat-sub {
       font-size: 0.65rem;
-      color: rgba(232,221,208,0.5);
+      color: rgba(232, 221, 208, 0.5);
     }
 
-    /* ── MAIN ── */
     .main {
       max-width: 1400px;
       margin: 0 auto;
       padding: 2rem 1.25rem 3rem;
     }
 
-    /* ── KPI STRIP ── */
+    /* KPI strip + charts same */
     .kpi-strip {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 0.85rem;
       margin-bottom: 1.75rem;
     }
-    @media (max-width: 900px)  { .kpi-strip { grid-template-columns: repeat(3,1fr); } }
-    @media (max-width: 540px)  { .kpi-strip { grid-template-columns: repeat(2,1fr); } }
-
+    @media (max-width: 900px) {
+      .kpi-strip {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (max-width: 540px) {
+      .kpi-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
     .kpi-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -165,23 +180,41 @@
       padding: 1.1rem 1rem 1rem;
       box-shadow: var(--shadow);
       position: relative;
-      overflow: hidden;
       transition: box-shadow 0.2s, transform 0.2s;
     }
-    .kpi-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .kpi-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
     .kpi-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 3px;
       border-radius: var(--radius) var(--radius) 0 0;
     }
-    .kpi-card:nth-child(1)::before { background: linear-gradient(90deg, var(--clay), var(--gold)); }
-    .kpi-card:nth-child(2)::before { background: linear-gradient(90deg, var(--moss), var(--sage)); }
-    .kpi-card:nth-child(3)::before { background: linear-gradient(90deg, var(--gold), #e8b86d); }
-    .kpi-card:nth-child(4)::before { background: linear-gradient(90deg, var(--sage), var(--moss)); }
-    .kpi-card:nth-child(5)::before { background: linear-gradient(90deg, var(--sms-blue), #5b9bd5); }
-    .kpi-icon { font-size: 0.9rem; margin-bottom: 0.45rem; display: block; }
+    .kpi-card:nth-child(1)::before {
+      background: linear-gradient(90deg, var(--clay), var(--gold));
+    }
+    .kpi-card:nth-child(2)::before {
+      background: linear-gradient(90deg, var(--moss), var(--sage));
+    }
+    .kpi-card:nth-child(3)::before {
+      background: linear-gradient(90deg, var(--gold), #e8b86d);
+    }
+    .kpi-card:nth-child(4)::before {
+      background: linear-gradient(90deg, var(--sage), var(--moss));
+    }
+    .kpi-card:nth-child(5)::before {
+      background: linear-gradient(90deg, var(--sms-blue), #5b9bd5);
+    }
+    .kpi-icon {
+      font-size: 0.9rem;
+      margin-bottom: 0.45rem;
+      display: block;
+    }
     .kpi-label {
       font-size: 0.6rem;
       letter-spacing: 1.6px;
@@ -197,9 +230,12 @@
       color: var(--text-primary);
       line-height: 1.1;
     }
-    .kpi-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.3rem; }
+    .kpi-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
 
-    /* ── CHARTS ── */
     .section-label {
       font-size: 0.6rem;
       letter-spacing: 2.5px;
@@ -214,8 +250,11 @@
       gap: 1.1rem;
       margin-bottom: 1.1rem;
     }
-    @media (max-width: 720px) { .charts-row { grid-template-columns: 1fr; } }
-
+    @media (max-width: 720px) {
+      .charts-row {
+        grid-template-columns: 1fr;
+      }
+    }
     .chart-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -230,10 +269,17 @@
       color: var(--text-primary);
       margin-bottom: 0.2rem;
     }
-    .chart-sub { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 1rem; }
-    canvas { max-height: 200px; width: 100% !important; }
+    .chart-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    canvas {
+      max-height: 200px;
+      width: 100% !important;
+    }
 
-    /* ── FILTERS ── */
+    /* controls + table */
     .controls-row {
       display: flex;
       align-items: center;
@@ -253,7 +299,10 @@
       transition: all 0.15s;
       font-family: 'DM Sans', sans-serif;
     }
-    .filter-btn:hover { background: var(--sand); border-color: var(--clay); }
+    .filter-btn:hover {
+      background: var(--sand);
+      border-color: var(--clay);
+    }
     .filter-btn.active {
       background: var(--espresso);
       color: var(--warm-white);
@@ -269,9 +318,11 @@
       font-family: 'DM Sans', sans-serif;
       outline: none;
       min-width: 180px;
-      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .search-input:focus { border-color: var(--clay); box-shadow: 0 0 0 3px rgba(192,122,91,0.12); }
+    .search-input:focus {
+      border-color: var(--clay);
+      box-shadow: 0 0 0 3px rgba(192, 122, 91, 0.12);
+    }
     .sort-select {
       border: 1px solid var(--border);
       background: var(--card-bg);
@@ -280,11 +331,8 @@
       font-size: 0.72rem;
       color: var(--text-secondary);
       font-family: 'DM Sans', sans-serif;
-      outline: none;
       cursor: pointer;
     }
-
-    /* ── TABLE ── */
     .table-section-header {
       display: flex;
       align-items: baseline;
@@ -306,7 +354,6 @@
       padding: 0.2rem 0.7rem;
       border-radius: 100px;
     }
-
     .table-wrapper {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -315,14 +362,16 @@
       overflow: hidden;
       margin-bottom: 2rem;
     }
-    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
     table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
       font-size: 0.76rem;
-      min-width: 900px;
+      min-width: 1100px;
     }
     thead th {
       background: #f2ebe1;
@@ -339,94 +388,158 @@
       user-select: none;
       transition: background 0.15s;
     }
-    thead th:hover { background: #ede3d7; }
-    thead th .sort-arrow { opacity: 0.35; margin-left: 3px; font-size: 0.65rem; }
-    thead th.sorted .sort-arrow { opacity: 1; color: var(--clay); }
-
-    tbody tr { transition: background 0.12s; }
-    tbody tr:hover td { background: #fdf5ec !important; }
-    tbody tr:last-child td { border-bottom: none; }
+    thead th:hover {
+      background: #ede3d7;
+    }
+    thead th .sort-arrow {
+      opacity: 0.35;
+      margin-left: 3px;
+      font-size: 0.65rem;
+    }
+    tbody tr:hover td {
+      background: #fdf5ec !important;
+    }
     tbody td {
       padding: 0.8rem 0.9rem;
-      border-bottom: 1px solid rgba(180,145,115,0.09);
+      border-bottom: 1px solid rgba(180, 145, 115, 0.09);
       vertical-align: middle;
       background: var(--card-bg);
     }
-
-    /* Sticky date col */
     thead th:first-child, tbody td:first-child {
-      position: sticky; left: 0; z-index: 5;
+      position: sticky;
+      left: 0;
+      z-index: 5;
+      background: var(--card-bg);
     }
-    thead th:first-child { background: #f2ebe1; z-index: 10; box-shadow: 2px 0 8px -3px rgba(44,30,20,0.08); }
-    tbody td:first-child { box-shadow: 2px 0 8px -3px rgba(44,30,20,0.05); }
-    tbody tr:hover td:first-child { background: #fdf5ec; }
-
-    .campaign-name { font-weight: 600; color: var(--bark); max-width: 220px; white-space: normal; line-height: 1.3; }
-    td.num { font-variant-numeric: tabular-nums; color: var(--text-secondary); }
-    td.rev { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text-primary); }
-    td.rate { font-variant-numeric: tabular-nums; }
-
-    /* Type pill */
+    thead th:first-child {
+      background: #f2ebe1;
+      z-index: 10;
+      box-shadow: 2px 0 8px -3px rgba(44, 30, 20, 0.08);
+    }
+    tbody tr:hover td:first-child {
+      background: #fdf5ec !important;
+    }
+    .campaign-name {
+      font-weight: 600;
+      color: var(--bark);
+      max-width: 220px;
+      white-space: normal;
+      line-height: 1.3;
+    }
+    td.num {
+      font-variant-numeric: tabular-nums;
+      color: var(--text-secondary);
+    }
+    td.rev {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
     .type-pill {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 0.18rem 0.55rem; border-radius: 100px;
-      font-size: 0.63rem; font-weight: 700; letter-spacing: 0.3px; white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.18rem 0.55rem;
+      border-radius: 100px;
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
     }
-    .pill-email { background: var(--email-light); color: var(--terracotta); }
-    .pill-sms   { background: var(--sms-light);   color: var(--sms-blue); }
-
-    /* Open/click rate bars */
+    .pill-email {
+      background: var(--email-light);
+      color: var(--terracotta);
+    }
+    .pill-sms {
+      background: var(--sms-light);
+      color: var(--sms-blue);
+    }
     .rate-bar {
-      display: flex; align-items: center; gap: 6px;
-    }
-    .bar-bg {
-      flex: 1; height: 5px; background: rgba(180,145,115,0.18);
-      border-radius: 10px; overflow: hidden; min-width: 40px;
-    }
-    .bar-fill { height: 100%; border-radius: 10px; }
-    .bar-open  .bar-fill { background: var(--moss); }
-    .bar-click .bar-fill { background: var(--clay); }
-    .rate-val { font-size: 0.7rem; font-variant-numeric: tabular-nums; color: var(--text-secondary); min-width: 36px; }
-
-    /* Perf badge */
-    .perf-badge {
-      display: inline-flex; align-items: center; gap: 3px;
-      padding: 0.18rem 0.55rem; border-radius: 100px;
-      font-size: 0.63rem; font-weight: 600; white-space: nowrap;
-    }
-    .perf-strong  { background: #d6ede0; color: #1a5c38; }
-    .perf-good    { background: #e8f4eb; color: #2d7a4a; }
-    .perf-avg     { background: #fceedd; color: #9b5e1a; }
-    .perf-low     { background: #fde0d5; color: #a33820; }
-
-    /* ── ADD FORM ── */
-    .add-section {
-      margin-bottom: 2rem;
-    }
-    .add-toggle {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      cursor: pointer;
-      margin-bottom: 0;
+      gap: 6px;
     }
-    .add-toggle-btn {
-      background: var(--espresso);
-      color: var(--warm-white);
-      border: none;
+    .bar-bg {
+      flex: 1;
+      height: 5px;
+      background: rgba(180, 145, 115, 0.18);
+      border-radius: 10px;
+      overflow: hidden;
+      min-width: 40px;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 10px;
+    }
+    .bar-open .bar-fill {
+      background: var(--moss);
+    }
+    .bar-click .bar-fill {
+      background: var(--clay);
+    }
+    .rate-val {
+      font-size: 0.7rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-secondary);
+      min-width: 36px;
+    }
+    .perf-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 0.18rem 0.55rem;
       border-radius: 100px;
-      padding: 0.5rem 1.2rem;
-      font-size: 0.75rem;
+      font-size: 0.63rem;
       font-weight: 600;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.15s;
-      display: flex; align-items: center; gap: 6px;
+      white-space: nowrap;
     }
-    .add-toggle-btn:hover { background: var(--bark); transform: translateY(-1px); }
-    .add-toggle-btn .btn-icon { transition: transform 0.25s; }
-    .add-toggle-btn.open .btn-icon { transform: rotate(45deg); }
+    .perf-strong {
+      background: #d6ede0;
+      color: #1a5c38;
+    }
+    .perf-good {
+      background: #e8f4eb;
+      color: #2d7a4a;
+    }
+    .perf-avg {
+      background: #fceedd;
+      color: #9b5e1a;
+    }
+    .perf-low {
+      background: #fde0d5;
+      color: #a33820;
+    }
 
+    /* Metric badge for new columns */
+    .metric-badge {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .del-btn,
+    .edit-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      padding: 2px 5px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+      opacity: 0;
+    }
+    tbody tr:hover .del-btn,
+    tbody tr:hover .edit-btn {
+      opacity: 1;
+    }
+    .del-btn:hover {
+      color: var(--terracotta);
+      background: #fde0d5;
+    }
+    .edit-btn:hover {
+      color: var(--moss);
+      background: #d6ede0;
+    }
     .form-panel {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -437,27 +550,23 @@
       display: none;
       animation: fadeUp 0.3s ease both;
     }
-    .form-panel.visible { display: block; }
-
-    .form-title {
-      font-family: 'Fraunces', serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 1.2rem;
-      display: flex; align-items: center; gap: 8px;
+    .form-panel.visible {
+      display: block;
     }
-
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 0.9rem 1rem;
       margin-bottom: 1.2rem;
     }
-
-    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
-    .form-group.full { grid-column: 1 / -1; }
-
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
     .form-label {
       font-size: 0.62rem;
       letter-spacing: 1.4px;
@@ -465,162 +574,101 @@
       font-weight: 700;
       color: var(--text-muted);
     }
-    .form-label .req { color: var(--clay); }
-
-    .form-input, .form-select {
+    .form-input,
+    .form-select {
       border: 1px solid var(--border);
       background: var(--warm-white);
       border-radius: 10px;
       padding: 0.55rem 0.8rem;
       font-size: 0.78rem;
-      color: var(--text-primary);
       font-family: 'DM Sans', sans-serif;
       outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      width: 100%;
-    }
-    .form-input:focus, .form-select:focus {
-      border-color: var(--clay);
-      box-shadow: 0 0 0 3px rgba(192,122,91,0.12);
-    }
-    .form-input::placeholder { color: var(--text-muted); }
-
-    .form-row-btns {
-      display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
     }
     .btn-submit {
       background: linear-gradient(135deg, var(--clay), var(--terracotta));
-      color: white; border: none; border-radius: 100px;
-      padding: 0.6rem 1.5rem; font-size: 0.78rem; font-weight: 600;
-      font-family: 'DM Sans', sans-serif; cursor: pointer;
-      transition: opacity 0.15s, transform 0.15s;
+      color: white;
+      border: none;
+      border-radius: 100px;
+      padding: 0.6rem 1.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
     }
-    .btn-submit:hover { opacity: 0.88; transform: translateY(-1px); }
     .btn-cancel {
-      background: transparent; color: var(--text-muted);
-      border: 1px solid var(--border); border-radius: 100px;
-      padding: 0.6rem 1.2rem; font-size: 0.78rem; font-weight: 500;
-      font-family: 'DM Sans', sans-serif; cursor: pointer;
-      transition: background 0.15s;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
     }
-    .btn-cancel:hover { background: var(--sand); }
-    .form-hint {
+    .add-toggle-btn {
+      background: var(--espresso);
+      color: var(--warm-white);
+      border: none;
+      border-radius: 100px;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--espresso);
+      color: white;
+      padding: 0.7rem 1.3rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: 0.25s;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .toast.success {
+      background: var(--moss);
+    }
+    .toast.error {
+      background: var(--terracotta);
+    }
+    .footer {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
       font-size: 0.68rem;
       color: var(--text-muted);
-      margin-top: 0.85rem;
-      border-top: 1px solid var(--border);
-      padding-top: 0.8rem;
-      line-height: 1.6;
     }
-
-    /* ── FOOTER ── */
-    .footer {
-      margin-top: 2rem; padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.68rem; color: var(--text-muted); line-height: 1.7;
-    }
-    .footer strong { color: var(--text-secondary); }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .kpi-card { animation: fadeUp 0.4s ease both; }
-    .kpi-card:nth-child(1) { animation-delay: 0.04s; }
-    .kpi-card:nth-child(2) { animation-delay: 0.08s; }
-    .kpi-card:nth-child(3) { animation-delay: 0.12s; }
-    .kpi-card:nth-child(4) { animation-delay: 0.16s; }
-    .kpi-card:nth-child(5) { animation-delay: 0.20s; }
-    .chart-card { animation: fadeUp 0.45s 0.22s ease both; }
-    .table-wrapper { animation: fadeUp 0.45s 0.28s ease both; }
-
-    /* ── JSON BUTTONS ── */
-    .data-btns {
-      display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;
-    }
-    .btn-export {
-      background: var(--moss); color: white; border: none;
-      border-radius: 100px; padding: 0.45rem 1.05rem;
-      font-size: 0.72rem; font-weight: 600; font-family: 'DM Sans', sans-serif;
-      cursor: pointer; display: flex; align-items: center; gap: 5px;
-      transition: opacity 0.15s, transform 0.15s;
-    }
-    .btn-export:hover { opacity: 0.85; transform: translateY(-1px); }
-    .btn-import-label {
-      background: var(--card-bg); color: var(--bark);
-      border: 1px solid var(--border); border-radius: 100px;
-      padding: 0.45rem 1.05rem; font-size: 0.72rem; font-weight: 600;
-      font-family: 'DM Sans', sans-serif; cursor: pointer;
-      display: flex; align-items: center; gap: 5px;
-      transition: background 0.15s, transform 0.15s;
-    }
-    .btn-import-label:hover { background: var(--sand); transform: translateY(-1px); }
-    #importFileInput { display: none; }
-
-    /* ── TOAST ── */
-    .toast {
-      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;
-      background: var(--espresso); color: var(--warm-white);
-      padding: 0.7rem 1.3rem; border-radius: 100px;
-      font-size: 0.78rem; font-weight: 500; font-family: 'DM Sans', sans-serif;
-      box-shadow: 0 6px 24px rgba(44,30,20,0.25);
-      display: flex; align-items: center; gap: 8px;
-      opacity: 0; transform: translateY(10px);
-      transition: opacity 0.25s, transform 0.25s;
-      pointer-events: none;
-    }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .toast.success { background: var(--moss); }
-    .toast.error   { background: var(--terracotta); }
-
-    /* delete btn */
-    .del-btn {
-      background: none; border: none; cursor: pointer;
-      color: var(--text-muted); font-size: 0.8rem; padding: 2px 5px;
-      border-radius: 6px; transition: color 0.15s, background 0.15s;
-      opacity: 0;
-    }
-    tbody tr:hover .del-btn { opacity: 1; }
-    .del-btn:hover { color: var(--terracotta); background: #fde0d5; }
-    .edit-btn {
-      background: none; border: none; cursor: pointer;
-      color: var(--text-muted); font-size: 0.75rem; padding: 2px 5px;
-      border-radius: 6px; transition: color 0.15s, background 0.15s;
-      opacity: 0;
-    }
-    tbody tr:hover .edit-btn { opacity: 1; }
-    .edit-btn:hover { color: var(--moss); background: #d6ede0; }
-
-    .form-panel.edit-mode { border-color: var(--moss); border-width: 2px; }
-    .form-panel.edit-mode .form-title { color: var(--moss); }
-    .edit-mode-banner {
-      background: #eaf4ec; border: 1px solid rgba(61,94,64,0.25);
-      border-radius: 10px; padding: 0.5rem 0.9rem;
-      font-size: 0.72rem; color: var(--moss); font-weight: 500;
-      margin-bottom: 1rem; display: none; align-items: center; gap: 6px;
-    }
-    .edit-mode-banner.visible { display: flex; }
-
-    /* empty state */
-    .empty-row td {
-      text-align: center; padding: 2.5rem;
-      color: var(--text-muted); font-size: 0.82rem;
-      font-style: italic;
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
-
-<!-- ── TOAST ── -->
 <div class="toast" id="toast"></div>
-<input type="file" id="importFileInput" accept=".json" onchange="importJSON(event)">
+<input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importJSON(event)">
 
-<!-- ── HEADER ── -->
 <header class="header">
   <div class="header-inner">
     <div class="header-top">
       <div>
-        <div class="brand-eyebrow">Campaign Performance · March 2026</div>
+        <div class="brand-eyebrow">Campaign Performance · Enhanced Metrics</div>
         <h1 class="brand-name">🧵 Boho Blanket <span>·</span> Campaigns</h1>
       </div>
       <div class="header-badge">Omnisend · Email & SMS</div>
@@ -629,653 +677,202 @@
   </div>
 </header>
 
-<!-- ── MAIN ── -->
 <main class="main">
-
-  <!-- KPI STRIP -->
   <div class="kpi-strip" id="kpiStrip"></div>
-
-  <!-- CHARTS -->
   <div class="section-label">Campaign Overview</div>
   <div class="charts-row">
-    <div class="chart-card">
-      <div class="chart-heading">Revenue per Campaign</div>
-      <div class="chart-sub">Ordered by send date — bar colour = channel</div>
-      <canvas id="revChart"></canvas>
-    </div>
-    <div class="chart-card">
-      <div class="chart-heading">Open Rate vs Click Rate</div>
-      <div class="chart-sub">Email campaigns only (SMS excluded)</div>
-      <canvas id="engChart"></canvas>
-    </div>
+    <div class="chart-card"><div class="chart-heading">Revenue per Campaign</div><div class="chart-sub">Bar colour = channel</div><canvas id="revChart"></canvas></div>
+    <div class="chart-card"><div class="chart-heading">Open Rate vs Click Rate</div><div class="chart-sub">Email campaigns only</div><canvas id="engChart"></canvas></div>
   </div>
 
-  <!-- ADD ENTRY -->
   <div class="add-section">
-    <div class="add-toggle" style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-      <button class="add-toggle-btn" id="toggleFormBtn" onclick="toggleForm()">
-        <span class="btn-icon">＋</span> Add New Campaign
-      </button>
-      <div class="data-btns">
-        <button class="btn-export" onclick="exportJSON()">⬇ Export JSON</button>
-        <label class="btn-import-label" for="importFileInput">⬆ Import JSON</label>
-      </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.5rem">
+      <button class="add-toggle-btn" id="toggleFormBtn" onclick="toggleForm()"><span class="btn-icon">＋</span> Add New Campaign</button>
+      <div><button class="add-toggle-btn" style="background:var(--moss)" onclick="exportJSON()">⬇ Export JSON</button>
+      <label class="add-toggle-btn" style="background:var(--bark);margin-left:6px" for="importFileInput">⬆ Import JSON</label></div>
     </div>
-
-    <div class="form-panel" id="formPanel">
-      <div class="form-title" id="formTitle">✏️ New Campaign Entry</div>
-      <div class="edit-mode-banner" id="editBanner">✎ Editing existing campaign — changes will overwrite the original.</div>
+    <div class="form-panel" id="formPanel"><div class="form-title" id="formTitle">✏️ Campaign Entry</div><div class="edit-mode-banner" id="editBanner" style="display:none">✎ Editing mode</div>
       <div class="form-grid">
-        <div class="form-group full">
-          <label class="form-label">Campaign Name <span class="req">*</span></label>
-          <input class="form-input" id="f_name" type="text" placeholder="e.g. Spring Palette Reveal">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Channel <span class="req">*</span></label>
-          <select class="form-select" id="f_channel">
-            <option value="Email">📧 Email</option>
-            <option value="SMS">💬 SMS</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Send Date <span class="req">*</span></label>
-          <input class="form-input" id="f_date" type="date">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Send Time</label>
-          <input class="form-input" id="f_time" type="time" placeholder="e.g. 08:00">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Recipients Sent <span class="req">*</span></label>
-          <input class="form-input" id="f_sent" type="number" placeholder="e.g. 8500" min="0">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Open Rate (%)</label>
-          <input class="form-input" id="f_open" type="number" step="0.1" placeholder="e.g. 79.5" min="0" max="100">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Opens (count)</label>
-          <input class="form-input" id="f_opens_n" type="number" placeholder="e.g. 6750" min="0">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Click Rate (%)</label>
-          <input class="form-input" id="f_click" type="number" step="0.1" placeholder="e.g. 3.1" min="0" max="100">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Clicks (count)</label>
-          <input class="form-input" id="f_clicks_n" type="number" placeholder="e.g. 260" min="0">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Revenue (€) <span class="req">*</span></label>
-          <input class="form-input" id="f_rev" type="number" step="0.01" placeholder="e.g. 370.10" min="0">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Orders</label>
-          <input class="form-input" id="f_orders" type="number" placeholder="e.g. 21" min="0">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Segment / Audience</label>
-          <input class="form-input" id="f_segment" type="text" placeholder="e.g. Active & Engaged">
-        </div>
+        <div class="form-group full"><label>Campaign Name *</label><input class="form-input" id="f_name"></div>
+        <div class="form-group"><label>Channel</label><select class="form-select" id="f_channel"><option>Email</option><option>SMS</option></select></div>
+        <div class="form-group"><label>Send Date *</label><input class="form-input" id="f_date" type="date"></div>
+        <div class="form-group"><label>Send Time</label><input class="form-input" id="f_time" type="time"></div>
+        <div class="form-group"><label>Recipients Sent *</label><input class="form-input" id="f_sent" type="number"></div>
+        <div class="form-group"><label>Open Rate (%)</label><input class="form-input" id="f_open" step="0.1"></div>
+        <div class="form-group"><label>Click Rate (%)</label><input class="form-input" id="f_click" step="0.1"></div>
+        <div class="form-group"><label>Revenue (€) *</label><input class="form-input" id="f_rev" step="0.01"></div>
+        <div class="form-group"><label>Orders</label><input class="form-input" id="f_orders" type="number"></div>
+        <div class="form-group"><label>Segment</label><input class="form-input" id="f_segment"></div>
       </div>
-      <div class="form-row-btns">
-        <button class="btn-submit" id="formSubmitBtn" onclick="submitForm()">Add Campaign</button>
-        <button class="btn-cancel" onclick="cancelForm()">Cancel</button>
-      </div>
-      <div class="form-hint">
-        <strong>Tips:</strong> Open Rate and Opens count — enter either or both (dashboard will use whichever is available).
-        Leave SMS open/click rate blank (N/A). Revenue and Recipients are required fields marked <span style="color:var(--clay)">*</span>.
-      </div>
+      <div><button class="btn-submit" id="formSubmitBtn" onclick="submitForm()">Add Campaign</button><button class="btn-cancel" onclick="cancelForm()">Cancel</button></div>
     </div>
   </div>
 
-  <!-- TABLE -->
-  <div class="table-section-header">
-    <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;">
-      <div class="table-section-title">Campaign Log</div>
-      <div class="table-count" id="rowCount">14 campaigns</div>
-    </div>
-    <div class="controls-row" style="margin-bottom:0;">
-      <input class="search-input" type="text" id="searchInput" placeholder="🔍  Search campaigns…" oninput="renderTable()">
+  <div class="table-section-header"><div style="display:flex;gap:0.8rem"><div class="table-section-title">Campaign Log</div><div class="table-count" id="rowCount">0 campaigns</div></div>
+    <div class="controls-row"><input class="search-input" id="searchInput" placeholder="🔍 Search…" oninput="renderTable()">
       <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">All</button>
       <button class="filter-btn" data-filter="Email" onclick="setFilter('Email',this)">📧 Email</button>
       <button class="filter-btn" data-filter="SMS" onclick="setFilter('SMS',this)">💬 SMS</button>
-      <select class="sort-select" id="sortSelect" onchange="renderTable()">
-        <option value="date-desc">Date ↓ Newest</option>
-        <option value="date-asc">Date ↑ Oldest</option>
-        <option value="rev-desc">Revenue ↓ High</option>
-        <option value="rev-asc">Revenue ↑ Low</option>
-        <option value="open-desc">Open Rate ↓</option>
-        <option value="click-desc">Click Rate ↓</option>
-      </select>
+      <select class="sort-select" id="sortSelect" onchange="renderTable()"><option value="date-desc">Date ↓ Newest</option><option value="date-asc">Date ↑ Oldest</option><option value="rev-desc">Revenue ↓</option><option value="rev-asc">Revenue ↑</option></select>
     </div>
   </div>
 
-  <div class="table-wrapper">
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th onclick="cycleSort('date')">Date <span class="sort-arrow">↕</span></th>
-            <th>Campaign Name</th>
-            <th>Channel</th>
-            <th onclick="cycleSort('sent')">Sent <span class="sort-arrow">↕</span></th>
-            <th onclick="cycleSort('open')">Open Rate <span class="sort-arrow">↕</span></th>
-            <th onclick="cycleSort('click')">Click Rate <span class="sort-arrow">↕</span></th>
-            <th onclick="cycleSort('rev')">Revenue (€) <span class="sort-arrow">↕</span></th>
-            <th>Orders</th>
-            <th>€/Order</th>
-            <th>Performance</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="footer">
-    Data source: Boho Blanket Omnisend — March 2026 campaign log.<br>
-    <strong>Open Rate</strong> = unique opens ÷ delivered. <strong>Click Rate</strong> = unique clicks ÷ delivered.<br>
-    SMS campaigns show N/A for open/click rates. Performance badge based on email open rate benchmark (≥75% = Strong, ≥65% = Good, ≥50% = Average, &lt;50% = Low).
-    <br><strong>Tip:</strong> Click column headers to sort. Use the search box to find campaigns by name.
-  </div>
+  <div class="table-wrapper"><div class="table-scroll"><table id="mainTable">
+    <thead><tr id="tableHeader"></tr></thead>
+    <tbody id="tableBody"></tbody>
+  </table></div></div>
+  <div class="footer"><strong>📊 Enhanced metrics:</strong> Conversion rate = orders ÷ sent; AOV = revenue ÷ orders; Revenue per subscriber = revenue ÷ sent. Horizontal scroll on table for full view.</div>
 </main>
 
 <script>
-  // ── DATA ──────────────────────────────────────────────────────────
   let campaigns = [];
   let filterChannel = 'all';
   let sortKey = 'date', sortDir = 'desc';
-  let nextId = 15;
+  let nextId = 100;
+  let editingId = null;
 
-  // ── HELPERS ──────────────────────────────────────────────────────
-  const fmt   = n  => n != null ? `€${Number(n).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})}` : '—';
-  const fmtN  = n  => n != null ? Number(n).toLocaleString() : '—';
-  const fmtPc = n  => n != null ? `${Number(n).toFixed(1)}%` : 'N/A';
-  const dateLabel = d => { const [y,m,day] = d.split('-'); const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]; return `${+day} ${mo} ${y}`; };
+  const fmtCurrency = n => n != null ? `€${Number(n).toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2})}` : '—';
+  const fmtNumber = n => n != null ? Number(n).toLocaleString() : '—';
+  const fmtPct = n => n != null ? `${Number(n).toFixed(1)}%` : 'N/A';
+  const dateLabel = d => { if(!d) return ''; const [y,m,day] = d.split('-'); const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]; return `${+day} ${mo} ${y}`; };
 
-  function perfBadge(c, open) {
-    if (c === 'SMS') return `<span class="perf-badge" style="background:#dce8f5;color:#2b5fa8">💬 SMS</span>`;
-    if (open == null) return '';
-    if (open >= 75) return `<span class="perf-badge perf-strong">⬆ Strong</span>`;
-    if (open >= 65) return `<span class="perf-badge perf-good">● Good</span>`;
-    if (open >= 40) return `<span class="perf-badge perf-avg">◑ Average</span>`;
-    return `<span class="perf-badge perf-low">▼ Low</span>`;
+  function computeMetrics(c) {
+    const sent = c.sent || 0;
+    const orders = c.orders || 0;
+    const rev = c.rev || 0;
+    const conversion = sent > 0 ? (orders / sent) * 100 : 0;
+    const aov = orders > 0 ? rev / orders : 0;
+    const revPerSub = sent > 0 ? rev / sent : 0;
+    return { conversion, aov, revPerSub };
   }
 
-  function barHtml(pct, type) {
-    if (pct == null) return '<span style="color:var(--text-muted);font-size:0.68rem">N/A</span>';
-    const w = Math.min(100, pct);
-    return `<div class="rate-bar"><div class="bar-bg bar-${type}"><div class="bar-fill" style="width:${w}%"></div></div><span class="rate-val">${fmtPc(pct)}</span></div>`;
-  }
-
-  // ── RENDER TABLE ─────────────────────────────────────────────────
   function renderTable() {
     const q = document.getElementById('searchInput').value.toLowerCase();
+    let data = campaigns.filter(c => (filterChannel === 'all' || c.channel === filterChannel) && (c.name.toLowerCase().includes(q) || c.date.includes(q)));
     const sv = document.getElementById('sortSelect').value;
     const [sk, sd] = sv.split('-');
+    data.sort((a,b) => { let va, vb; if(sk==='date') { va=a.date+a.time; vb=b.date+b.time; } else if(sk==='rev') { va=a.rev; vb=b.rev; } else if(sk==='sent'){ va=a.sent; vb=b.sent; } else { va=a.date; vb=b.date; } return sd==='desc' ? (vb>va?1:-1) : (va>vb?1:-1); });
+    document.getElementById('rowCount').innerHTML = `${data.length} campaign${data.length!==1?'s':''}`;
 
-    let data = campaigns.filter(c =>
-      (filterChannel === 'all' || c.channel === filterChannel) &&
-      (c.name.toLowerCase().includes(q) || c.date.includes(q) || c.channel.toLowerCase().includes(q))
-    );
-
-    data.sort((a,b) => {
-      let va, vb;
-      if (sk==='date')  { va=a.date+a.time; vb=b.date+b.time; }
-      else if (sk==='rev')   { va=a.rev; vb=b.rev; }
-      else if (sk==='open')  { va=a.openPct??-1; vb=b.openPct??-1; }
-      else if (sk==='click') { va=a.clickPct??-1; vb=b.clickPct??-1; }
-      else if (sk==='sent')  { va=a.sent; vb=b.sent; }
-      else { va=a.date; vb=b.date; }
-      return sd==='desc' ? (vb>va?1:-1) : (va>vb?1:-1);
-    });
-
-    document.getElementById('rowCount').textContent = `${data.length} campaign${data.length!==1?'s':''}`;
+    const theadRow = document.getElementById('tableHeader');
+    theadRow.innerHTML = `
+      <th onclick="cycleSort('date')">Date <span class="sort-arrow">↕</span></th>
+      <th>Campaign Name</th><th>Channel</th><th onclick="cycleSort('sent')">Sent <span class="sort-arrow">↕</span></th>
+      <th>Open Rate</th><th>Click Rate</th><th onclick="cycleSort('rev')">Revenue (€)<span class="sort-arrow">↕</span></th>
+      <th>Orders</th><th>€/Order</th><th>Conv. Rate</th><th>AOV (€)</th><th>Rev/Sub (€)</th><th>Perf</th><th></th>
+    `;
 
     const tbody = document.getElementById('tableBody');
-    if (!data.length) {
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="11">No campaigns match your filter.</td></tr>';
-      return;
-    }
+    if (!data.length) { tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:2rem">No campaigns</td></tr>'; updateCharts(data); updateKPIs(data); return; }
 
     tbody.innerHTML = data.map(c => {
+      const metrics = computeMetrics(c);
+      const aovVal = metrics.aov;
+      const revPerSub = metrics.revPerSub;
+      const convRate = metrics.conversion;
       const epo = c.orders ? (c.rev/c.orders).toFixed(2) : null;
+      const perfBadgeHtml = (c.channel === 'SMS') ? `<span class="perf-badge" style="background:#dce8f5;color:#2b5fa8">💬 SMS</span>` : (c.openPct != null ? (c.openPct>=75 ? '<span class="perf-badge perf-strong">⬆ Strong</span>' : (c.openPct>=65 ? '<span class="perf-badge perf-good">● Good</span>' : (c.openPct>=40 ? '<span class="perf-badge perf-avg">◑ Average</span>' : '<span class="perf-badge perf-low">▼ Low</span>'))) : '—');
+      const barOpen = (c.openPct != null) ? `<div class="rate-bar"><div class="bar-bg bar-open"><div class="bar-fill" style="width:${Math.min(100,c.openPct)}%"></div></div><span class="rate-val">${fmtPct(c.openPct)}</span></div>` : '<span style="color:var(--text-muted)">N/A</span>';
+      const barClick = (c.clickPct != null && c.channel==='Email') ? `<div class="rate-bar"><div class="bar-bg bar-click"><div class="bar-fill" style="width:${Math.min(100,c.clickPct)}%"></div></div><span class="rate-val">${fmtPct(c.clickPct)}</span></div>` : '<span style="color:var(--text-muted)">—</span>';
       return `<tr>
-        <td style="white-space:nowrap;font-weight:600;color:var(--bark)">${dateLabel(c.date)}<br><span style="font-size:0.65rem;font-weight:400;color:var(--text-muted)">${c.time||''}</span></td>
-        <td><div class="campaign-name" title="${c.name}">${c.name}</div><div style="font-size:0.62rem;color:var(--text-muted);margin-top:2px">${c.segment||''}</div></td>
+        <td style="white-space:nowrap;font-weight:600">${dateLabel(c.date)}<br><span style="font-size:0.65rem;color:var(--text-muted)">${c.time||''}</span></td>
+        <td><div class="campaign-name">${c.name}</div><div style="font-size:0.62rem;color:var(--text-muted)">${c.segment||''}</div></td>
         <td><span class="type-pill ${c.channel==='SMS'?'pill-sms':'pill-email'}">${c.channel==='SMS'?'💬':'📧'} ${c.channel}</span></td>
-        <td class="num">${fmtN(c.sent)}</td>
-        <td>${barHtml(c.openPct,'open')}</td>
-        <td>${barHtml(c.clickPct,'click')}</td>
-        <td class="rev">${fmt(c.rev)}</td>
-        <td class="num">${c.orders??'—'}</td>
+        <td class="num">${fmtNumber(c.sent)}</td>
+        <td>${barOpen}</td>
+        <td>${barClick}</td>
+        <td class="rev">${fmtCurrency(c.rev)}</td>
+        <td class="num">${c.orders ?? '—'}</td>
         <td class="num">${epo ? '€'+epo : '—'}</td>
-        <td>${perfBadge(c.channel, c.openPct)}</td>
-        <td style="white-space:nowrap">
-          <button class="edit-btn" onclick="editEntry(${c.id})" title="Edit">✎</button>
-          <button class="del-btn"  onclick="deleteEntry(${c.id})" title="Remove">✕</button>
-        </td>
+        <td class="num metric-badge" style="color:var(--moss)">${convRate > 0 ? fmtPct(convRate) : (c.orders ? fmtPct(convRate) : '—')}</td>
+        <td class="num metric-badge">${aovVal ? fmtCurrency(aovVal) : '—'}</td>
+        <td class="num metric-badge">${revPerSub ? fmtCurrency(revPerSub) : '—'}</td>
+        <td>${perfBadgeHtml}</td>
+        <td style="white-space:nowrap"><button class="edit-btn" onclick="editEntry(${c.id})">✎</button><button class="del-btn" onclick="deleteEntry(${c.id})">✕</button></td>
       </tr>`;
     }).join('');
-
     updateCharts(data);
     updateKPIs(data);
   }
 
-  // ── KPIs ─────────────────────────────────────────────────────────
   function updateKPIs(data) {
     const totalRev = data.reduce((s,c)=>s+c.rev,0);
     const totalOrders = data.reduce((s,c)=>s+(c.orders||0),0);
-    const emailOnly = data.filter(c=>c.channel==='Email' && c.openPct!=null);
-    const avgOpen = emailOnly.length ? emailOnly.reduce((s,c)=>s+c.openPct,0)/emailOnly.length : null;
-    const avgClick = emailOnly.length ? emailOnly.reduce((s,c)=>s+(c.clickPct||0),0)/emailOnly.length : null;
-    const bestRev = data.reduce((best,c)=>c.rev>best.rev?c:best, data[0]);
     const totalSent = data.reduce((s,c)=>s+c.sent,0);
+    const avgConv = totalSent ? (totalOrders / totalSent) * 100 : 0;
+    const avgAOV = totalOrders ? totalRev / totalOrders : 0;
+    const avgRPS = totalSent ? totalRev / totalSent : 0;
+    const emailData = data.filter(c=>c.channel==='Email' && c.openPct!=null);
+    const avgOpen = emailData.length ? emailData.reduce((s,c)=>s+c.openPct,0)/emailData.length : null;
 
     document.getElementById('kpiStrip').innerHTML = [
-      { icon:'💰', label:'Total Revenue',       val: fmt(totalRev),                    sub:`${totalOrders} orders` },
-      { icon:'📊', label:'Campaigns',           val: data.length,                       sub:`${data.filter(c=>c.channel==='Email').length} email · ${data.filter(c=>c.channel==='SMS').length} SMS` },
-      { icon:'📬', label:'Total Reach',         val: totalSent.toLocaleString(),        sub:'recipients sent' },
-      { icon:'👁', label:'Avg Open Rate',        val: avgOpen!=null?fmtPc(avgOpen):'—', sub:'email only' },
-      { icon:'🖱',  label:'Avg Click Rate',      val: avgClick!=null?fmtPc(avgClick):'—', sub:'email only' },
-    ].map((k,i) => `<div class="kpi-card" style="animation-delay:${0.04+i*0.04}s">
-      <span class="kpi-icon">${k.icon}</span>
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-val">${k.val}</div>
-      <div class="kpi-sub">${k.sub}</div>
-    </div>`).join('');
+      { icon:'💰', label:'Total Revenue', val: fmtCurrency(totalRev), sub:`${totalOrders} orders` },
+      { icon:'📧', label:'Avg Open Rate', val: avgOpen!=null?fmtPct(avgOpen):'—', sub:'email only' },
+      { icon:'🔄', label:'Avg Conversion', val: fmtPct(avgConv), sub:'orders / sent' },
+      { icon:'💶', label:'Avg AOV', val: fmtCurrency(avgAOV), sub:'revenue per order' },
+      { icon:'📬', label:'Rev per Sub', val: fmtCurrency(avgRPS), sub:'list value' }
+    ].map((k,i)=>`<div class="kpi-card"><span class="kpi-icon">${k.icon}</span><div class="kpi-label">${k.label}</div><div class="kpi-val">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
 
-    // header stats
     document.getElementById('headerStats').innerHTML = [
-      { label:'Total Revenue', val: fmt(totalRev), sub: `${totalOrders} orders` },
-      { label:'Top Campaign',  val: bestRev ? bestRev.name.slice(0,28)+(bestRev.name.length>28?'…':'') : '—', sub: bestRev ? fmt(bestRev.rev) : '' },
-      { label:'Avg Open Rate', val: avgOpen!=null?fmtPc(avgOpen):'—', sub:'email campaigns' },
-    ].map(s=>`<div class="hstat">
-      <div class="hstat-label">${s.label}</div>
-      <div class="hstat-val">${s.val}</div>
-      <div class="hstat-sub">${s.sub}</div>
-    </div>`).join('');
+      { label:'Total Revenue', val: fmtCurrency(totalRev), sub:`${totalOrders} orders` },
+      { label:'Avg Conversion', val: fmtPct(avgConv), sub:'CR%' },
+      { label:'Rev per Sub', val: fmtCurrency(avgRPS), sub:'campaign ROI' }
+    ].map(s=>`<div class="hstat"><div class="hstat-label">${s.label}</div><div class="hstat-val">${s.val}</div><div class="hstat-sub">${s.sub}</div></div>`).join('');
   }
 
-  // ── CHARTS ───────────────────────────────────────────────────────
   let revChart, engChart;
-  const PALETTE = { email:'#c07a5b', sms:'#3a6fa8', open:'#3d5e40', click:'#c07a5b' };
-
   function updateCharts(data) {
     const sorted = [...data].sort((a,b)=>(a.date+a.time)<(b.date+b.time)?-1:1);
     const labels = sorted.map(c=>{const d=c.date.split('-');return `${+d[2]} Mar`;});
     const revData = sorted.map(c=>c.rev);
-    const colors  = sorted.map(c=>c.channel==='SMS'?PALETTE.sms:PALETTE.email);
-
+    const colors = sorted.map(c=>c.channel==='SMS'?'#3a6fa8':'#c07a5b');
     const emailSorted = sorted.filter(c=>c.channel==='Email' && c.openPct!=null);
-    const eLabels  = emailSorted.map(c=>{const d=c.date.split('-');return `${+d[2]} Mar`;});
-    const openData = emailSorted.map(c=>c.openPct);
-    const clickData= emailSorted.map(c=>c.clickPct??0);
-
-    if (revChart) revChart.destroy();
-    if (engChart) engChart.destroy();
-
-    revChart = new Chart(document.getElementById('revChart'), {
-      type:'bar',
-      data:{ labels, datasets:[{ label:'Revenue (€)', data:revData, backgroundColor:colors, borderRadius:5, borderSkipped:false }]},
-      options:{
-        responsive:true, maintainAspectRatio:true,
-        plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>`€${c.raw.toFixed(2)}`}} },
-        scales:{
-          x:{ grid:{display:false}, ticks:{font:{size:10},maxRotation:45} },
-          y:{ grid:{color:'rgba(180,145,115,0.12)'}, ticks:{callback:v=>`€${v}`,font:{size:10}} }
-        }
-      }
-    });
-
-    engChart = new Chart(document.getElementById('engChart'), {
-      type:'line',
-      data:{
-        labels:eLabels,
-        datasets:[
-          { label:'Open Rate %', data:openData, borderColor:PALETTE.open, backgroundColor:'rgba(61,94,64,0.07)', fill:true, tension:0.35, pointRadius:3, pointBackgroundColor:PALETTE.open, pointBorderColor:'#fff', pointBorderWidth:1.5 },
-          { label:'Click Rate %', data:clickData, borderColor:PALETTE.click, backgroundColor:'transparent', tension:0.35, pointRadius:3, pointBackgroundColor:PALETTE.click, pointBorderColor:'#fff', pointBorderWidth:1.5 }
-        ]
-      },
-      options:{
-        responsive:true, maintainAspectRatio:true,
-        plugins:{ legend:{position:'top'}, tooltip:{mode:'index',intersect:false,callbacks:{label:c=>`${c.dataset.label}: ${c.raw.toFixed(1)}%`}} },
-        scales:{
-          x:{ grid:{display:false}, ticks:{font:{size:10},maxRotation:45} },
-          y:{ grid:{color:'rgba(180,145,115,0.12)'}, ticks:{callback:v=>`${v}%`,font:{size:10}}, min:0 }
-        }
-      }
-    });
+    if(revChart) revChart.destroy();
+    if(engChart) engChart.destroy();
+    revChart = new Chart(document.getElementById('revChart'), { type:'bar', data:{ labels, datasets:[{ label:'Revenue (€)', data:revData, backgroundColor:colors, borderRadius:5 }] }, options:{ responsive:true, maintainAspectRatio:true, plugins:{legend:{display:false}} } });
+    engChart = new Chart(document.getElementById('engChart'), { type:'line', data:{ labels:emailSorted.map(c=>{const d=c.date.split('-');return `${+d[2]} Mar`;}), datasets:[{ label:'Open Rate %', data:emailSorted.map(c=>c.openPct), borderColor:'#3d5e40', tension:0.35, pointRadius:3 },{ label:'Click Rate %', data:emailSorted.map(c=>c.clickPct??0), borderColor:'#c07a5b', tension:0.35 }] }, options:{ responsive:true } });
   }
 
-  // ── FORM ─────────────────────────────────────────────────────────
-  let editingId = null; // null = add mode, number = edit mode
-
-  function openForm() {
-    const panel = document.getElementById('formPanel');
-    const btn   = document.getElementById('toggleFormBtn');
-    panel.classList.add('visible');
-    btn.classList.add('open');
-    btn.querySelector('.btn-icon').textContent = '×';
-    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  function closeForm() {
-    const panel = document.getElementById('formPanel');
-    const btn   = document.getElementById('toggleFormBtn');
-    panel.classList.remove('visible', 'edit-mode');
-    btn.classList.remove('open');
-    btn.querySelector('.btn-icon').textContent = '＋';
-  }
-
-  function toggleForm() {
-    const panel = document.getElementById('formPanel');
-    if (panel.classList.contains('visible')) {
-      cancelForm();
-    } else {
-      setAddMode();
-      openForm();
-    }
-  }
-
-  function setAddMode() {
-    editingId = null;
-    document.getElementById('formTitle').textContent = '✏️ New Campaign Entry';
-    document.getElementById('formSubmitBtn').textContent = 'Add Campaign';
-    document.getElementById('editBanner').classList.remove('visible');
-    document.getElementById('formPanel').classList.remove('edit-mode');
-    clearForm();
-  }
-
-  function clearForm() {
-    ['f_name','f_open','f_opens_n','f_click','f_clicks_n','f_rev','f_orders','f_segment','f_sent','f_time'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('f_date').value = '';
-    document.getElementById('f_channel').value = 'Email';
-  }
-
-  function cancelForm() {
-    closeForm();
-    setAddMode();
-  }
-
-  function editEntry(id) {
-    const c = campaigns.find(x => x.id === id);
-    if (!c) return;
-
-    editingId = id;
-    document.getElementById('formTitle').textContent = '✎ Edit Campaign';
-    document.getElementById('formSubmitBtn').textContent = 'Save Changes';
-    document.getElementById('editBanner').classList.add('visible');
-    document.getElementById('formPanel').classList.add('edit-mode');
-
-    // Pre-fill fields
-    document.getElementById('f_name').value     = c.name ?? '';
-    document.getElementById('f_channel').value  = c.channel ?? 'Email';
-    document.getElementById('f_date').value     = c.date ?? '';
-    document.getElementById('f_time').value     = c.time ?? '';
-    document.getElementById('f_sent').value     = c.sent ?? '';
-    document.getElementById('f_open').value     = c.openPct ?? '';
-    document.getElementById('f_opens_n').value  = c.openN ?? '';
-    document.getElementById('f_click').value    = c.clickPct ?? '';
-    document.getElementById('f_clicks_n').value = c.clickN ?? '';
-    document.getElementById('f_rev').value      = c.rev ?? '';
-    document.getElementById('f_orders').value   = c.orders ?? '';
-    document.getElementById('f_segment').value  = c.segment ?? '';
-
-    openForm();
-  }
+  function setFilter(val, el) { filterChannel = val; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderTable(); }
+  function cycleSort(key) { const map={date:'date',rev:'rev',sent:'sent'}; sortKey=key; sortDir=sortDir==='desc'?'asc':'desc'; document.getElementById('sortSelect').value = (map[key]||'date')+'-'+sortDir; renderTable(); }
 
   function submitForm() {
-    if (editingId !== null) {
-      saveEdit();
+    const name = document.getElementById('f_name').value.trim();
+    const channel = document.getElementById('f_channel').value;
+    const date = document.getElementById('f_date').value;
+    const time = document.getElementById('f_time').value || '00:00';
+    const sent = parseFloat(document.getElementById('f_sent').value);
+    const rev = parseFloat(document.getElementById('f_rev').value);
+    const openPct = document.getElementById('f_open').value !== '' ? parseFloat(document.getElementById('f_open').value) : null;
+    const clickPct = document.getElementById('f_click').value !== '' ? parseFloat(document.getElementById('f_click').value) : null;
+    const orders = document.getElementById('f_orders').value !== '' ? parseInt(document.getElementById('f_orders').value) : null;
+    const segment = document.getElementById('f_segment').value.trim();
+    if(!name || !date || isNaN(sent) || isNaN(rev)) { alert('Name, Date, Recipients and Revenue required'); return; }
+    if(editingId !== null) {
+      const idx = campaigns.findIndex(c=>c.id===editingId);
+      if(idx!==-1) campaigns[idx] = { id:editingId, name, channel, date, time, sent, rev, openPct, clickPct, orders, segment };
+      showToast('✏️ Updated', 'success');
     } else {
-      addEntry();
+      campaigns.push({ id:nextId++, name, channel, date, time, sent, rev, openPct, clickPct, orders, segment });
+      showToast('✅ Added', 'success');
     }
+    cancelForm(); renderTable(); saveToStorage();
   }
+  function editEntry(id){ const c=campaigns.find(x=>x.id===id); if(!c) return; editingId=id; document.getElementById('f_name').value=c.name; document.getElementById('f_channel').value=c.channel; document.getElementById('f_date').value=c.date; document.getElementById('f_time').value=c.time||''; document.getElementById('f_sent').value=c.sent; document.getElementById('f_rev').value=c.rev; document.getElementById('f_open').value=c.openPct??''; document.getElementById('f_click').value=c.clickPct??''; document.getElementById('f_orders').value=c.orders??''; document.getElementById('f_segment').value=c.segment||''; document.getElementById('formTitle').innerHTML='✎ Edit Campaign'; document.getElementById('formSubmitBtn').innerHTML='Save Changes'; openForm(); }
+  function deleteEntry(id){ if(confirm('Delete campaign?')){ campaigns=campaigns.filter(c=>c.id!==id); renderTable(); saveToStorage(); showToast('🗑 Removed',''); } }
+  function cancelForm(){ editingId=null; closeForm(); clearFormFields(); document.getElementById('formTitle').innerHTML='✏️ New Campaign Entry'; document.getElementById('formSubmitBtn').innerHTML='Add Campaign'; }
+  function clearFormFields(){ ['f_name','f_date','f_time','f_sent','f_open','f_click','f_rev','f_orders','f_segment'].forEach(id=>document.getElementById(id).value=''); document.getElementById('f_channel').value='Email'; }
+  function openForm(){ document.getElementById('formPanel').classList.add('visible'); document.getElementById('toggleFormBtn').classList.add('open'); document.getElementById('toggleFormBtn').querySelector('.btn-icon').textContent='×'; }
+  function closeForm(){ document.getElementById('formPanel').classList.remove('visible'); document.getElementById('toggleFormBtn').classList.remove('open'); document.getElementById('toggleFormBtn').querySelector('.btn-icon').textContent='＋'; }
+  function toggleForm(){ const p=document.getElementById('formPanel'); p.classList.contains('visible')?cancelForm():openForm(); }
+  function exportJSON(){ const blob=new Blob([JSON.stringify({campaigns},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`boho-campaigns-${new Date().toISOString().slice(0,10)}.json`; a.click(); showToast('⬇ Exported','success'); }
+  function importJSON(e){ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=ev=>{ try{ const parsed=JSON.parse(ev.target.result); const data=parsed.campaigns||parsed; if(!Array.isArray(data))throw new Error('invalid'); campaigns=data.map((c,i)=>({...c,id:c.id??(i+1)})); nextId=Math.max(...campaigns.map(c=>c.id),0)+1; renderTable(); saveToStorage(); showToast(`Imported ${campaigns.length} campaigns`,'success'); }catch(e){ showToast('Import error','error'); } e.target.value=''; }; reader.readAsText(file); }
+  function saveToStorage(){ localStorage.setItem('boho_campaigns_v2',JSON.stringify({campaigns,nextId})); }
+  function loadFromStorage(){ const raw=localStorage.getItem('boho_campaigns_v2'); if(raw){ const p=JSON.parse(raw); campaigns=p.campaigns; nextId=p.nextId; return true; } return false; }
+  function showToast(msg,type){ const el=document.getElementById('toast'); el.textContent=msg; el.className='toast show'+(type?' '+type:''); setTimeout(()=>el.classList.remove('show'),2800); }
 
-  function readForm() {
-    return {
-      name:     document.getElementById('f_name').value.trim(),
-      channel:  document.getElementById('f_channel').value,
-      date:     document.getElementById('f_date').value,
-      time:     document.getElementById('f_time').value || '00:00',
-      sent:     parseFloat(document.getElementById('f_sent').value),
-      rev:      parseFloat(document.getElementById('f_rev').value),
-      openPct:  document.getElementById('f_open').value     !== '' ? parseFloat(document.getElementById('f_open').value)     : null,
-      openN:    document.getElementById('f_opens_n').value  !== '' ? parseInt(document.getElementById('f_opens_n').value)    : null,
-      clickPct: document.getElementById('f_click').value    !== '' ? parseFloat(document.getElementById('f_click').value)    : null,
-      clickN:   document.getElementById('f_clicks_n').value !== '' ? parseInt(document.getElementById('f_clicks_n').value)   : null,
-      orders:   document.getElementById('f_orders').value   !== '' ? parseInt(document.getElementById('f_orders').value)     : null,
-      segment:  document.getElementById('f_segment').value.trim(),
-    };
-  }
-
-  function addEntry() {
-    const f = readForm();
-    if (!f.name || !f.date || isNaN(f.sent) || isNaN(f.rev)) {
-      alert('Please fill in required fields: Name, Date, Recipients, and Revenue.');
-      return;
-    }
-    campaigns.push({ id: nextId++, ...f });
-    cancelForm();
-    renderTable();
-    saveToStorage();
-    showToast('✅ Campaign saved!', 'success');
-  }
-
-  function saveEdit() {
-    const f = readForm();
-    if (!f.name || !f.date || isNaN(f.sent) || isNaN(f.rev)) {
-      alert('Please fill in required fields: Name, Date, Recipients, and Revenue.');
-      return;
-    }
-    const idx = campaigns.findIndex(c => c.id === editingId);
-    if (idx === -1) return;
-    campaigns[idx] = { id: editingId, ...f };
-    cancelForm();
-    renderTable();
-    saveToStorage();
-    showToast('✏️ Campaign updated!', 'success');
-  }
-
-  function deleteEntry(id) {
-    if (!confirm('Remove this campaign from the log?')) return;
-    campaigns = campaigns.filter(c=>c.id!==id);
-    renderTable();
-    saveToStorage();
-    showToast('🗑 Campaign removed', '');
-  }
-
-  // ── FILTER / SORT ─────────────────────────────────────────────────
-  function setFilter(val, el) {
-    filterChannel = val;
-    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-    el.classList.add('active');
-    renderTable();
-  }
-
-  function cycleSort(key) {
-    if (sortKey === key) sortDir = sortDir==='desc'?'asc':'desc';
-    else { sortKey=key; sortDir='desc'; }
-    const map = {date:'date',rev:'rev',open:'open',click:'click',sent:'sent'};
-    document.getElementById('sortSelect').value = (map[key]||'date')+'-'+sortDir;
-    renderTable();
-  }
-
-  // ── JSON EXPORT / IMPORT ─────────────────────────────────────────
-  function exportJSON() {
-    const payload = {
-      _meta: {
-        source: 'Boho Blanket · Campaign Dashboard',
-        exported: new Date().toISOString(),
-        version: '1.0',
-        count: campaigns.length
-      },
-      campaigns
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    const date = new Date().toISOString().slice(0,10);
-    a.href = url;
-    a.download = `boho-blanket-campaigns-${date}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('⬇ Exported ' + campaigns.length + ' campaigns as JSON', 'success');
-  }
-
-  function importJSON(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        const parsed = JSON.parse(ev.target.result);
-        // Accept either { campaigns: [...] } or a bare array
-        const data = Array.isArray(parsed) ? parsed : (parsed.campaigns || null);
-        if (!data || !Array.isArray(data)) throw new Error('Invalid format');
-
-        // Validate each entry has minimum required fields
-        data.forEach((c, i) => {
-          if (!c.name || !c.date || c.rev == null) throw new Error(`Row ${i+1} missing required fields (name, date, rev)`);
-        });
-
-        if (!confirm(`Import ${data.length} campaign(s)? This will REPLACE your current ${campaigns.length} campaign(s).`)) {
-          e.target.value = ''; return;
-        }
-
-        campaigns = data.map((c, i) => ({ ...c, id: c.id ?? (i + 1) }));
-        nextId = Math.max(...campaigns.map(c => c.id), 0) + 1;
-        renderTable();
-        saveToStorage();
-        showToast('✅ Imported ' + campaigns.length + ' campaigns', 'success');
-      } catch (err) {
-        showToast('❌ Import failed: ' + err.message, 'error');
-      }
-      e.target.value = ''; // reset so same file can be re-imported
-    };
-    reader.readAsText(file);
-  }
-
-  // ── TOAST ────────────────────────────────────────────────────────
-  let toastTimer;
-  function showToast(msg, type = '') {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.className = 'toast show' + (type ? ' ' + type : '');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { el.classList.remove('show'); }, 3000);
-  }
-
-  // ── LOCAL STORAGE ────────────────────────────────────────────────
-  const LS_KEY = 'boho_campaigns_v1';
-
-  function saveToStorage() {
-    try {
-      localStorage.setItem(LS_KEY, JSON.stringify({ campaigns, nextId }));
-    } catch(e) { /* storage full or unavailable */ }
-  }
-
-  function loadFromStorage() {
-    try {
-      const raw = localStorage.getItem(LS_KEY);
-      if (!raw) return false;
-      const parsed = JSON.parse(raw);
-      if (parsed.campaigns && Array.isArray(parsed.campaigns)) {
-        campaigns = parsed.campaigns;
-        nextId = parsed.nextId ?? (Math.max(...campaigns.map(c=>c.id), 0) + 1);
-        return true;
-      }
-    } catch(e) {}
-    return false;
-  }
-
-  // ── INIT ──────────────────────────────────────────────────────────
-  Chart.defaults.font.family = "'DM Sans', sans-serif";
-  Chart.defaults.color = '#7a6555';
-  Chart.defaults.plugins.legend.labels.boxWidth = 10;
-  Chart.defaults.plugins.legend.labels.padding  = 14;
-  Chart.defaults.plugins.legend.labels.font     = { size: 11 };
-
-  // Priority: 1) localStorage (has user edits), 2) data.json (clean seed), 3) empty
-  const hadSaved = loadFromStorage();
-  if (hadSaved) {
-    renderTable();
-    showToast(`📂 Loaded ${campaigns.length} saved campaigns`, 'success');
-  } else {
-    fetch('data.json')
-      .then(r => r.json())
-      .then(d => {
-        campaigns = d.campaigns.map((c,i) => ({ ...c, id: c.id ?? (i+1) }));
-        nextId = Math.max(...campaigns.map(c=>c.id), 0) + 1;
-        // also save monthly to localStorage for homepage
-        try { localStorage.setItem('boho_monthly_v1', JSON.stringify(d.monthly)); } catch(e) {}
-        renderTable();
-      })
-      .catch(() => renderTable()); // empty table if both fail
-  }
+  fetch('data.json').then(r=>r.json()).then(d=>{ if(d.campaigns && !loadFromStorage()){ campaigns=d.campaigns.map((c,i)=>({...c,id:c.id??(i+1)})); nextId=Math.max(...campaigns.map(c=>c.id),0)+1; renderTable(); saveToStorage(); } }).catch(()=>{ if(!loadFromStorage()) campaigns=[]; renderTable(); });
 </script>
-
-<!-- ── FLOATING HOME BUTTON ── -->
-<style>
-  .home-fab {
-    position: fixed;
-    top: 1.75rem;
-    right: 1.75rem;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .home-fab-btn {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #2c1e14, #5c3d28);
-    box-shadow: 0 4px 18px rgba(44,30,20,0.35), 0 1px 4px rgba(44,30,20,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.15rem;
-    transition: transform 0.22s, box-shadow 0.22s, background 0.22s;
-    border: 1.5px solid rgba(232,221,208,0.15);
-  }
-  .home-fab:hover .home-fab-btn {
-    transform: translateY(-3px) scale(1.07);
-    box-shadow: 0 8px 28px rgba(44,30,20,0.4), 0 2px 6px rgba(44,30,20,0.2);
-    background: linear-gradient(135deg, #3e2718, #7a5236);
-  }
-  .home-fab-label {
-    font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: #5c3d28;
-    background: rgba(255,252,247,0.92);
-    padding: 0.18rem 0.55rem;
-    border-radius: 100px;
-    border: 1px solid rgba(180,145,115,0.25);
-    box-shadow: 0 2px 8px rgba(44,30,20,0.08);
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.2s, transform 0.2s;
-    pointer-events: none;
-  }
-  .home-fab:hover .home-fab-label {
-    opacity: 1;
-    transform: translateY(0);
-  }
-</style>
-<a class="home-fab" href="/index.html" title="Back to Home">
-  <div class="home-fab-btn">🏚️</div>
-  <span class="home-fab-label">Home</span>
-</a>
+<a href="/index.html" style="position:fixed;top:1.5rem;right:1.5rem;background:#2c1e14;border-radius:40px;padding:0.5rem 1rem;font-size:0.7rem;color:white;text-decoration:none;font-weight:600;z-index:999">🏠 Home</a>
 </body>
 </html>
