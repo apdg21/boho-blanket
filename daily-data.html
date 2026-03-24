@@ -658,6 +658,99 @@
         transform: translateY(0);
       }
     }
+    /* ── ADD SECTION BUTTONS ── */
+.add-section {
+  margin-bottom: 2rem;
+}
+
+.add-section .add-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.add-section .data-btns {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-left: 0;
+}
+
+.add-toggle-btn {
+  background: var(--espresso);
+  color: var(--warm-white);
+  border: none;
+  border-radius: 100px;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.add-toggle-btn:hover {
+  background: var(--bark);
+  transform: translateY(-1px);
+}
+
+.btn-export, 
+.btn-import-label {
+  background: var(--card-bg);
+  color: var(--bark);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.btn-export {
+  background: var(--moss);
+  color: white;
+  border: none;
+}
+
+.btn-export:hover {
+  background: var(--sage);
+  transform: translateY(-1px);
+}
+
+.btn-import-label:hover {
+  background: var(--sand);
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .add-section .add-toggle {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .add-section .data-btns {
+    justify-content: flex-start;
+  }
+  
+  .add-toggle-btn,
+  .btn-export,
+  .btn-import-label {
+    justify-content: center;
+  }
+}
   </style>
 </head>
 <body>
@@ -686,11 +779,16 @@
   </div>
 
   <div class="add-section">
-    <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.5rem">
-      <button class="add-toggle-btn" id="toggleFormBtn" onclick="toggleForm()"><span class="btn-icon">＋</span> Add New Campaign</button>
-      <div><button class="add-toggle-btn" style="background:var(--moss)" onclick="exportJSON()">⬇ Export JSON</button>
-      <label class="add-toggle-btn" style="background:var(--bark);margin-left:6px" for="importFileInput">⬆ Import JSON</label></div>
+  <div class="add-toggle">
+    <button class="add-toggle-btn" id="toggleFormBtn" onclick="toggleForm()">
+      <span class="btn-icon">＋</span> Add New Campaign
+    </button>
+    <div class="data-btns">
+      <button class="btn-export" onclick="exportJSON()">⬇ Export JSON</button>
+      <label class="btn-import-label" for="importFileInput">⬆ Import JSON</label>
     </div>
+  </div>
+
     <div class="form-panel" id="formPanel"><div class="form-title" id="formTitle">✏️ Campaign Entry</div><div class="edit-mode-banner" id="editBanner" style="display:none">✎ Editing mode</div>
       <div class="form-grid">
         <div class="form-group full"><label>Campaign Name *</label><input class="form-input" id="f_name"></div>
