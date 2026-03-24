@@ -1,98 +1,633 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campaign JSON Converter</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; background: #eceff1; color: #37474f; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        textarea { width: 100%; height: 180px; margin-bottom: 15px; border: 1px solid #cfd8dc; border-radius: 6px; padding: 12px; font-family: monospace; box-sizing: border-box; resize: vertical; }
-        .controls { display: flex; gap: 10px; margin-bottom: 20px; }
-        button { background: #2196f3; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        button:hover { background: #1976d2; }
-        button.secondary { background: #546e7a; }
-        button.secondary:hover { background: #455a64; }
-        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.6; border-left: 5px solid #2196f3; }
-        h1 { margin-top: 0; font-size: 24px; color: #1a237e; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>Campaign JSON Converter</h1>
-    <textarea id="inputData" placeholder="Paste your Google Sheets data here..."></textarea>
-    
-    <div class="controls">
-        <button onclick="convertData()">Convert to JSON</button>
-        <button class="secondary" onclick="copyToClipboard()">Copy JSON</button>
-    </div>
-
-    <pre id="outputJson">{ "campaigns": [] }</pre>
-</div>
-
-<script>
-function convertData() {
-    const rawText = document.getElementById('inputData').value.trim();
-    const lines = rawText.split('\n').map(line => line.trim());
-    const campaigns = [];
-    let idCounter = 1;
-
-    const cleanNum = (str) => {
-        if (!str || str === "null") return "null";
-        const cleaned = str.replace(/[^-0-9.]/g, '');
-        return cleaned === "" ? 0 : parseFloat(cleaned);
-    };
-
-    for (let i = 0; i < lines.length; i++) {
-        // Look for the "Sent" marker to identify a block
-        if (lines[i+3] === "Sent" || (lines[i+4] && lines[i+4].includes(" at "))) {
-            const dateLine = lines[i+4] || "";
-            const [datePart, timePart] = dateLine.split(' at ');
-            
-            let formattedDate = "";
-            if (datePart) {
-                const d = new Date(datePart);
-                formattedDate = d.getFullYear() + '-' + 
-                                String(d.getMonth() + 1).padStart(2, '0') + '-' + 
-                                String(d.getDate()).padStart(2, '0');
-            }
-
-            // Create the object
-            const obj = {
-                "id": idCounter++,
-                "date": formattedDate,
-                "time": timePart ? timePart.replace(/\s+/g, ' ') : "12:00 PM",
-                "name": lines[i],
-                "channel": lines[i+2],
-                "sent": cleanNum(lines[i+5]),
-                "openPct": cleanNum(lines[i+6]),
-                "openN": cleanNum(lines[i+8]), // Based on your image A9
-                "clickPct": cleanNum(lines[i+9]),
-                "clickN": cleanNum(lines[i+11]),
-                "rev": cleanNum(lines[i+12]),
-                "orders": cleanNum(lines[i+14]),
-                "segment": lines[i+1]
-            };
-            
-            // Push as a stringified single line
-            campaigns.push(JSON.stringify(obj));
-            i += 15; // Move to next potential block
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boho Blanket · Campaign Converter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f7f2ea;
+      --warm-white: #fdfaf5;
+      --sand: #e8ddd0;
+      --clay: #c07a5b;
+      --terracotta: #b85c38;
+      --espresso: #2c1e14;
+      --bark: #5c3d28;
+      --moss: #3d5e40;
+      --sage: #7a9e7e;
+      --gold: #c9973a;
+      --text-primary: #1e1510;
+      --text-secondary: #7a6555;
+      --text-muted: #a8937f;
+      --border: rgba(180,145,115,0.2);
+      --card-bg: rgba(255,252,247,0.97);
+      --shadow: 0 2px 20px rgba(44,30,20,0.06);
+      --radius: 20px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--cream);
+      background-image:
+        radial-gradient(ellipse 70% 50% at 8% 0%, rgba(192,122,91,0.09) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 60% at 92% 100%, rgba(61,94,64,0.08) 0%, transparent 60%);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 2rem 1.25rem 4rem;
     }
 
-    // Wrap the one-liners into the final format
-    const finalOutput = `"campaigns": [\n  ` + campaigns.join(',\n  ') + `\n]`;
-    document.getElementById('outputJson').textContent = finalOutput;
-}
+    .page { max-width: 960px; margin: 0 auto; }
 
-function copyToClipboard() {
-    const text = document.getElementById('outputJson').textContent;
-    navigator.clipboard.writeText(text).then(() => {
-        alert("JSON copied to clipboard!");
+    /* header */
+    .page-header {
+      background: linear-gradient(135deg, var(--espresso), var(--bark));
+      border-radius: var(--radius);
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(192,122,91,0.12); pointer-events: none;
+    }
+    .page-eyebrow {
+      font-size: 0.6rem; letter-spacing: 2.5px; text-transform: uppercase;
+      color: rgba(232,221,208,0.45); font-weight: 500; margin-bottom: 0.35rem;
+    }
+    .page-title {
+      font-family: 'Fraunces', serif; font-weight: 700;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #fdfaf5; letter-spacing: -0.3px; line-height: 1.15;
+    }
+    .page-title span { color: var(--clay); }
+    .page-sub {
+      font-size: 0.78rem; color: rgba(232,221,208,0.55);
+      margin-top: 0.4rem; position: relative; z-index: 1;
+    }
+
+    /* cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.2rem;
+    }
+    .card-title {
+      font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 0.25rem;
+    }
+    .card-sub {
+      font-size: 0.7rem; color: var(--text-muted); margin-bottom: 1.1rem; line-height: 1.55;
+    }
+
+    /* instructions */
+    .steps {
+      display: flex; flex-direction: column; gap: 0.55rem;
+      margin-bottom: 1.2rem;
+    }
+    .step {
+      display: flex; align-items: flex-start; gap: 0.7rem;
+      font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5;
+    }
+    .step-num {
+      min-width: 20px; height: 20px;
+      background: var(--espresso); color: var(--warm-white);
+      border-radius: 50%; font-size: 0.6rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step code {
+      background: var(--sand); padding: 0.1rem 0.45rem;
+      border-radius: 5px; font-size: 0.72rem; font-family: 'Consolas', monospace;
+      color: var(--bark);
+    }
+
+    /* column map */
+    .col-map {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.5rem; margin-bottom: 1.2rem;
+    }
+    .col-item {
+      background: var(--sand); border-radius: 10px;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.68rem; line-height: 1.4;
+    }
+    .col-item strong { display: block; color: var(--bark); font-weight: 700; font-size: 0.63rem; letter-spacing: 0.5px; }
+    .col-item span { color: var(--text-secondary); }
+
+    /* textarea */
+    textarea {
+      width: 100%; height: 200px;
+      border: 1.5px solid var(--border);
+      background: var(--warm-white);
+      border-radius: 12px; padding: 1rem;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.75rem; color: var(--text-primary);
+      resize: vertical; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    textarea:focus { border-color: var(--clay); box-shadow: 0 0 0 3px rgba(192,122,91,0.12); }
+    textarea::placeholder { color: var(--text-muted); }
+
+    /* start id row */
+    .options-row {
+      display: flex; gap: 1rem; margin-top: 0.85rem; flex-wrap: wrap; align-items: flex-end;
+    }
+    .opt-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .opt-label {
+      font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase;
+      font-weight: 700; color: var(--text-muted);
+    }
+    .opt-input {
+      border: 1.5px solid var(--border); background: var(--warm-white);
+      border-radius: 10px; padding: 0.45rem 0.75rem;
+      font-size: 0.78rem; font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary); outline: none; width: 100px;
+      transition: border-color 0.15s;
+    }
+    .opt-input:focus { border-color: var(--clay); }
+
+    /* buttons */
+    .btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+    .btn {
+      border: none; border-radius: 100px; padding: 0.6rem 1.3rem;
+      font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; transition: opacity 0.15s, transform 0.15s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary { background: linear-gradient(135deg, var(--clay), var(--terracotta)); color: white; }
+    .btn-secondary { background: var(--espresso); color: var(--warm-white); }
+    .btn-ghost { background: var(--card-bg); color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-green { background: linear-gradient(135deg, var(--moss), #2d4a30); color: white; }
+
+    /* output */
+    .output-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .output-label {
+      font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+      font-weight: 700; color: var(--text-muted);
+    }
+    .output-badge {
+      font-size: 0.65rem; font-weight: 600; padding: 0.2rem 0.65rem;
+      border-radius: 100px; background: var(--sand); color: var(--text-secondary);
+    }
+    .output-badge.success { background: #d6ede0; color: #1a5c38; }
+    .output-badge.error   { background: #fde0d5; color: #a33820; }
+
+    pre {
+      background: var(--espresso);
+      color: #e8ddd0;
+      padding: 1.2rem 1.3rem;
+      border-radius: 14px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.73rem;
+      line-height: 1.65;
+      border-left: 4px solid var(--clay);
+      max-height: 480px;
+      overflow-y: auto;
+      white-space: pre;
+    }
+    /* syntax-like colouring */
+    .json-key   { color: #7ec8e3; }
+    .json-str   { color: #c8e8a2; }
+    .json-num   { color: #f5c87a; }
+    .json-null  { color: #d08080; }
+    .json-bool  { color: #d08080; }
+
+    /* validation panel */
+    .validation { margin-top: 1rem; }
+    .val-item {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      font-size: 0.73rem; color: var(--text-secondary);
+      padding: 0.35rem 0; border-bottom: 1px solid rgba(180,145,115,0.1);
+      line-height: 1.4;
+    }
+    .val-item:last-child { border-bottom: none; }
+    .val-ok   { color: var(--moss); font-weight: 700; }
+    .val-warn { color: var(--gold); font-weight: 700; }
+    .val-err  { color: var(--terracotta); font-weight: 700; }
+
+    /* toast */
+    .toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;
+      background: var(--espresso); color: var(--warm-white);
+      padding: 0.65rem 1.2rem; border-radius: 100px;
+      font-size: 0.76rem; font-weight: 500;
+      box-shadow: 0 6px 24px rgba(44,30,20,0.25);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.22s, transform 0.22s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--moss); }
+    .toast.error   { background: var(--terracotta); }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(12px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .card { animation: fadeUp 0.4s ease both; }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.1s; }
+    .card:nth-child(3) { animation-delay: 0.15s; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-eyebrow">Boho Blanket · Tools</div>
+    <h1 class="page-title">Campaign JSON <span>Converter</span></h1>
+    <p class="page-sub">Paste raw Omnisend campaign data → get clean JSON ready for data.json</p>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div class="card">
+    <div class="card-title">How to use</div>
+    <div class="card-sub">Copy your campaign data from Omnisend and paste it below. Each campaign block should follow this column order.</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><span>In Omnisend, open your Campaigns report and select all rows for the campaigns you want to add.</span></div>
+      <div class="step"><div class="step-num">2</div><span>Copy (<code>Ctrl+C</code>) and paste into the text area below. Tab-separated or line-by-line both work.</span></div>
+      <div class="step"><div class="step-num">3</div><span>Set the <strong>Starting ID</strong> to continue from your last campaign (e.g. if you have 14, set it to 15).</span></div>
+      <div class="step"><div class="step-num">4</div><span>Click <strong>Convert</strong> — review the output, then <strong>Copy JSON</strong> and paste the new campaign objects into your <code>data.json</code> campaigns array.</span></div>
+    </div>
+
+    <div class="card-title" style="margin-bottom:0.5rem">Expected column order per campaign block</div>
+    <div class="col-map">
+      <div class="col-item"><strong>Row 1</strong><span>Campaign Name</span></div>
+      <div class="col-item"><strong>Row 2</strong><span>Segment / Audience</span></div>
+      <div class="col-item"><strong>Row 3</strong><span>Channel (Email / SMS)</span></div>
+      <div class="col-item"><strong>Row 4</strong><span>"Sent" (status label)</span></div>
+      <div class="col-item"><strong>Row 5</strong><span>Date & time (e.g. Mar 21, 2026 at 8:00 AM)</span></div>
+      <div class="col-item"><strong>Row 6</strong><span>Recipients sent (number)</span></div>
+      <div class="col-item"><strong>Row 7</strong><span>Open rate % (or N/A for SMS)</span></div>
+      <div class="col-item"><strong>Row 8</strong><span>Open count (number)</span></div>
+      <div class="col-item"><strong>Row 9</strong><span>Click rate %</span></div>
+      <div class="col-item"><strong>Row 10</strong><span>Click count (number)</span></div>
+      <div class="col-item"><strong>Row 11</strong><span>Revenue (€)</span></div>
+      <div class="col-item"><strong>Row 12</strong><span>Orders (number)</span></div>
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="card">
+    <div class="card-title">Paste Campaign Data</div>
+    <div class="card-sub">One or multiple campaigns — each block is 12 rows. Blank lines between campaigns are ignored.</div>
+    <textarea id="inputData" placeholder="Paste Omnisend campaign data here...
+
+Example:
+Spring Palette Reveal
+Sent to Active & Engaged, VIP...
+Email
+Sent
+Mar 5, 2026 at 9:00 AM
+8,360
+80.4%
+(6,723)
+2.3%
+(198)
+€370.10
+(21)"></textarea>
+
+    <div class="options-row">
+      <div class="opt-group">
+        <div class="opt-label">Starting ID</div>
+        <input class="opt-input" type="number" id="startId" value="15" min="1">
+      </div>
+      <div class="opt-group">
+        <div class="opt-label">Default Channel</div>
+        <select class="opt-input" id="defaultChannel" style="width:120px">
+          <option value="Email">Email</option>
+          <option value="SMS">SMS</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="convertData()">⚡ Convert</button>
+      <button class="btn btn-ghost" onclick="clearAll()">✕ Clear</button>
+      <button class="btn btn-ghost" onclick="loadExample()">📋 Load Example</button>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="card">
+    <div class="output-header">
+      <div class="output-label">JSON Output</div>
+      <div class="output-badge" id="statusBadge">Waiting for input</div>
+    </div>
+    <pre id="outputJson">// Output will appear here after conversion</pre>
+
+    <div class="validation" id="validationPanel"></div>
+
+    <div class="btn-row" style="margin-top:1rem">
+      <button class="btn btn-secondary" onclick="copyJSON()">📋 Copy campaign objects</button>
+      <button class="btn btn-green" onclick="copyFullPatch()">⬇ Copy as data.json patch</button>
+    </div>
+    <div style="font-size:0.68rem;color:var(--text-muted);margin-top:0.6rem;line-height:1.6">
+      <strong>Copy campaign objects</strong> — copies just the <code>[{...},{...}]</code> array to paste into your existing data.json campaigns array.<br>
+      <strong>Copy as data.json patch</strong> — copies the full wrapper JSON (with _meta + campaigns) ready to merge.
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── HELPERS ──────────────────────────────────────────────────────
+  let lastConverted = [];
+
+  const showToast = (msg, type='') => {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (type ? ' '+type : '');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  };
+
+  const cleanNum = str => {
+    if (!str || str.trim() === '' || str.trim().toLowerCase() === 'n/a' || str.trim() === 'null') return null;
+    const c = str.replace(/[^0-9.\-]/g, '');
+    if (c === '') return null;
+    return parseFloat(c);
+  };
+
+  const cleanInt = str => {
+    const n = cleanNum(str);
+    return n === null ? null : Math.round(n);
+  };
+
+  // Convert "Mar 21, 2026 at 8:00 AM" → { date: "2026-03-21", time: "08:00" }
+  const parseDateTime = str => {
+    if (!str) return { date: '', time: '00:00' };
+    const atIdx = str.indexOf(' at ');
+    const datePart = atIdx > -1 ? str.slice(0, atIdx).trim() : str.trim();
+    const timePart = atIdx > -1 ? str.slice(atIdx + 4).trim() : '';
+
+    // Parse date
+    let date = '';
+    try {
+      const d = new Date(datePart + ' 2000'); // add year fallback
+      if (isNaN(d)) throw new Error();
+      const d2 = new Date(datePart);
+      date = isNaN(d2)
+        ? ''
+        : d2.getFullYear() + '-' +
+          String(d2.getMonth() + 1).padStart(2, '0') + '-' +
+          String(d2.getDate()).padStart(2, '0');
+    } catch(e) { date = ''; }
+
+    // Parse time → 24h "HH:MM"
+    let time = '00:00';
+    if (timePart) {
+      const m = timePart.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+      if (m) {
+        let h = parseInt(m[1]);
+        const min = m[2];
+        const ampm = (m[3] || '').toUpperCase();
+        if (ampm === 'PM' && h < 12) h += 12;
+        if (ampm === 'AM' && h === 12) h = 0;
+        time = String(h).padStart(2, '0') + ':' + min;
+      }
+    }
+    return { date, time };
+  };
+
+  // Shorten segment string for display
+  const shortenSegment = str => {
+    if (!str) return '';
+    // Remove "Sent to" prefix if present
+    const cleaned = str.replace(/^Sent to\s*/i, '').trim();
+    // If it contains "Excluding:", just take the "Sent to" part
+    const excIdx = cleaned.indexOf('. Excluding');
+    return excIdx > -1 ? cleaned.slice(0, excIdx).trim() : cleaned;
+  };
+
+  // Detect channel from text
+  const detectChannel = str => {
+    if (!str) return null;
+    const s = str.trim().toLowerCase();
+    if (s === 'email') return 'Email';
+    if (s === 'sms') return 'SMS';
+    if (s === 'push') return 'Push';
+    return null;
+  };
+
+  // ── SYNTAX HIGHLIGHT ─────────────────────────────────────────────
+  const highlight = json => {
+    return json
+      .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")\s*:/g, '<span class="json-key">$1</span>:')
+      .replace(/:\s*("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")/g, ': <span class="json-str">$1</span>')
+      .replace(/:\s*(-?\d+\.?\d*)/g, ': <span class="json-num">$1</span>')
+      .replace(/:\s*(null)/g, ': <span class="json-null">$1</span>')
+      .replace(/:\s*(true|false)/g, ': <span class="json-bool">$1</span>');
+  };
+
+  // ── CONVERT ──────────────────────────────────────────────────────
+  function convertData() {
+    const raw = document.getElementById('inputData').value;
+    const startId = parseInt(document.getElementById('startId').value) || 1;
+    const defaultChannel = document.getElementById('defaultChannel').value;
+
+    // Split into non-empty lines
+    const lines = raw.split('\n').map(l => l.trim()).filter(l => l !== '');
+
+    if (!lines.length) {
+      showToast('⚠️ Nothing to convert — paste your data first.', 'error');
+      return;
+    }
+
+    const campaigns = [];
+    const warnings  = [];
+    let id = startId;
+    let i = 0;
+
+    while (i < lines.length) {
+      // Find a "Sent" status line to anchor a block
+      // Pattern: name, segment, channel, "Sent", "Date at Time", sent#, openPct, openN, clickPct, clickN, rev, orders
+      // Look ahead for "Sent" within next 5 lines
+      let sentIdx = -1;
+      for (let j = i; j < Math.min(i + 6, lines.length); j++) {
+        if (lines[j].trim() === 'Sent') { sentIdx = j; break; }
+      }
+      if (sentIdx === -1) { i++; continue; }
+
+      // Derive positions relative to "Sent"
+      const sentLine   = sentIdx;
+      const dateLine   = sentLine + 1;  // "Mar 21, 2026 at 8:00 AM"
+      const sentNumLine= sentLine + 2;  // recipients
+      const openPctLine= sentLine + 3;  // open rate or N/A
+      const openNLine  = sentLine + 4;  // open count
+      const clickPctLine= sentLine + 5; // click rate
+      const clickNLine = sentLine + 6;  // click count
+      const revLine    = sentLine + 7;  // revenue
+      const ordersLine = sentLine + 8;  // orders
+
+      // Items before "Sent" (working backwards)
+      const channelLine  = sentLine - 1;
+      const segmentLine  = sentLine - 2;
+      const nameLine     = sentLine - 3;
+
+      const name    = nameLine >= 0 ? lines[nameLine] : '';
+      const segRaw  = segmentLine >= 0 ? lines[segmentLine] : '';
+      const chanRaw = channelLine >= 0 ? lines[channelLine] : '';
+
+      const segment = shortenSegment(segRaw);
+      const channel = detectChannel(chanRaw) || defaultChannel;
+      const isSMS   = channel === 'SMS';
+
+      const { date, time } = parseDateTime(lines[dateLine] || '');
+      const sent     = cleanInt(lines[sentNumLine]);
+      const openPct  = isSMS ? null : cleanNum(lines[openPctLine]);
+      const openN    = isSMS ? null : cleanInt(lines[openNLine]);
+      const clickPct = cleanNum(lines[clickPctLine]);
+      const clickN   = cleanInt(lines[clickNLine]);
+      const rev      = cleanNum(lines[revLine]);
+      const orders   = cleanInt(lines[ordersLine]);
+
+      if (!name) { warnings.push(`Block at line ${i+1}: could not detect campaign name — skipped.`); i = ordersLine + 1; continue; }
+      if (!date) warnings.push(`"${name}": could not parse date from "${lines[dateLine] || ''}"`);
+      if (rev === null) warnings.push(`"${name}": revenue is null — check row ${revLine + 1}`);
+
+      campaigns.push({ id, date, time, name, channel, sent, openPct, openN, clickPct, clickN, rev, orders, segment });
+      id++;
+      i = ordersLine + 1;
+    }
+
+    lastConverted = campaigns;
+
+    // Render
+    if (!campaigns.length) {
+      document.getElementById('outputJson').innerHTML = '// No campaigns detected.\n// Check your data format — see the column map above.';
+      document.getElementById('statusBadge').className = 'output-badge error';
+      document.getElementById('statusBadge').textContent = '0 campaigns';
+      renderValidation(warnings, campaigns);
+      showToast('❌ No campaigns detected', 'error');
+      return;
+    }
+
+    // Pretty print each campaign on one line (matching data.json style)
+    const lines2 = campaigns.map((c, idx) => {
+      const obj = JSON.stringify(c);
+      return '    ' + obj;
     });
-}
-</script>
+    const prettyOutput = '[\n' + lines2.join(',\n') + '\n  ]';
 
+    document.getElementById('outputJson').innerHTML = highlight(prettyOutput);
+    document.getElementById('statusBadge').className = 'output-badge success';
+    document.getElementById('statusBadge').textContent = `✅ ${campaigns.length} campaign${campaigns.length !== 1 ? 's' : ''} converted`;
+    renderValidation(warnings, campaigns);
+    showToast(`✅ ${campaigns.length} campaign${campaigns.length !== 1 ? 's' : ''} converted`, 'success');
+  }
+
+  function renderValidation(warnings, campaigns) {
+    const panel = document.getElementById('validationPanel');
+    const checks = [];
+
+    if (campaigns.length > 0) {
+      const missingDates  = campaigns.filter(c => !c.date);
+      const missingRevs   = campaigns.filter(c => c.rev === null);
+      const missingSent   = campaigns.filter(c => c.sent === null);
+      const smsCount      = campaigns.filter(c => c.channel === 'SMS');
+      const emailCount    = campaigns.filter(c => c.channel === 'Email');
+
+      checks.push({ type: 'ok',  msg: `${campaigns.length} campaign block${campaigns.length !== 1 ? 's' : ''} detected` });
+      checks.push({ type: emailCount.length ? 'ok' : 'warn', msg: `${emailCount.length} Email · ${smsCount.length} SMS` });
+      if (missingDates.length)  checks.push({ type:'warn', msg: `${missingDates.length} campaign(s) missing date — check manually` });
+      else                      checks.push({ type:'ok',   msg: 'All dates parsed successfully' });
+      if (missingRevs.length)   checks.push({ type:'warn', msg: `${missingRevs.length} campaign(s) with null revenue` });
+      else                      checks.push({ type:'ok',   msg: 'All revenue values present' });
+      if (missingSent.length)   checks.push({ type:'warn', msg: `${missingSent.length} campaign(s) with null sent count` });
+      if (smsCount.length > 0)  checks.push({ type:'ok',   msg: `SMS campaigns: openPct & openN correctly set to null` });
+    }
+
+    warnings.forEach(w => checks.push({ type: 'warn', msg: w }));
+
+    if (!checks.length) { panel.innerHTML = ''; return; }
+
+    panel.innerHTML = '<div style="margin-top:1rem;border-top:1px solid var(--border);padding-top:0.85rem">' +
+      '<div style="font-size:0.6rem;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;color:var(--text-muted);margin-bottom:0.6rem">Validation</div>' +
+      checks.map(c => `<div class="val-item"><span class="val-${c.type}">${c.type === 'ok' ? '✓' : c.type === 'warn' ? '⚠' : '✕'}</span>${c.msg}</div>`).join('') +
+      '</div>';
+  }
+
+  // ── COPY FUNCTIONS ───────────────────────────────────────────────
+  function copyJSON() {
+    if (!lastConverted.length) { showToast('Nothing to copy yet — convert first', 'error'); return; }
+    const lines = lastConverted.map(c => '    ' + JSON.stringify(c));
+    const out = lines.join(',\n');
+    navigator.clipboard.writeText(out)
+      .then(() => showToast('📋 Campaign objects copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed — select and copy manually', 'error'));
+  }
+
+  function copyFullPatch() {
+    if (!lastConverted.length) { showToast('Nothing to copy yet — convert first', 'error'); return; }
+    const patch = {
+      _meta: {
+        source: 'Boho Blanket · Omnisend Analytics',
+        version: '1.0',
+        note: 'Paste these campaign entries into your data.json campaigns array',
+        converted: new Date().toISOString().slice(0, 10)
+      },
+      campaigns: lastConverted
+    };
+    navigator.clipboard.writeText(JSON.stringify(patch, null, 2))
+      .then(() => showToast('⬇ Full patch copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed', 'error'));
+  }
+
+  function clearAll() {
+    document.getElementById('inputData').value = '';
+    document.getElementById('outputJson').innerHTML = '// Output will appear here after conversion';
+    document.getElementById('statusBadge').className = 'output-badge';
+    document.getElementById('statusBadge').textContent = 'Waiting for input';
+    document.getElementById('validationPanel').innerHTML = '';
+    lastConverted = [];
+  }
+
+  function loadExample() {
+    document.getElementById('inputData').value =
+`Spring Palette Reveal
+Sent to Active & Engaged, Active in the last 7 Days, Champions, Loyalists, VIP. Excluding: Hard Bounces, Unsubscribed
+Email
+Sent
+Mar 5, 2026 at 9:00 AM
+8,360
+80.4%
+(6,723)
+2.3%
+(198)
+€370.10
+(21)
+
+MAR_NAT_QUILT_DAY_2026
+Sent to Engaged SMS Subscribers
+SMS
+Sent
+Mar 21, 2026 at 2:00 PM
+6,752
+N/A
+N/A
+40.6%
+(2,748)
+€218.85
+(11)`;
+    document.getElementById('startId').value = '15';
+    showToast('📋 Example loaded', '');
+  }
+</script>
 </body>
 </html>
