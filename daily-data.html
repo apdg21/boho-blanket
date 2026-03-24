@@ -48,7 +48,6 @@
       min-height: 100vh;
     }
 
-    /* header, cards, etc — same elegant style */
     .header {
       background: linear-gradient(135deg, var(--espresso) 0%, var(--bark) 100%);
       padding: 2.5rem 2rem 2rem;
@@ -156,7 +155,6 @@
       padding: 2rem 1.25rem 3rem;
     }
 
-    /* KPI strip + charts same */
     .kpi-strip {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -279,7 +277,98 @@
       width: 100% !important;
     }
 
-    /* controls + table */
+    /* ── ADD SECTION BUTTONS ── */
+    .add-section {
+      margin-bottom: 2rem;
+    }
+
+    .add-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .data-btns {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .add-toggle-btn {
+      background: var(--espresso);
+      color: var(--warm-white);
+      border: none;
+      border-radius: 100px;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .add-toggle-btn:hover {
+      background: var(--bark);
+      transform: translateY(-1px);
+    }
+
+    .btn-export, 
+    .btn-import-label {
+      background: var(--card-bg);
+      color: var(--bark);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-export {
+      background: var(--moss);
+      color: white;
+      border: none;
+    }
+
+    .btn-export:hover {
+      background: var(--sage);
+      transform: translateY(-1px);
+    }
+
+    .btn-import-label:hover {
+      background: var(--sand);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 640px) {
+      .add-toggle {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .data-btns {
+        justify-content: flex-start;
+      }
+      
+      .add-toggle-btn,
+      .btn-export,
+      .btn-import-label {
+        justify-content: center;
+      }
+    }
+
     .controls-row {
       display: flex;
       align-items: center;
@@ -371,7 +460,7 @@
       border-collapse: separate;
       border-spacing: 0;
       font-size: 0.76rem;
-      min-width: 1100px;
+      min-width: 1300px;
     }
     thead th {
       background: #f2ebe1;
@@ -509,13 +598,10 @@
       background: #fde0d5;
       color: #a33820;
     }
-
-    /* Metric badge for new columns */
     .metric-badge {
       font-weight: 600;
       font-variant-numeric: tabular-nums;
     }
-
     .del-btn,
     .edit-btn {
       background: none;
@@ -593,6 +679,7 @@
       font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
+      margin-right: 0.5rem;
     }
     .btn-cancel {
       background: transparent;
@@ -601,19 +688,6 @@
       border-radius: 100px;
       padding: 0.6rem 1.2rem;
       cursor: pointer;
-    }
-    .add-toggle-btn {
-      background: var(--espresso);
-      color: var(--warm-white);
-      border: none;
-      border-radius: 100px;
-      padding: 0.5rem 1.2rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
     .toast {
       position: fixed;
@@ -647,7 +721,6 @@
       font-size: 0.68rem;
       color: var(--text-muted);
     }
-
     @keyframes fadeUp {
       from {
         opacity: 0;
@@ -658,104 +731,11 @@
         transform: translateY(0);
       }
     }
-    /* ── ADD SECTION BUTTONS ── */
-.add-section {
-  margin-bottom: 2rem;
-}
-
-.add-section .add-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.5rem;
-}
-
-.add-section .data-btns {
-  display: flex;
-  gap: 0.6rem;
-  align-items: center;
-  margin-left: 0;
-}
-
-.add-toggle-btn {
-  background: var(--espresso);
-  color: var(--warm-white);
-  border: none;
-  border-radius: 100px;
-  padding: 0.5rem 1.2rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.15s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.add-toggle-btn:hover {
-  background: var(--bark);
-  transform: translateY(-1px);
-}
-
-.btn-export, 
-.btn-import-label {
-  background: var(--card-bg);
-  color: var(--bark);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 0.5rem 1.2rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.15s, transform 0.15s;
-  white-space: nowrap;
-}
-
-.btn-export {
-  background: var(--moss);
-  color: white;
-  border: none;
-}
-
-.btn-export:hover {
-  background: var(--sage);
-  transform: translateY(-1px);
-}
-
-.btn-import-label:hover {
-  background: var(--sand);
-  transform: translateY(-1px);
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .add-section .add-toggle {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .add-section .data-btns {
-    justify-content: flex-start;
-  }
-  
-  .add-toggle-btn,
-  .btn-export,
-  .btn-import-label {
-    justify-content: center;
-  }
-}
   </style>
 </head>
 <body>
 <div class="toast" id="toast"></div>
-<input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importJSON(event)">
+<input type="file" id="importFileInput" accept=".json" style="display:none">
 
 <header class="header">
   <div class="header-inner">
@@ -779,53 +759,107 @@
   </div>
 
   <div class="add-section">
-  <div class="add-toggle">
-    <button class="add-toggle-btn" id="toggleFormBtn" onclick="toggleForm()">
-      <span class="btn-icon">＋</span> Add New Campaign
-    </button>
-    <div class="data-btns">
-      <button class="btn-export" onclick="exportJSON()">⬇ Export JSON</button>
-      <label class="btn-import-label" for="importFileInput">⬆ Import JSON</label>
-    </div>
-  </div>
-
-    <div class="form-panel" id="formPanel"><div class="form-title" id="formTitle">✏️ Campaign Entry</div><div class="edit-mode-banner" id="editBanner" style="display:none">✎ Editing mode</div>
-      <div class="form-grid">
-        <div class="form-group full"><label>Campaign Name *</label><input class="form-input" id="f_name"></div>
-        <div class="form-group"><label>Channel</label><select class="form-select" id="f_channel"><option>Email</option><option>SMS</option></select></div>
-        <div class="form-group"><label>Send Date *</label><input class="form-input" id="f_date" type="date"></div>
-        <div class="form-group"><label>Send Time</label><input class="form-input" id="f_time" type="time"></div>
-        <div class="form-group"><label>Recipients Sent *</label><input class="form-input" id="f_sent" type="number"></div>
-        <div class="form-group"><label>Open Rate (%)</label><input class="form-input" id="f_open" step="0.1"></div>
-        <div class="form-group"><label>Click Rate (%)</label><input class="form-input" id="f_click" step="0.1"></div>
-        <div class="form-group"><label>Revenue (€) *</label><input class="form-input" id="f_rev" step="0.01"></div>
-        <div class="form-group"><label>Orders</label><input class="form-input" id="f_orders" type="number"></div>
-        <div class="form-group"><label>Segment</label><input class="form-input" id="f_segment"></div>
+    <div class="add-toggle">
+      <button class="add-toggle-btn" id="toggleFormBtn" onclick="toggleForm()">
+        <span class="btn-icon">＋</span> Add New Campaign
+      </button>
+      <div class="data-btns">
+        <button class="btn-export" onclick="exportJSON()">⬇ Export JSON</button>
+        <label class="btn-import-label" for="importFileInput">⬆ Import JSON</label>
       </div>
-      <div><button class="btn-submit" id="formSubmitBtn" onclick="submitForm()">Add Campaign</button><button class="btn-cancel" onclick="cancelForm()">Cancel</button></div>
+    </div>
+
+    <div class="form-panel" id="formPanel">
+      <div class="form-title" id="formTitle" style="font-family:'Fraunces',serif;font-weight:600;margin-bottom:1rem;">✏️ New Campaign Entry</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">Campaign Name *</label>
+          <input class="form-input" id="f_name" placeholder="e.g., Spring Collection Launch">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Channel *</label>
+          <select class="form-select" id="f_channel">
+            <option value="Email">📧 Email</option>
+            <option value="SMS">💬 SMS</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Send Date *</label>
+          <input class="form-input" id="f_date" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Send Time</label>
+          <input class="form-input" id="f_time" type="time">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Recipients Sent *</label>
+          <input class="form-input" id="f_sent" type="number" placeholder="e.g., 8500">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Open Rate (%)</label>
+          <input class="form-input" id="f_open" type="number" step="0.1" placeholder="e.g., 42.5">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Click Rate (%)</label>
+          <input class="form-input" id="f_click" type="number" step="0.1" placeholder="e.g., 3.2">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Revenue (€) *</label>
+          <input class="form-input" id="f_rev" type="number" step="0.01" placeholder="e.g., 1250.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Orders</label>
+          <input class="form-input" id="f_orders" type="number" placeholder="e.g., 45">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Segment / Audience</label>
+          <input class="form-input" id="f_segment" placeholder="e.g., VIP Customers">
+        </div>
+      </div>
+      <div>
+        <button class="btn-submit" id="formSubmitBtn" onclick="submitForm()">Add Campaign</button>
+        <button class="btn-cancel" onclick="cancelForm()">Cancel</button>
+      </div>
     </div>
   </div>
 
-  <div class="table-section-header"><div style="display:flex;gap:0.8rem"><div class="table-section-title">Campaign Log</div><div class="table-count" id="rowCount">0 campaigns</div></div>
-    <div class="controls-row"><input class="search-input" id="searchInput" placeholder="🔍 Search…" oninput="renderTable()">
+  <div class="table-section-header">
+    <div style="display:flex;gap:0.8rem;align-items:center;">
+      <div class="table-section-title">Campaign Log</div>
+      <div class="table-count" id="rowCount">0 campaigns</div>
+    </div>
+    <div class="controls-row" style="margin-bottom:0;">
+      <input class="search-input" id="searchInput" placeholder="🔍 Search campaigns..." oninput="renderTable()">
       <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">All</button>
       <button class="filter-btn" data-filter="Email" onclick="setFilter('Email',this)">📧 Email</button>
       <button class="filter-btn" data-filter="SMS" onclick="setFilter('SMS',this)">💬 SMS</button>
-      <select class="sort-select" id="sortSelect" onchange="renderTable()"><option value="date-desc">Date ↓ Newest</option><option value="date-asc">Date ↑ Oldest</option><option value="rev-desc">Revenue ↓</option><option value="rev-asc">Revenue ↑</option></select>
+      <select class="sort-select" id="sortSelect" onchange="renderTable()">
+        <option value="date-desc">Date ↓ Newest</option>
+        <option value="date-asc">Date ↑ Oldest</option>
+        <option value="rev-desc">Revenue ↓ High</option>
+        <option value="rev-asc">Revenue ↑ Low</option>
+      </select>
     </div>
   </div>
 
-  <div class="table-wrapper"><div class="table-scroll"><table id="mainTable">
-    <thead><tr id="tableHeader"></tr></thead>
-    <tbody id="tableBody"></tbody>
-  </table></div></div>
-  <div class="footer"><strong>📊 Enhanced metrics:</strong> Conversion rate = orders ÷ sent; AOV = revenue ÷ orders; Revenue per subscriber = revenue ÷ sent. Horizontal scroll on table for full view.</div>
+  <div class="table-wrapper">
+    <div class="table-scroll">
+      <table id="mainTable">
+        <thead id="tableHeader"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="footer">
+    <strong>📊 Enhanced Metrics:</strong> Conversion Rate = orders ÷ sent; AOV = revenue ÷ orders; Revenue per Subscriber = revenue ÷ sent.<br>
+    <strong>Performance badges</strong> based on email open rate benchmarks (≥75% Strong, ≥65% Good, ≥40% Average, <40% Low).<br>
+    <strong>💡 Tip:</strong> Click column headers to sort. Use search to filter campaigns by name.
+  </div>
 </main>
 
 <script>
   let campaigns = [];
   let filterChannel = 'all';
-  let sortKey = 'date', sortDir = 'desc';
   let nextId = 100;
   let editingId = null;
 
@@ -846,22 +880,48 @@
 
   function renderTable() {
     const q = document.getElementById('searchInput').value.toLowerCase();
-    let data = campaigns.filter(c => (filterChannel === 'all' || c.channel === filterChannel) && (c.name.toLowerCase().includes(q) || c.date.includes(q)));
+    let data = campaigns.filter(c => 
+      (filterChannel === 'all' || c.channel === filterChannel) && 
+      (c.name.toLowerCase().includes(q) || c.date.includes(q))
+    );
+    
     const sv = document.getElementById('sortSelect').value;
     const [sk, sd] = sv.split('-');
-    data.sort((a,b) => { let va, vb; if(sk==='date') { va=a.date+a.time; vb=b.date+b.time; } else if(sk==='rev') { va=a.rev; vb=b.rev; } else if(sk==='sent'){ va=a.sent; vb=b.sent; } else { va=a.date; vb=b.date; } return sd==='desc' ? (vb>va?1:-1) : (va>vb?1:-1); });
+    data.sort((a,b) => { 
+      let va, vb; 
+      if(sk==='date') { va=a.date+a.time; vb=b.date+b.time; } 
+      else if(sk==='rev') { va=a.rev; vb=b.rev; } 
+      else { va=a.date; vb=b.date; } 
+      return sd==='desc' ? (vb>va?1:-1) : (va>vb?1:-1); 
+    });
+    
     document.getElementById('rowCount').innerHTML = `${data.length} campaign${data.length!==1?'s':''}`;
 
     const theadRow = document.getElementById('tableHeader');
     theadRow.innerHTML = `
       <th onclick="cycleSort('date')">Date <span class="sort-arrow">↕</span></th>
-      <th>Campaign Name</th><th>Channel</th><th onclick="cycleSort('sent')">Sent <span class="sort-arrow">↕</span></th>
-      <th>Open Rate</th><th>Click Rate</th><th onclick="cycleSort('rev')">Revenue (€)<span class="sort-arrow">↕</span></th>
-      <th>Orders</th><th>€/Order</th><th>Conv. Rate</th><th>AOV (€)</th><th>Rev/Sub (€)</th><th>Perf</th><th></th>
+      <th>Campaign Name</th>
+      <th>Channel</th>
+      <th onclick="cycleSort('sent')">Sent <span class="sort-arrow">↕</span></th>
+      <th>Open Rate</th>
+      <th>Click Rate</th>
+      <th onclick="cycleSort('rev')">Revenue (€)<span class="sort-arrow">↕</span></th>
+      <th>Orders</th>
+      <th>€/Order</th>
+      <th>Conv. Rate</th>
+      <th>AOV (€)</th>
+      <th>Rev/Sub (€)</th>
+      <th>Performance</th>
+      <th></th>
     `;
 
     const tbody = document.getElementById('tableBody');
-    if (!data.length) { tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:2rem">No campaigns</td></tr>'; updateCharts(data); updateKPIs(data); return; }
+    if (!data.length) { 
+      tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;padding:2rem;">✨ No campaigns match your filter. Try adjusting search or add a new campaign! ✨</td></tr>'; 
+      updateCharts(data); 
+      updateKPIs(data); 
+      return; 
+    }
 
     tbody.innerHTML = data.map(c => {
       const metrics = computeMetrics(c);
@@ -869,12 +929,24 @@
       const revPerSub = metrics.revPerSub;
       const convRate = metrics.conversion;
       const epo = c.orders ? (c.rev/c.orders).toFixed(2) : null;
-      const perfBadgeHtml = (c.channel === 'SMS') ? `<span class="perf-badge" style="background:#dce8f5;color:#2b5fa8">💬 SMS</span>` : (c.openPct != null ? (c.openPct>=75 ? '<span class="perf-badge perf-strong">⬆ Strong</span>' : (c.openPct>=65 ? '<span class="perf-badge perf-good">● Good</span>' : (c.openPct>=40 ? '<span class="perf-badge perf-avg">◑ Average</span>' : '<span class="perf-badge perf-low">▼ Low</span>'))) : '—');
-      const barOpen = (c.openPct != null) ? `<div class="rate-bar"><div class="bar-bg bar-open"><div class="bar-fill" style="width:${Math.min(100,c.openPct)}%"></div></div><span class="rate-val">${fmtPct(c.openPct)}</span></div>` : '<span style="color:var(--text-muted)">N/A</span>';
-      const barClick = (c.clickPct != null && c.channel==='Email') ? `<div class="rate-bar"><div class="bar-bg bar-click"><div class="bar-fill" style="width:${Math.min(100,c.clickPct)}%"></div></div><span class="rate-val">${fmtPct(c.clickPct)}</span></div>` : '<span style="color:var(--text-muted)">—</span>';
+      const perfBadgeHtml = (c.channel === 'SMS') ? 
+        `<span class="perf-badge" style="background:#dce8f5;color:#2b5fa8">💬 SMS</span>` : 
+        (c.openPct != null ? (c.openPct>=75 ? '<span class="perf-badge perf-strong">⬆ Strong</span>' : 
+        (c.openPct>=65 ? '<span class="perf-badge perf-good">● Good</span>' : 
+        (c.openPct>=40 ? '<span class="perf-badge perf-avg">◑ Average</span>' : 
+        '<span class="perf-badge perf-low">▼ Low</span>'))) : '—');
+      
+      const barOpen = (c.openPct != null && c.channel === 'Email') ? 
+        `<div class="rate-bar"><div class="bar-bg bar-open"><div class="bar-fill" style="width:${Math.min(100,c.openPct)}%"></div></div><span class="rate-val">${fmtPct(c.openPct)}</span></div>` : 
+        '<span style="color:var(--text-muted);font-size:0.7rem;">N/A</span>';
+      
+      const barClick = (c.clickPct != null && c.channel==='Email') ? 
+        `<div class="rate-bar"><div class="bar-bg bar-click"><div class="bar-fill" style="width:${Math.min(100,c.clickPct)}%"></div></div><span class="rate-val">${fmtPct(c.clickPct)}</span></div>` : 
+        '<span style="color:var(--text-muted);font-size:0.7rem;">—</span>';
+      
       return `<tr>
         <td style="white-space:nowrap;font-weight:600">${dateLabel(c.date)}<br><span style="font-size:0.65rem;color:var(--text-muted)">${c.time||''}</span></td>
-        <td><div class="campaign-name">${c.name}</div><div style="font-size:0.62rem;color:var(--text-muted)">${c.segment||''}</div></td>
+        <td><div class="campaign-name">${c.name}</div><div style="font-size:0.62rem;color:var(--text-muted);margin-top:2px">${c.segment||''}</div></td>
         <td><span class="type-pill ${c.channel==='SMS'?'pill-sms':'pill-email'}">${c.channel==='SMS'?'💬':'📧'} ${c.channel}</span></td>
         <td class="num">${fmtNumber(c.sent)}</td>
         <td>${barOpen}</td>
@@ -882,9 +954,9 @@
         <td class="rev">${fmtCurrency(c.rev)}</td>
         <td class="num">${c.orders ?? '—'}</td>
         <td class="num">${epo ? '€'+epo : '—'}</td>
-        <td class="num metric-badge" style="color:var(--moss)">${convRate > 0 ? fmtPct(convRate) : (c.orders ? fmtPct(convRate) : '—')}</td>
-        <td class="num metric-badge">${aovVal ? fmtCurrency(aovVal) : '—'}</td>
-        <td class="num metric-badge">${revPerSub ? fmtCurrency(revPerSub) : '—'}</td>
+        <td class="num metric-badge" style="color:var(--moss);font-weight:600;">${convRate > 0 ? fmtPct(convRate) : (c.orders ? fmtPct(convRate) : '—')}</td>
+        <td class="num metric-badge" style="font-weight:600;">${aovVal ? fmtCurrency(aovVal) : '—'}</td>
+        <td class="num metric-badge" style="font-weight:600;">${revPerSub ? fmtCurrency(revPerSub) : '—'}</td>
         <td>${perfBadgeHtml}</td>
         <td style="white-space:nowrap"><button class="edit-btn" onclick="editEntry(${c.id})">✎</button><button class="del-btn" onclick="deleteEntry(${c.id})">✕</button></td>
       </tr>`;
@@ -909,7 +981,7 @@
       { icon:'🔄', label:'Avg Conversion', val: fmtPct(avgConv), sub:'orders / sent' },
       { icon:'💶', label:'Avg AOV', val: fmtCurrency(avgAOV), sub:'revenue per order' },
       { icon:'📬', label:'Rev per Sub', val: fmtCurrency(avgRPS), sub:'list value' }
-    ].map((k,i)=>`<div class="kpi-card"><span class="kpi-icon">${k.icon}</span><div class="kpi-label">${k.label}</div><div class="kpi-val">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
+    ].map((k,i)=>`<div class="kpi-card" style="animation-delay:${0.04+i*0.04}s"><span class="kpi-icon">${k.icon}</span><div class="kpi-label">${k.label}</div><div class="kpi-val">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
 
     document.getElementById('headerStats').innerHTML = [
       { label:'Total Revenue', val: fmtCurrency(totalRev), sub:`${totalOrders} orders` },
@@ -928,11 +1000,27 @@
     if(revChart) revChart.destroy();
     if(engChart) engChart.destroy();
     revChart = new Chart(document.getElementById('revChart'), { type:'bar', data:{ labels, datasets:[{ label:'Revenue (€)', data:revData, backgroundColor:colors, borderRadius:5 }] }, options:{ responsive:true, maintainAspectRatio:true, plugins:{legend:{display:false}} } });
-    engChart = new Chart(document.getElementById('engChart'), { type:'line', data:{ labels:emailSorted.map(c=>{const d=c.date.split('-');return `${+d[2]} Mar`;}), datasets:[{ label:'Open Rate %', data:emailSorted.map(c=>c.openPct), borderColor:'#3d5e40', tension:0.35, pointRadius:3 },{ label:'Click Rate %', data:emailSorted.map(c=>c.clickPct??0), borderColor:'#c07a5b', tension:0.35 }] }, options:{ responsive:true } });
+    if(emailSorted.length) {
+      engChart = new Chart(document.getElementById('engChart'), { type:'line', data:{ labels:emailSorted.map(c=>{const d=c.date.split('-');return `${+d[2]} Mar`;}), datasets:[{ label:'Open Rate %', data:emailSorted.map(c=>c.openPct), borderColor:'#3d5e40', backgroundColor:'rgba(61,94,64,0.07)', fill:true, tension:0.35, pointRadius:3 },{ label:'Click Rate %', data:emailSorted.map(c=>c.clickPct??0), borderColor:'#c07a5b', tension:0.35, pointRadius:3 }] }, options:{ responsive:true, maintainAspectRatio:true, plugins:{ tooltip:{callbacks:{label:(ctx)=>`${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%`}} } } });
+    }
   }
 
-  function setFilter(val, el) { filterChannel = val; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderTable(); }
-  function cycleSort(key) { const map={date:'date',rev:'rev',sent:'sent'}; sortKey=key; sortDir=sortDir==='desc'?'asc':'desc'; document.getElementById('sortSelect').value = (map[key]||'date')+'-'+sortDir; renderTable(); }
+  function setFilter(val, el) { 
+    filterChannel = val; 
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); 
+    el.classList.add('active'); 
+    renderTable(); 
+  }
+  
+  function cycleSort(key) { 
+    const map={date:'date',rev:'rev',sent:'sent'}; 
+    const currentVal = document.getElementById('sortSelect').value;
+    const [currentKey, currentDir] = currentVal.split('-');
+    let newDir = 'desc';
+    if(currentKey === key) newDir = currentDir === 'desc' ? 'asc' : 'desc';
+    document.getElementById('sortSelect').value = (map[key]||key)+'-'+newDir; 
+    renderTable(); 
+  }
 
   function submitForm() {
     const name = document.getElementById('f_name').value.trim();
@@ -945,32 +1033,183 @@
     const clickPct = document.getElementById('f_click').value !== '' ? parseFloat(document.getElementById('f_click').value) : null;
     const orders = document.getElementById('f_orders').value !== '' ? parseInt(document.getElementById('f_orders').value) : null;
     const segment = document.getElementById('f_segment').value.trim();
-    if(!name || !date || isNaN(sent) || isNaN(rev)) { alert('Name, Date, Recipients and Revenue required'); return; }
+    
+    if(!name || !date || isNaN(sent) || isNaN(rev)) { 
+      alert('Please fill in required fields: Name, Date, Recipients, and Revenue'); 
+      return; 
+    }
+    
     if(editingId !== null) {
       const idx = campaigns.findIndex(c=>c.id===editingId);
       if(idx!==-1) campaigns[idx] = { id:editingId, name, channel, date, time, sent, rev, openPct, clickPct, orders, segment };
-      showToast('✏️ Updated', 'success');
+      showToast('✏️ Campaign updated!', 'success');
     } else {
       campaigns.push({ id:nextId++, name, channel, date, time, sent, rev, openPct, clickPct, orders, segment });
-      showToast('✅ Added', 'success');
+      showToast('✅ Campaign added!', 'success');
     }
-    cancelForm(); renderTable(); saveToStorage();
+    cancelForm(); 
+    renderTable(); 
+    saveToStorage();
   }
-  function editEntry(id){ const c=campaigns.find(x=>x.id===id); if(!c) return; editingId=id; document.getElementById('f_name').value=c.name; document.getElementById('f_channel').value=c.channel; document.getElementById('f_date').value=c.date; document.getElementById('f_time').value=c.time||''; document.getElementById('f_sent').value=c.sent; document.getElementById('f_rev').value=c.rev; document.getElementById('f_open').value=c.openPct??''; document.getElementById('f_click').value=c.clickPct??''; document.getElementById('f_orders').value=c.orders??''; document.getElementById('f_segment').value=c.segment||''; document.getElementById('formTitle').innerHTML='✎ Edit Campaign'; document.getElementById('formSubmitBtn').innerHTML='Save Changes'; openForm(); }
-  function deleteEntry(id){ if(confirm('Delete campaign?')){ campaigns=campaigns.filter(c=>c.id!==id); renderTable(); saveToStorage(); showToast('🗑 Removed',''); } }
-  function cancelForm(){ editingId=null; closeForm(); clearFormFields(); document.getElementById('formTitle').innerHTML='✏️ New Campaign Entry'; document.getElementById('formSubmitBtn').innerHTML='Add Campaign'; }
-  function clearFormFields(){ ['f_name','f_date','f_time','f_sent','f_open','f_click','f_rev','f_orders','f_segment'].forEach(id=>document.getElementById(id).value=''); document.getElementById('f_channel').value='Email'; }
-  function openForm(){ document.getElementById('formPanel').classList.add('visible'); document.getElementById('toggleFormBtn').classList.add('open'); document.getElementById('toggleFormBtn').querySelector('.btn-icon').textContent='×'; }
-  function closeForm(){ document.getElementById('formPanel').classList.remove('visible'); document.getElementById('toggleFormBtn').classList.remove('open'); document.getElementById('toggleFormBtn').querySelector('.btn-icon').textContent='＋'; }
-  function toggleForm(){ const p=document.getElementById('formPanel'); p.classList.contains('visible')?cancelForm():openForm(); }
-  function exportJSON(){ const blob=new Blob([JSON.stringify({campaigns},null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`boho-campaigns-${new Date().toISOString().slice(0,10)}.json`; a.click(); showToast('⬇ Exported','success'); }
-  function importJSON(e){ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=ev=>{ try{ const parsed=JSON.parse(ev.target.result); const data=parsed.campaigns||parsed; if(!Array.isArray(data))throw new Error('invalid'); campaigns=data.map((c,i)=>({...c,id:c.id??(i+1)})); nextId=Math.max(...campaigns.map(c=>c.id),0)+1; renderTable(); saveToStorage(); showToast(`Imported ${campaigns.length} campaigns`,'success'); }catch(e){ showToast('Import error','error'); } e.target.value=''; }; reader.readAsText(file); }
-  function saveToStorage(){ localStorage.setItem('boho_campaigns_v2',JSON.stringify({campaigns,nextId})); }
-  function loadFromStorage(){ const raw=localStorage.getItem('boho_campaigns_v2'); if(raw){ const p=JSON.parse(raw); campaigns=p.campaigns; nextId=p.nextId; return true; } return false; }
-  function showToast(msg,type){ const el=document.getElementById('toast'); el.textContent=msg; el.className='toast show'+(type?' '+type:''); setTimeout(()=>el.classList.remove('show'),2800); }
+  
+  function editEntry(id){ 
+    const c=campaigns.find(x=>x.id===id); 
+    if(!c) return; 
+    editingId=id; 
+    document.getElementById('f_name').value=c.name; 
+    document.getElementById('f_channel').value=c.channel; 
+    document.getElementById('f_date').value=c.date; 
+    document.getElementById('f_time').value=c.time||''; 
+    document.getElementById('f_sent').value=c.sent; 
+    document.getElementById('f_rev').value=c.rev; 
+    document.getElementById('f_open').value=c.openPct??''; 
+    document.getElementById('f_click').value=c.clickPct??''; 
+    document.getElementById('f_orders').value=c.orders??''; 
+    document.getElementById('f_segment').value=c.segment||''; 
+    document.getElementById('formTitle').innerHTML='✎ Edit Campaign'; 
+    document.getElementById('formSubmitBtn').innerHTML='Save Changes'; 
+    openForm(); 
+  }
+  
+  function deleteEntry(id){ 
+    if(confirm('Remove this campaign from the log?')){ 
+      campaigns=campaigns.filter(c=>c.id!==id); 
+      renderTable(); 
+      saveToStorage(); 
+      showToast('🗑 Campaign removed', ''); 
+    } 
+  }
+  
+  function cancelForm(){ 
+    editingId=null; 
+    closeForm(); 
+    document.getElementById('formTitle').innerHTML='✏️ New Campaign Entry'; 
+    document.getElementById('formSubmitBtn').innerHTML='Add Campaign'; 
+    document.getElementById('f_name').value='';
+    document.getElementById('f_date').value='';
+    document.getElementById('f_time').value='';
+    document.getElementById('f_sent').value='';
+    document.getElementById('f_rev').value='';
+    document.getElementById('f_open').value='';
+    document.getElementById('f_click').value='';
+    document.getElementById('f_orders').value='';
+    document.getElementById('f_segment').value='';
+    document.getElementById('f_channel').value='Email';
+  }
+  
+  function openForm(){ 
+    document.getElementById('formPanel').classList.add('visible'); 
+    document.getElementById('toggleFormBtn').classList.add('open'); 
+    const btnIcon = document.getElementById('toggleFormBtn').querySelector('.btn-icon');
+    if(btnIcon) btnIcon.textContent='×';
+  }
+  
+  function closeForm(){ 
+    document.getElementById('formPanel').classList.remove('visible'); 
+    document.getElementById('toggleFormBtn').classList.remove('open'); 
+    const btnIcon = document.getElementById('toggleFormBtn').querySelector('.btn-icon');
+    if(btnIcon) btnIcon.textContent='＋';
+  }
+  
+  function toggleForm(){ 
+    const p=document.getElementById('formPanel'); 
+    if(p.classList.contains('visible')) cancelForm(); 
+    else openForm(); 
+  }
+  
+  function exportJSON(){ 
+    const payload = { campaigns, exported: new Date().toISOString(), count: campaigns.length };
+    const blob=new Blob([JSON.stringify(payload, null, 2)],{type:'application/json'}); 
+    const a=document.createElement('a'); 
+    a.href=URL.createObjectURL(blob); 
+    a.download=`boho-campaigns-${new Date().toISOString().slice(0,10)}.json`; 
+    a.click(); 
+    URL.revokeObjectURL(a.href);
+    showToast(`⬇ Exported ${campaigns.length} campaigns`, 'success'); 
+  }
+  
+  function importJSON(e){ 
+    const file=e.target.files[0]; 
+    if(!file) return; 
+    const reader=new FileReader(); 
+    reader.onload=ev=>{ 
+      try{ 
+        const parsed=JSON.parse(ev.target.result); 
+        const data=parsed.campaigns || parsed; 
+        if(!Array.isArray(data)) throw new Error('Invalid format: expected array'); 
+        if(!confirm(`Import ${data.length} campaign(s)? This will REPLACE your current ${campaigns.length} campaign(s).`)) {
+          e.target.value=''; 
+          return;
+        }
+        campaigns=data.map((c,i)=>({...c,id:c.id??(i+1)})); 
+        nextId=Math.max(...campaigns.map(c=>c.id),0)+1; 
+        renderTable(); 
+        saveToStorage(); 
+        showToast(`✅ Imported ${campaigns.length} campaigns`, 'success'); 
+      } catch(err){ 
+        showToast('❌ Import failed: ' + err.message, 'error'); 
+      } 
+      e.target.value=''; 
+    }; 
+    reader.readAsText(file); 
+  }
+  
+  function saveToStorage(){ 
+    localStorage.setItem('boho_campaigns_v2',JSON.stringify({campaigns,nextId})); 
+  }
+  
+  function loadFromStorage(){ 
+    const raw=localStorage.getItem('boho_campaigns_v2'); 
+    if(raw){ 
+      const p=JSON.parse(raw); 
+      campaigns=p.campaigns; 
+      nextId=p.nextId; 
+      return true; 
+    } 
+    return false; 
+  }
+  
+  function showToast(msg,type){ 
+    const el=document.getElementById('toast'); 
+    el.textContent=msg; 
+    el.className='toast show'+(type?' '+type:''); 
+    setTimeout(()=>el.classList.remove('show'),2800); 
+  }
 
-  fetch('data.json').then(r=>r.json()).then(d=>{ if(d.campaigns && !loadFromStorage()){ campaigns=d.campaigns.map((c,i)=>({...c,id:c.id??(i+1)})); nextId=Math.max(...campaigns.map(c=>c.id),0)+1; renderTable(); saveToStorage(); } }).catch(()=>{ if(!loadFromStorage()) campaigns=[]; renderTable(); });
+  // Initialize with sample data if no storage
+  function initSampleData() {
+    const sampleData = [
+      { id: 1, name: "Spring Collection Launch", channel: "Email", date: "2026-03-01", time: "09:00", sent: 8450, rev: 2890.50, openPct: 68.2, clickPct: 4.8, orders: 78, segment: "Active Subscribers" },
+      { id: 2, name: "Boho Vibes Flash Sale", channel: "SMS", date: "2026-03-03", time: "14:30", sent: 3200, rev: 1240.00, openPct: null, clickPct: null, orders: 42, segment: "Mobile Opt-in" },
+      { id: 3, name: "New Arrivals: Woven Throws", channel: "Email", date: "2026-03-05", time: "10:15", sent: 9200, rev: 4520.75, openPct: 71.5, clickPct: 5.2, orders: 112, segment: "All Subscribers" },
+      { id: 4, name: "VIP Early Access", channel: "Email", date: "2026-03-08", time: "08:00", sent: 2100, rev: 3850.00, openPct: 82.3, clickPct: 7.9, orders: 95, segment: "VIP Members" },
+      { id: 5, name: "Weekend Flash Sale", channel: "SMS", date: "2026-03-10", time: "18:00", sent: 4100, rev: 1890.25, openPct: null, clickPct: null, orders: 63, segment: "All SMS" }
+    ];
+    campaigns = sampleData;
+    nextId = 6;
+    renderTable();
+    saveToStorage();
+  }
+
+  // Load data
+  if(!loadFromStorage()) {
+    fetch('data.json')
+      .then(r => r.json().catch(() => null))
+      .then(d => {
+        if(d && d.campaigns && Array.isArray(d.campaigns)) {
+          campaigns = d.campaigns.map((c,i) => ({...c, id: c.id ?? (i+1)}));
+          nextId = Math.max(...campaigns.map(c=>c.id), 0) + 1;
+          renderTable();
+          saveToStorage();
+        } else {
+          initSampleData();
+        }
+      })
+      .catch(() => initSampleData());
+  } else {
+    renderTable();
+  }
 </script>
-<a href="/index.html" style="position:fixed;top:1.5rem;right:1.5rem;background:#2c1e14;border-radius:40px;padding:0.5rem 1rem;font-size:0.7rem;color:white;text-decoration:none;font-weight:600;z-index:999">🏠 Home</a>
+<a href="/index.html" style="position:fixed;top:1.5rem;right:1.5rem;background:#2c1e14;border-radius:40px;padding:0.5rem 1rem;font-size:0.7rem;color:white;text-decoration:none;font-weight:600;z-index:999;font-family:'DM Sans',sans-serif;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">🏠 Home</a>
 </body>
 </html>
