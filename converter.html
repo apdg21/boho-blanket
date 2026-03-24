@@ -632,10 +632,28 @@ SMS subscribers
     const startId = parseInt(document.getElementById('startId').value) || 1;
     const defaultChannel = document.getElementById('defaultChannel').value;
 
-    // Split into non-empty lines
-    const lines = raw.split('\n').map(l => l.trim()).filter(l => l !== '');
+    // ── STEP 1: Normalize lines ──────────────────────────────────
+    // Split combined lines like "40.9% (2,763)" → ["40.9%", "2,763"]
+    // and "€236.75 (12)" → ["€236.75", "12"]
+    const normalize = raw.split('\n').flatMap(raw => {
+      const l = raw.trim();
+      if (!l) return [];
 
-    if (!lines.length) {
+      // "40.9% (2,763)"  →  ["40.9%", "2763"]
+      const pctCount = l.match(/^([\d.]+%)\s*\(([\d,]+)\)$/);
+      if (pctCount) return [pctCount[1], pctCount[2]];
+
+      // "N/A (2,763)" or "N/A" lines — just keep as-is
+      if (/^N\/A$/i.test(l)) return [l];
+
+      // "€236.75 (12)"  →  ["€236.75", "12"]
+      const revOrders = l.match(/^(€[\d,]+\.?\d*)\s*\(([\d,]+)\)$/);
+      if (revOrders) return [revOrders[1], revOrders[2]];
+
+      return [l];
+    });
+
+    if (!normalize.length) {
       showToast('⚠️ Nothing to convert — paste your data first.', 'error');
       return;
     }
@@ -645,56 +663,69 @@ SMS subscribers
     let id = startId;
     let i = 0;
 
-    while (i < lines.length) {
-      // Find a "Sent" status line to anchor a block
-      // Pattern: name, segment, channel, "Sent", "Date at Time", sent#, openPct, openN, clickPct, clickN, rev, orders
-      // Look ahead for "Sent" within next 5 lines
+    while (i < normalize.length) {
+      // Find "Sent" anchor within next 6 lines
       let sentIdx = -1;
-      for (let j = i; j < Math.min(i + 6, lines.length); j++) {
-        if (lines[j].trim() === 'Sent') { sentIdx = j; break; }
+      for (let j = i; j < Math.min(i + 6, normalize.length); j++) {
+        if (normalize[j].trim() === 'Sent') { sentIdx = j; break; }
       }
       if (sentIdx === -1) { i++; continue; }
 
-      // Derive positions relative to "Sent"
-      const sentLine   = sentIdx;
-      const dateLine   = sentLine + 1;  // "Mar 21, 2026 at 8:00 AM"
-      const sentNumLine= sentLine + 2;  // recipients
-      const openPctLine= sentLine + 3;  // open rate or N/A
-      const openNLine  = sentLine + 4;  // open count
-      const clickPctLine= sentLine + 5; // click rate
-      const clickNLine = sentLine + 6;  // click count
-      const revLine    = sentLine + 7;  // revenue
-      const ordersLine = sentLine + 8;  // orders
+      // Items before "Sent" (working backwards from anchor)
+      const channelLine = sentIdx - 1;
+      const segmentLine = sentIdx - 2;
+      const nameLine    = sentIdx - 3;
 
-      // Items before "Sent" (working backwards)
-      const channelLine  = sentLine - 1;
-      const segmentLine  = sentLine - 2;
-      const nameLine     = sentLine - 3;
-
-      const name    = nameLine >= 0 ? lines[nameLine] : '';
-      const segRaw  = segmentLine >= 0 ? lines[segmentLine] : '';
-      const chanRaw = channelLine >= 0 ? lines[channelLine] : '';
+      const name    = nameLine >= 0 ? normalize[nameLine] : '';
+      const segRaw  = segmentLine >= 0 ? normalize[segmentLine] : '';
+      const chanRaw = channelLine >= 0 ? normalize[channelLine] : '';
 
       const segment = shortenSegment(segRaw);
       const channel = detectChannel(chanRaw) || defaultChannel;
       const isSMS   = channel === 'SMS';
 
-      const { date, time } = parseDateTime(lines[dateLine] || '');
-      const sent     = cleanInt(lines[sentNumLine]);
-      const openPct  = isSMS ? null : cleanNum(lines[openPctLine]);
-      const openN    = isSMS ? null : cleanInt(lines[openNLine]);
-      const clickPct = cleanNum(lines[clickPctLine]);
-      const clickN   = cleanInt(lines[clickNLine]);
-      const rev      = cleanNum(lines[revLine]);
-      const orders   = cleanInt(lines[ordersLine]);
+      const { date, time } = parseDateTime(normalize[sentIdx + 1] || '');
+      const sent = cleanInt(normalize[sentIdx + 2]);
 
-      if (!name) { warnings.push(`Block at line ${i+1}: could not detect campaign name — skipped.`); i = ordersLine + 1; continue; }
-      if (!date) warnings.push(`"${name}": could not parse date from "${lines[dateLine] || ''}"`);
-      if (rev === null) warnings.push(`"${name}": revenue is null — check row ${revLine + 1}`);
+      // ── STEP 2: Read metric rows based on channel ────────────
+      // Email layout after sent: openPct, openN, clickPct, clickN, rev, orders  (6 rows)
+      // SMS layout after sent:   N/A (skip), clickPct, clickN, rev, orders      (5 rows, no openN)
+      // We scan for the first revenue line (starts with €) to anchor rev/orders
+      let openPct = null, openN = null, clickPct = null, clickN = null, rev = null, orders = null;
+
+      // Find revenue line by scanning ahead from sent+3
+      let revIdx = -1;
+      for (let j = sentIdx + 3; j < Math.min(sentIdx + 12, normalize.length); j++) {
+        if (/^€[\d,]+\.?\d*$/.test(normalize[j])) { revIdx = j; break; }
+      }
+
+      if (revIdx > -1) {
+        orders = cleanInt(normalize[revIdx + 1]);
+        rev    = cleanNum(normalize[revIdx]);
+
+        // Work backwards from revIdx to find click data
+        // clickN is revIdx-1, clickPct is revIdx-2 (for both email and SMS)
+        clickN   = cleanInt(normalize[revIdx - 1]);
+        clickPct = cleanNum(normalize[revIdx - 2]);
+
+        if (!isSMS) {
+          // email: openN = revIdx-3, openPct = revIdx-4
+          openN   = cleanInt(normalize[revIdx - 3]);
+          openPct = cleanNum(normalize[revIdx - 4]);
+        }
+      }
+
+      if (!name) {
+        warnings.push(`Block at line ${i + 1}: could not detect campaign name — skipped.`);
+        i = (revIdx > -1 ? revIdx + 2 : sentIdx + 10);
+        continue;
+      }
+      if (!date) warnings.push(`"${name}": could not parse date`);
+      if (rev === null) warnings.push(`"${name}": revenue is null — check formatting`);
 
       campaigns.push({ id, date, time, name, channel, sent, openPct, openN, clickPct, clickN, rev, orders, segment });
       id++;
-      i = ordersLine + 1;
+      i = revIdx > -1 ? revIdx + 2 : sentIdx + 10;
     }
 
     lastConverted = campaigns;
@@ -811,11 +842,8 @@ Sent
 Mar 21, 2026 at 2:00 PM
 6,752
 N/A
-N/A
-40.6%
-(2,748)
-€218.85
-(11)`;
+40.9% (2,763)
+€236.75 (12)`;
     document.getElementById('startId').value = '15';
     showToast('📋 Example loaded', '');
   }
@@ -1013,9 +1041,7 @@ Push subscribers
 9,461
 +625
 635 subscribed|10 unsubscribed`;
-    // trigger live parse
     parseMonthlyLive();
-    // set month manually since raw data has no month label
     document.getElementById('m_month').value = "Feb '26";
     showToast('📋 Example loaded — set the month label', '');
   }
