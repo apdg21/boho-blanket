@@ -19,7 +19,7 @@
     { "month": "Dec '25", "omni": 9791.83, "camp": 5170.66, "auto": 4621.17, "store": 31852.92, "emailSubs": 29499, "newNet": 785, "unsub": 617 },
     { "month": "Jan '26", "omni": 15412.07, "camp": 7457.12, "auto": 7954.95, "store": 56014.00, "emailSubs": 31482, "newNet": 1983, "unsub": 715 },
     { "month": "Feb '26", "omni": 14073.31, "camp": 6133.66, "auto": 7939.65, "store": 50885.36, "emailSubs": 33089, "newNet": 1607, "unsub": 735 },
-    {"month":"Mar '26","omni":8185.98,"camp":3716.54,"auto":4469.44,"store":27586.52,"emailSubs":33600,"newNet":546,"unsub":676}
+    {"month":  "Mar '26","omni":  8461.5,  "camp":3850.63,"auto":4610.87,"store":28661.15,"emailSubs":33600,"newNet":544,"unsub":713 }
   ],
   "campaigns": [
         {"id":1,"date":"2026-03-22","time":"12:00","name":"Sunday Morning Coffee — The Spring Edit Follow-up","channel":"Email","sent":9893,"openPct":74.4,"openN":7364,"clickPct":1.5,"clickN":150,"rev":208.22,"orders":11,"segment":"Active & Engaged, Active in the last 7 Days, Can't Lose, Champions, Engaged Recent Campaigns, High Potential, Loyalists, New Subscribers, VIP"},
