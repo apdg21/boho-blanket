@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boho Blanket · Data Converter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f7f2ea;
+      --warm-white: #fdfaf5;
+      --sand: #e8ddd0;
+      --clay: #c07a5b;
+      --terracotta: #b85c38;
+      --espresso: #2c1e14;
+      --bark: #5c3d28;
+      --moss: #3d5e40;
+      --sage: #7a9e7e;
+      --gold: #c9973a;
+      --text-primary: #1e1510;
+      --text-secondary: #7a6555;
+      --text-muted: #a8937f;
+      --border: rgba(180,145,115,0.2);
+      --card-bg: rgba(255,252,247,0.97);
+      --shadow: 0 2px 20px rgba(44,30,20,0.06);
+      --radius: 20px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--cream);
+      background-image:
+        radial-gradient(ellipse 70% 50% at 8% 0%, rgba(192,122,91,0.09) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 60% at 92% 100%, rgba(61,94,64,0.08) 0%, transparent 60%);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    .page { max-width: 960px; margin: 0 auto; }
+
+    /* header */
+    .page-header {
+      background: linear-gradient(135deg, var(--espresso), var(--bark));
+      border-radius: var(--radius);
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(192,122,91,0.12); pointer-events: none;
+    }
+    .page-eyebrow {
+      font-size: 0.6rem; letter-spacing: 2.5px; text-transform: uppercase;
+      color: rgba(232,221,208,0.45); font-weight: 500; margin-bottom: 0.35rem;
+    }
+    .page-title {
+      font-family: 'Fraunces', serif; font-weight: 700;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: #fdfaf5; letter-spacing: -0.3px; line-height: 1.15;
+    }
+    .page-title span { color: var(--clay); }
+    .page-sub {
+      font-size: 0.78rem; color: rgba(232,221,208,0.55);
+      margin-top: 0.4rem; position: relative; z-index: 1;
+    }
+
+    /* tabs */
+    .tabs {
+      display: flex; gap: 0.5rem; margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border); padding-bottom: 0;
+    }
+    .tab-btn {
+      border: none; background: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600;
+      color: var(--text-muted); padding: 0.65rem 1.2rem 0.75rem;
+      border-bottom: 3px solid transparent; margin-bottom: -2px;
+      border-radius: 8px 8px 0 0;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .tab-btn:hover { color: var(--bark); background: var(--sand); }
+    .tab-btn.active { color: var(--bark); border-bottom-color: var(--clay); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* monthly form grid */
+    .monthly-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1.2rem;
+    }
+    .m-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .m-label {
+      font-size: 0.6rem; letter-spacing: 1.4px; text-transform: uppercase;
+      font-weight: 700; color: var(--text-muted);
+    }
+    .m-label .req { color: var(--clay); }
+    .m-input {
+      border: 1.5px solid var(--border); background: var(--warm-white);
+      border-radius: 10px; padding: 0.5rem 0.8rem;
+      font-size: 0.78rem; font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary); outline: none; width: 100%;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .m-input:focus { border-color: var(--clay); box-shadow: 0 0 0 3px rgba(192,122,91,0.12); }
+    .m-input::placeholder { color: var(--text-muted); }
+    .m-input.parsed { border-color: var(--moss); background: #f0faf3; }
+    .m-input.error  { border-color: var(--terracotta); background: #fff5f3; }
+
+    .paste-area-wrap { position: relative; }
+    .paste-overlay {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      font-size: 0.62rem; color: var(--text-muted); pointer-events: none;
+    }
+
+    /* cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.2rem;
+    }
+    .card-title {
+      font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 0.25rem;
+    }
+    .card-sub {
+      font-size: 0.7rem; color: var(--text-muted); margin-bottom: 1.1rem; line-height: 1.55;
+    }
+
+    /* instructions */
+    .steps {
+      display: flex; flex-direction: column; gap: 0.55rem;
+      margin-bottom: 1.2rem;
+    }
+    .step {
+      display: flex; align-items: flex-start; gap: 0.7rem;
+      font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5;
+    }
+    .step-num {
+      min-width: 20px; height: 20px;
+      background: var(--espresso); color: var(--warm-white);
+      border-radius: 50%; font-size: 0.6rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step code {
+      background: var(--sand); padding: 0.1rem 0.45rem;
+      border-radius: 5px; font-size: 0.72rem; font-family: 'Consolas', monospace;
+      color: var(--bark);
+    }
+
+    /* column map */
+    .col-map {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.5rem; margin-bottom: 1.2rem;
+    }
+    .col-item {
+      background: var(--sand); border-radius: 10px;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.68rem; line-height: 1.4;
+    }
+    .col-item strong { display: block; color: var(--bark); font-weight: 700; font-size: 0.63rem; letter-spacing: 0.5px; }
+    .col-item span { color: var(--text-secondary); }
+
+    /* textarea */
+    textarea {
+      width: 100%; height: 200px;
+      border: 1.5px solid var(--border);
+      background: var(--warm-white);
+      border-radius: 12px; padding: 1rem;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.75rem; color: var(--text-primary);
+      resize: vertical; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    textarea:focus { border-color: var(--clay); box-shadow: 0 0 0 3px rgba(192,122,91,0.12); }
+    textarea::placeholder { color: var(--text-muted); }
+
+    /* start id row */
+    .options-row {
+      display: flex; gap: 1rem; margin-top: 0.85rem; flex-wrap: wrap; align-items: flex-end;
+    }
+    .opt-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .opt-label {
+      font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase;
+      font-weight: 700; color: var(--text-muted);
+    }
+    .opt-input {
+      border: 1.5px solid var(--border); background: var(--warm-white);
+      border-radius: 10px; padding: 0.45rem 0.75rem;
+      font-size: 0.78rem; font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary); outline: none; width: 100px;
+      transition: border-color 0.15s;
+    }
+    .opt-input:focus { border-color: var(--clay); }
+
+    /* buttons */
+    .btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+    .btn {
+      border: none; border-radius: 100px; padding: 0.6rem 1.3rem;
+      font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; transition: opacity 0.15s, transform 0.15s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary { background: linear-gradient(135deg, var(--clay), var(--terracotta)); color: white; }
+    .btn-secondary { background: var(--espresso); color: var(--warm-white); }
+    .btn-ghost { background: var(--card-bg); color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-green { background: linear-gradient(135deg, var(--moss), #2d4a30); color: white; }
+    .btn-gold { background: linear-gradient(135deg, var(--gold), #a87a2a); color: white; }
+
+    /* output */
+    .output-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .output-label {
+      font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+      font-weight: 700; color: var(--text-muted);
+    }
+    .output-badge {
+      font-size: 0.65rem; font-weight: 600; padding: 0.2rem 0.65rem;
+      border-radius: 100px; background: var(--sand); color: var(--text-secondary);
+    }
+    .output-badge.success { background: #d6ede0; color: #1a5c38; }
+    .output-badge.error   { background: #fde0d5; color: #a33820; }
+
+    pre {
+      background: var(--espresso);
+      color: #e8ddd0;
+      padding: 1.2rem 1.3rem;
+      border-radius: 14px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.73rem;
+      line-height: 1.65;
+      border-left: 4px solid var(--clay);
+      max-height: 480px;
+      overflow-y: auto;
+      white-space: pre;
+    }
+    .json-key   { color: #7ec8e3; }
+    .json-str   { color: #c8e8a2; }
+    .json-num   { color: #f5c87a; }
+    .json-null  { color: #d08080; }
+    .json-bool  { color: #d08080; }
+
+    /* validation panel */
+    .validation { margin-top: 1rem; }
+    .val-item {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      font-size: 0.73rem; color: var(--text-secondary);
+      padding: 0.35rem 0; border-bottom: 1px solid rgba(180,145,115,0.1);
+      line-height: 1.4;
+    }
+    .val-item:last-child { border-bottom: none; }
+    .val-ok   { color: var(--moss); font-weight: 700; }
+    .val-warn { color: var(--gold); font-weight: 700; }
+    .val-err  { color: var(--terracotta); font-weight: 700; }
+
+    /* section divider in btn-row area */
+    .export-section {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .export-section-title {
+      font-size: 0.58rem; letter-spacing: 1.8px; text-transform: uppercase;
+      font-weight: 700; color: var(--text-muted); margin-bottom: 0.6rem;
+    }
+    .export-note {
+      font-size: 0.68rem; color: var(--text-muted); margin-top: 0.6rem; line-height: 1.6;
+    }
+    .export-note strong { color: var(--text-secondary); }
+    .export-note code {
+      background: var(--sand); padding: 0.1rem 0.35rem;
+      border-radius: 4px; font-size: 0.68rem; color: var(--bark);
+    }
+
+    /* toast */
+    .toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;
+      background: var(--espresso); color: var(--warm-white);
+      padding: 0.65rem 1.2rem; border-radius: 100px;
+      font-size: 0.76rem; font-weight: 500;
+      box-shadow: 0 6px 24px rgba(44,30,20,0.25);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.22s, transform 0.22s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--moss); }
+    .toast.error   { background: var(--terracotta); }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(12px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .card { animation: fadeUp 0.4s ease both; }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.1s; }
+    .card:nth-child(3) { animation-delay: 0.15s; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-eyebrow">Boho Blanket · Tools</div>
+    <h1 class="page-title">Data JSON <span>Converter</span></h1>
+    <p class="page-sub">Paste raw Omnisend data → get clean JSON or CSV ready for data.json · Campaigns & Monthly</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('campaign', this)">📅 Campaign (Daily)</button>
+    <button class="tab-btn" onclick="switchTab('monthly', this)">📈 Monthly Report</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       TAB: CAMPAIGN
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-panel active" id="tab-campaign">
+
+  <div class="card">
+    <div class="card-title">How to use</div>
+    <div class="card-sub">Copy your campaign data from Omnisend and paste it below. Each campaign block should follow this column order.</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><span>In Omnisend, open your Campaigns report and select all rows for the campaigns you want to add.</span></div>
+      <div class="step"><div class="step-num">2</div><span>Copy (<code>Ctrl+C</code>) and paste into the text area below. Tab-separated or line-by-line both work.</span></div>
+      <div class="step"><div class="step-num">3</div><span>Set the <strong>Starting ID</strong> to continue from your last campaign (e.g. if you have 14, set it to 15).</span></div>
+      <div class="step"><div class="step-num">4</div><span>Click <strong>Convert</strong> — review the output, then copy JSON or <strong>Download CSV</strong> to get a <code>.csv</code> file matching your template.</span></div>
+    </div>
+
+    <div class="card-title" style="margin-bottom:0.5rem">Expected column order per campaign block</div>
+    <div class="col-map">
+      <div class="col-item"><strong>Row 1</strong><span>Campaign Name</span></div>
+      <div class="col-item"><strong>Row 2</strong><span>Segment / Audience</span></div>
+      <div class="col-item"><strong>Row 3</strong><span>Channel (Email / SMS)</span></div>
+      <div class="col-item"><strong>Row 4</strong><span>"Sent" (status label)</span></div>
+      <div class="col-item"><strong>Row 5</strong><span>Date & time (e.g. Mar 21, 2026 at 8:00 AM)</span></div>
+      <div class="col-item"><strong>Row 6</strong><span>Recipients sent (number)</span></div>
+      <div class="col-item"><strong>Row 7</strong><span>Open rate % (or N/A for SMS)</span></div>
+      <div class="col-item"><strong>Row 8</strong><span>Open count (number)</span></div>
+      <div class="col-item"><strong>Row 9</strong><span>Click rate %</span></div>
+      <div class="col-item"><strong>Row 10</strong><span>Click count (number)</span></div>
+      <div class="col-item"><strong>Row 11</strong><span>Revenue (€)</span></div>
+      <div class="col-item"><strong>Row 12</strong><span>Orders (number)</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Paste Campaign Data</div>
+    <div class="card-sub">One or multiple campaigns — each block is 12 rows. Blank lines between campaigns are ignored.</div>
+    <textarea id="inputData" placeholder="Paste Omnisend campaign data here...
+
+Example:
+Spring Palette Reveal
+Sent to Active & Engaged, VIP...
+Email
+Sent
+Mar 5, 2026 at 9:00 AM
+8,360
+80.4%
+(6,723)
+2.3%
+(198)
+€370.10
+(21)"></textarea>
+
+    <div class="options-row">
+      <div class="opt-group">
+        <div class="opt-label">Starting ID</div>
+        <input class="opt-input" type="number" id="startId" value="15" min="1">
+      </div>
+      <div class="opt-group">
+        <div class="opt-label">Default Channel</div>
+        <select class="opt-input" id="defaultChannel" style="width:120px">
+          <option value="Email">Email</option>
+          <option value="SMS">SMS</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="convertData()">⚡ Convert</button>
+      <button class="btn btn-ghost" onclick="clearAll()">✕ Clear</button>
+      <button class="btn btn-ghost" onclick="loadExample()">📋 Load Example</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="output-header">
+      <div class="output-label">JSON Output</div>
+      <div class="output-badge" id="statusBadge">Waiting for input</div>
+    </div>
+    <pre id="outputJson">// Output will appear here after conversion</pre>
+
+    <div class="validation" id="validationPanel"></div>
+
+    <!-- JSON export -->
+    <div class="export-section">
+      <div class="export-section-title">Export as JSON</div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-secondary" onclick="copyJSON()">📋 Copy campaign objects</button>
+        <button class="btn btn-green" onclick="copyFullPatch()">⬇ Copy as data.json patch</button>
+      </div>
+      <div class="export-note">
+        <strong>Copy campaign objects</strong> — copies just the <code>[{...},{...}]</code> array to paste into your existing campaigns array.<br>
+        <strong>Copy as data.json patch</strong> — copies the full wrapper JSON (with _meta + campaigns) ready to merge.
+      </div>
+    </div>
+
+    <!-- CSV export -->
+    <div class="export-section">
+      <div class="export-section-title">Export as CSV</div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-gold" onclick="downloadCampaignCSV()">⬇ Download campaigns.csv</button>
+        <button class="btn btn-ghost" onclick="copyCampaignCSV()">📋 Copy CSV text</button>
+      </div>
+      <div class="export-note">
+        Matches your <code>template-campaigns.csv</code> structure — columns: <code>date, name, channel, sent, openPct, openN, clickPct, clickN, rev, orders, segment</code>.<br>
+        Empty cells for SMS open rate/count are left blank (not null).
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tab-campaign -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     TAB: MONTHLY REPORT
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-monthly">
+
+  <div class="card">
+    <div class="card-title">How to use — Monthly</div>
+    <div class="card-sub">Paste your full Omnisend monthly summary block below. The converter will auto-detect all values. You only need to confirm the month label.</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><span>In Omnisend, open the monthly overview for the month you want to add and copy all the text.</span></div>
+      <div class="step"><div class="step-num">2</div><span>Paste into the text area below — the converter reads the raw block and fills all fields automatically.</span></div>
+      <div class="step"><div class="step-num">3</div><span>Check the parsed fields, correct anything if needed, then set the <strong>Month label</strong> (e.g. <code>Mar '26</code>).</span></div>
+      <div class="step"><div class="step-num">4</div><span>Click <strong>Convert</strong> → copy JSON or <strong>Download CSV</strong> to get a <code>.csv</code> file matching your template.</span></div>
+    </div>
+    <div class="card-title" style="margin-bottom:0.5rem">What gets extracted</div>
+    <div class="col-map">
+      <div class="col-item"><strong>omni</strong><span>Revenue from Omnisend (€)</span></div>
+      <div class="col-item"><strong>camp</strong><span>Campaigns revenue (€)</span></div>
+      <div class="col-item"><strong>auto</strong><span>Automation revenue (€)</span></div>
+      <div class="col-item"><strong>store</strong><span>Total store revenue (€)</span></div>
+      <div class="col-item"><strong>emailSubs</strong><span>Email subscribers total</span></div>
+      <div class="col-item"><strong>newNet</strong><span>Net new email subscribers</span></div>
+      <div class="col-item"><strong>unsub</strong><span>Email unsubscribes</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Paste Monthly Data</div>
+    <div class="card-sub">Paste the raw Omnisend monthly block — values will be auto-detected and shown below for review.</div>
+
+    <div class="paste-area-wrap">
+      <textarea id="m_rawInput" placeholder="Paste your Omnisend monthly data here...
+
+Example:
+Revenue from Omnisend
+€14,073.31
+-9.51%
+780 orders
+Campaigns
+€6,133.66
+352 orders
+Automation
+€7,939.65
+428 orders
+Total store revenue
+€50,885.36
+3,073 orders
+
+Email subscribers
+33K
++1,607
+2,342 subscribed|735 unsubscribed
+SMS subscribers
+10.9K
+..." oninput="parseMonthlyLive()"></textarea>
+    </div>
+
+    <div style="margin-top:1rem;margin-bottom:0.4rem">
+      <div class="card-title" style="font-size:0.82rem;margin-bottom:0.6rem">Parsed Fields — review & correct if needed</div>
+      <div class="monthly-grid">
+        <div class="m-group">
+          <label class="m-label">Month Label <span class="req">*</span></label>
+          <input class="m-input" id="m_month" type="text" placeholder="e.g. Mar '26">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Omnisend Revenue (€) <span class="req">*</span></label>
+          <input class="m-input" id="m_omni" type="number" step="0.01" placeholder="e.g. 14073.31">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Campaigns Revenue (€)</label>
+          <input class="m-input" id="m_camp" type="number" step="0.01" placeholder="e.g. 6133.66">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Automation Revenue (€)</label>
+          <input class="m-input" id="m_auto" type="number" step="0.01" placeholder="e.g. 7939.65">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Store Revenue (€)</label>
+          <input class="m-input" id="m_store" type="number" step="0.01" placeholder="e.g. 50885.36">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Email Subscribers (total)</label>
+          <input class="m-input" id="m_emailSubs" type="number" placeholder="e.g. 33089">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Net New Subscribers</label>
+          <input class="m-input" id="m_newNet" type="number" placeholder="e.g. 1607">
+        </div>
+        <div class="m-group">
+          <label class="m-label">Unsubscribed (email)</label>
+          <input class="m-input" id="m_unsub" type="number" placeholder="e.g. 735">
+        </div>
+      </div>
+      <div style="font-size:0.68rem;color:var(--text-muted);line-height:1.6;margin-top:0.25rem">
+        ⚠️ <strong>Email Subscribers total:</strong> Omnisend sometimes shows <code>33K</code> — enter the exact number from the detailed view (e.g. <code>33089</code>). Check your previous month's data for context.
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="convertMonthly()">⚡ Convert</button>
+      <button class="btn btn-ghost" onclick="clearMonthly()">✕ Clear</button>
+      <button class="btn btn-ghost" onclick="loadMonthlyExample()">📋 Load Example</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="output-header">
+      <div class="output-label">JSON Output</div>
+      <div class="output-badge" id="m_statusBadge">Waiting for input</div>
+    </div>
+    <pre id="m_outputJson">// Output will appear here after conversion</pre>
+    <div class="validation" id="m_validationPanel"></div>
+
+    <!-- JSON export -->
+    <div class="export-section">
+      <div class="export-section-title">Export as JSON</div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-secondary" onclick="copyMonthlyObj()">📋 Copy monthly object</button>
+        <button class="btn btn-green" onclick="copyMonthlyPatch()">⬇ Copy as data.json patch</button>
+      </div>
+      <div class="export-note">
+        <strong>Copy monthly object</strong> — copies just the <code>{...}</code> object to paste as a new entry in your data.json monthly array.<br>
+        <strong>Copy as data.json patch</strong> — copies the full wrapper with _meta ready to reference.
+      </div>
+    </div>
+
+    <!-- CSV export -->
+    <div class="export-section">
+      <div class="export-section-title">Export as CSV</div>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-gold" onclick="downloadMonthlyCSV()">⬇ Download monthly.csv</button>
+        <button class="btn btn-ghost" onclick="copyMonthlyCSV()">📋 Copy CSV text</button>
+      </div>
+      <div class="export-note">
+        Matches your <code>template-monthly.csv</code> structure — columns: <code>month, omni, camp, auto, store, emailSubs, newNet, unsub</code>.<br>
+        Downloads a single-row CSV ready to append to your existing file.
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tab-monthly -->
+
+</div><!-- end .page -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── HELPERS ──────────────────────────────────────────────────────
+  let lastConverted = [];
+
+  const showToast = (msg, type='') => {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (type ? ' '+type : '');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  };
+
+  const cleanNum = str => {
+    if (!str || str.trim() === '' || str.trim().toLowerCase() === 'n/a' || str.trim() === 'null') return null;
+    const c = str.replace(/[^0-9.\-]/g, '');
+    if (c === '') return null;
+    return parseFloat(c);
+  };
+
+  const cleanInt = str => {
+    const n = cleanNum(str);
+    return n === null ? null : Math.round(n);
+  };
+
+  const parseDateTime = str => {
+    if (!str) return { date: '', time: '00:00' };
+    const atIdx = str.indexOf(' at ');
+    const datePart = atIdx > -1 ? str.slice(0, atIdx).trim() : str.trim();
+    const timePart = atIdx > -1 ? str.slice(atIdx + 4).trim() : '';
+
+    let date = '';
+    try {
+      const d2 = new Date(datePart);
+      date = isNaN(d2)
+        ? ''
+        : d2.getFullYear() + '-' +
+          String(d2.getMonth() + 1).padStart(2, '0') + '-' +
+          String(d2.getDate()).padStart(2, '0');
+    } catch(e) { date = ''; }
+
+    let time = '00:00';
+    if (timePart) {
+      const m = timePart.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+      if (m) {
+        let h = parseInt(m[1]);
+        const min = m[2];
+        const ampm = (m[3] || '').toUpperCase();
+        if (ampm === 'PM' && h < 12) h += 12;
+        if (ampm === 'AM' && h === 12) h = 0;
+        time = String(h).padStart(2, '0') + ':' + min;
+      }
+    }
+    return { date, time };
+  };
+
+  const shortenSegment = str => {
+    if (!str) return '';
+    const cleaned = str.replace(/^Sent to\s*/i, '').trim();
+    const excIdx = cleaned.indexOf('. Excluding');
+    return excIdx > -1 ? cleaned.slice(0, excIdx).trim() : cleaned;
+  };
+
+  const detectChannel = str => {
+    if (!str) return null;
+    const s = str.trim().toLowerCase();
+    if (s === 'email') return 'Email';
+    if (s === 'sms') return 'SMS';
+    if (s === 'push') return 'Push';
+    return null;
+  };
+
+  const highlight = json => {
+    return json
+      .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")\s*:/g, '<span class="json-key">$1</span>:')
+      .replace(/:\s*("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")/g, ': <span class="json-str">$1</span>')
+      .replace(/:\s*(-?\d+\.?\d*)/g, ': <span class="json-num">$1</span>')
+      .replace(/:\s*(null)/g, ': <span class="json-null">$1</span>')
+      .replace(/:\s*(true|false)/g, ': <span class="json-bool">$1</span>');
+  };
+
+  // ── CSV HELPERS ──────────────────────────────────────────────────
+  // Escape a CSV cell value
+  const csvCell = val => {
+    if (val === null || val === undefined) return '';
+    const s = String(val);
+    // Quote if contains comma, quote, or newline
+    if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  };
+
+  // Build campaigns CSV string matching template-campaigns.csv
+  // Columns: date,name,channel,sent,openPct,openN,clickPct,clickN,rev,orders,segment
+  const buildCampaignsCSV = () => {
+    if (!lastConverted.length) return null;
+    const header = 'date,name,channel,sent,openPct,openN,clickPct,clickN,rev,orders,segment';
+    const rows = lastConverted.map(c => [
+      csvCell(c.date),
+      csvCell(c.name),
+      csvCell(c.channel),
+      csvCell(c.sent),
+      csvCell(c.openPct),   // blank for SMS (null)
+      csvCell(c.openN),     // blank for SMS (null)
+      csvCell(c.clickPct),
+      csvCell(c.clickN),
+      csvCell(c.rev),
+      csvCell(c.orders),
+      csvCell(c.segment)
+    ].join(','));
+    return header + '\n' + rows.join('\n');
+  };
+
+  // Build monthly CSV string matching template-monthly.csv
+  // Columns: month,omni,camp,auto,store,emailSubs,newNet,unsub
+  const buildMonthlyCSV = () => {
+    if (!lastMonthly) return null;
+    const m = lastMonthly;
+    const header = 'month,omni,camp,auto,store,emailSubs,newNet,unsub';
+    const row = [
+      csvCell(m.month),
+      csvCell(m.omni),
+      csvCell(m.camp),
+      csvCell(m.auto),
+      csvCell(m.store),
+      csvCell(m.emailSubs),
+      csvCell(m.newNet),
+      csvCell(m.unsub)
+    ].join(',');
+    return header + '\n' + row;
+  };
+
+  // Trigger a file download
+  const downloadCSV = (content, filename) => {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // ── CONVERT ──────────────────────────────────────────────────────
+  function convertData() {
+    const raw = document.getElementById('inputData').value;
+    const startId = parseInt(document.getElementById('startId').value) || 1;
+    const defaultChannel = document.getElementById('defaultChannel').value;
+
+    const normalize = raw.split('\n').flatMap(raw => {
+      const l = raw.trim();
+      if (!l) return [];
+      const pctCount = l.match(/^([\d.]+%)\s*\(([\d,]+)\)$/);
+      if (pctCount) return [pctCount[1], pctCount[2]];
+      if (/^N\/A$/i.test(l)) return [l];
+      const revOrders = l.match(/^(€[\d,]+\.?\d*)\s*\(([\d,]+)\)$/);
+      if (revOrders) return [revOrders[1], revOrders[2]];
+      return [l];
+    });
+
+    if (!normalize.length) {
+      showToast('⚠️ Nothing to convert — paste your data first.', 'error');
+      return;
+    }
+
+    const campaigns = [];
+    const warnings  = [];
+    let id = startId;
+    let i = 0;
+
+    while (i < normalize.length) {
+      let sentIdx = -1;
+      for (let j = i; j < Math.min(i + 6, normalize.length); j++) {
+        if (normalize[j].trim() === 'Sent') { sentIdx = j; break; }
+      }
+      if (sentIdx === -1) { i++; continue; }
+
+      const channelLine = sentIdx - 1;
+      const segmentLine = sentIdx - 2;
+      const nameLine    = sentIdx - 3;
+
+      const name    = nameLine >= 0 ? normalize[nameLine] : '';
+      const segRaw  = segmentLine >= 0 ? normalize[segmentLine] : '';
+      const chanRaw = channelLine >= 0 ? normalize[channelLine] : '';
+
+      const segment = shortenSegment(segRaw);
+      const channel = detectChannel(chanRaw) || defaultChannel;
+      const isSMS   = channel === 'SMS';
+
+      const { date, time } = parseDateTime(normalize[sentIdx + 1] || '');
+      const sent = cleanInt(normalize[sentIdx + 2]);
+
+      let openPct = null, openN = null, clickPct = null, clickN = null, rev = null, orders = null;
+      let revIdx = -1;
+      for (let j = sentIdx + 3; j < Math.min(sentIdx + 12, normalize.length); j++) {
+        if (/^€[\d,]+\.?\d*$/.test(normalize[j])) { revIdx = j; break; }
+      }
+
+      if (revIdx > -1) {
+        orders = cleanInt(normalize[revIdx + 1]);
+        rev    = cleanNum(normalize[revIdx]);
+        clickN   = cleanInt(normalize[revIdx - 1]);
+        clickPct = cleanNum(normalize[revIdx - 2]);
+        if (!isSMS) {
+          openN   = cleanInt(normalize[revIdx - 3]);
+          openPct = cleanNum(normalize[revIdx - 4]);
+        }
+      }
+
+      if (!name) {
+        warnings.push(`Block at line ${i + 1}: could not detect campaign name — skipped.`);
+        i = (revIdx > -1 ? revIdx + 2 : sentIdx + 10);
+        continue;
+      }
+      if (!date) warnings.push(`"${name}": could not parse date`);
+      if (rev === null) warnings.push(`"${name}": revenue is null — check formatting`);
+
+      campaigns.push({ id, date, time, name, channel, sent, openPct, openN, clickPct, clickN, rev, orders, segment });
+      id++;
+      i = revIdx > -1 ? revIdx + 2 : sentIdx + 10;
+    }
+
+    lastConverted = campaigns;
+
+    if (!campaigns.length) {
+      document.getElementById('outputJson').innerHTML = '// No campaigns detected.\n// Check your data format — see the column map above.';
+      document.getElementById('statusBadge').className = 'output-badge error';
+      document.getElementById('statusBadge').textContent = '0 campaigns';
+      renderValidation(warnings, campaigns);
+      showToast('❌ No campaigns detected', 'error');
+      return;
+    }
+
+    const lines2 = campaigns.map(c => '    ' + JSON.stringify(c));
+    const prettyOutput = '[\n' + lines2.join(',\n') + '\n  ]';
+
+    document.getElementById('outputJson').innerHTML = highlight(prettyOutput);
+    document.getElementById('statusBadge').className = 'output-badge success';
+    document.getElementById('statusBadge').textContent = `✅ ${campaigns.length} campaign${campaigns.length !== 1 ? 's' : ''} converted`;
+    renderValidation(warnings, campaigns);
+    showToast(`✅ ${campaigns.length} campaign${campaigns.length !== 1 ? 's' : ''} converted`, 'success');
+  }
+
+  function renderValidation(warnings, campaigns) {
+    const panel = document.getElementById('validationPanel');
+    const checks = [];
+    if (campaigns.length > 0) {
+      const missingDates  = campaigns.filter(c => !c.date);
+      const missingRevs   = campaigns.filter(c => c.rev === null);
+      const missingSent   = campaigns.filter(c => c.sent === null);
+      const smsCount      = campaigns.filter(c => c.channel === 'SMS');
+      const emailCount    = campaigns.filter(c => c.channel === 'Email');
+      checks.push({ type: 'ok',  msg: `${campaigns.length} campaign block${campaigns.length !== 1 ? 's' : ''} detected` });
+      checks.push({ type: emailCount.length ? 'ok' : 'warn', msg: `${emailCount.length} Email · ${smsCount.length} SMS` });
+      if (missingDates.length)  checks.push({ type:'warn', msg: `${missingDates.length} campaign(s) missing date — check manually` });
+      else                      checks.push({ type:'ok',   msg: 'All dates parsed successfully' });
+      if (missingRevs.length)   checks.push({ type:'warn', msg: `${missingRevs.length} campaign(s) with null revenue` });
+      else                      checks.push({ type:'ok',   msg: 'All revenue values present' });
+      if (missingSent.length)   checks.push({ type:'warn', msg: `${missingSent.length} campaign(s) with null sent count` });
+      if (smsCount.length > 0)  checks.push({ type:'ok',   msg: `SMS campaigns: openPct & openN correctly set to null` });
+    }
+    warnings.forEach(w => checks.push({ type: 'warn', msg: w }));
+    if (!checks.length) { panel.innerHTML = ''; return; }
+    panel.innerHTML = '<div style="margin-top:1rem;border-top:1px solid var(--border);padding-top:0.85rem">' +
+      '<div style="font-size:0.6rem;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;color:var(--text-muted);margin-bottom:0.6rem">Validation</div>' +
+      checks.map(c => `<div class="val-item"><span class="val-${c.type}">${c.type === 'ok' ? '✓' : c.type === 'warn' ? '⚠' : '✕'}</span>${c.msg}</div>`).join('') +
+      '</div>';
+  }
+
+  // ── COPY / DOWNLOAD — CAMPAIGNS ─────────────────────────────────
+  function copyJSON() {
+    if (!lastConverted.length) { showToast('Nothing to copy yet — convert first', 'error'); return; }
+    const lines = lastConverted.map(c => '    ' + JSON.stringify(c));
+    navigator.clipboard.writeText(lines.join(',\n'))
+      .then(() => showToast('📋 Campaign objects copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed — select and copy manually', 'error'));
+  }
+
+  function copyFullPatch() {
+    if (!lastConverted.length) { showToast('Nothing to copy yet — convert first', 'error'); return; }
+    const patch = {
+      _meta: { source: 'Boho Blanket · Omnisend Analytics', version: '1.0', note: 'Paste these campaign entries into your data.json campaigns array', converted: new Date().toISOString().slice(0, 10) },
+      campaigns: lastConverted
+    };
+    navigator.clipboard.writeText(JSON.stringify(patch, null, 2))
+      .then(() => showToast('⬇ Full patch copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed', 'error'));
+  }
+
+  function downloadCampaignCSV() {
+    if (!lastConverted.length) { showToast('Nothing to download — convert first', 'error'); return; }
+    const csv = buildCampaignsCSV();
+    // Generate filename with today's date
+    const today = new Date().toISOString().slice(0, 10);
+    downloadCSV(csv, `campaigns-${today}.csv`);
+    showToast('⬇ campaigns.csv downloaded!', 'success');
+  }
+
+  function copyCampaignCSV() {
+    if (!lastConverted.length) { showToast('Nothing to copy — convert first', 'error'); return; }
+    const csv = buildCampaignsCSV();
+    navigator.clipboard.writeText(csv)
+      .then(() => showToast('📋 CSV text copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed', 'error'));
+  }
+
+  function clearAll() {
+    document.getElementById('inputData').value = '';
+    document.getElementById('outputJson').innerHTML = '// Output will appear here after conversion';
+    document.getElementById('statusBadge').className = 'output-badge';
+    document.getElementById('statusBadge').textContent = 'Waiting for input';
+    document.getElementById('validationPanel').innerHTML = '';
+    lastConverted = [];
+  }
+
+  function loadExample() {
+    document.getElementById('inputData').value =
+`Spring Palette Reveal
+Sent to Active & Engaged, Active in the last 7 Days, Champions, Loyalists, VIP. Excluding: Hard Bounces, Unsubscribed
+Email
+Sent
+Mar 5, 2026 at 9:00 AM
+8,360
+80.4%
+(6,723)
+2.3%
+(198)
+€370.10
+(21)
+
+MAR_NAT_QUILT_DAY_2026
+Sent to Engaged SMS Subscribers
+SMS
+Sent
+Mar 21, 2026 at 2:00 PM
+6,752
+N/A
+40.9% (2,763)
+€236.75 (12)`;
+    document.getElementById('startId').value = '15';
+    showToast('📋 Example loaded', '');
+  }
+
+  // ── TAB SWITCHER ─────────────────────────────────────────────────
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── MONTHLY: LIVE PARSER ─────────────────────────────────────────
+  let lastMonthly = null;
+
+  function parseMonthlyLive() {
+    const raw = document.getElementById('m_rawInput').value;
+    const lines = raw.split('\n').map(l => l.trim()).filter(l => l !== '');
+
+    const setIfFound = (id, val) => {
+      if (val === null || val === undefined) return;
+      const el = document.getElementById(id);
+      el.value = val;
+      el.classList.add('parsed');
+      setTimeout(() => el.classList.remove('parsed'), 1500);
+    };
+
+    const omniIdx = lines.findIndex(l => /revenue from omnisend/i.test(l));
+    if (omniIdx > -1) setIfFound('m_omni', cleanNum(lines[omniIdx + 1]));
+
+    const campIdx = lines.findIndex(l => /^campaigns$/i.test(l));
+    if (campIdx > -1) setIfFound('m_camp', cleanNum(lines[campIdx + 1]));
+
+    const autoIdx = lines.findIndex(l => /^automation$/i.test(l));
+    if (autoIdx > -1) setIfFound('m_auto', cleanNum(lines[autoIdx + 1]));
+
+    const storeIdx = lines.findIndex(l => /total store revenue/i.test(l));
+    if (storeIdx > -1) setIfFound('m_store', cleanNum(lines[storeIdx + 1]));
+
+    const emailSubIdx = lines.findIndex(l => /^email subscribers$/i.test(l));
+    if (emailSubIdx > -1) {
+      const subsRaw = lines[emailSubIdx + 1] || '';
+      const subsNum = parseKNum(subsRaw);
+      if (subsNum) setIfFound('m_emailSubs', subsNum);
+      for (let j = emailSubIdx + 1; j < Math.min(emailSubIdx + 6, lines.length); j++) {
+        if (/^\+[\d,]+$/.test(lines[j])) { setIfFound('m_newNet', cleanInt(lines[j])); break; }
+      }
+      for (let j = emailSubIdx + 1; j < Math.min(emailSubIdx + 8, lines.length); j++) {
+        const m = lines[j].match(/(\d[\d,]*)\s*unsubscribed/i);
+        if (m) { setIfFound('m_unsub', cleanInt(m[1])); break; }
+        const pm = lines[j].match(/\|?\s*(\d[\d,]*)\s*unsubscribed/i);
+        if (pm) { setIfFound('m_unsub', cleanInt(pm[1])); break; }
+      }
+    }
+  }
+
+  function parseKNum(str) {
+    if (!str) return null;
+    const s = str.trim().replace(/,/g, '');
+    const km = s.match(/^([\d.]+)[kK]$/);
+    if (km) return Math.round(parseFloat(km[1]) * 1000);
+    const n = parseFloat(s);
+    return isNaN(n) ? null : Math.round(n);
+  }
+
+  // ── MONTHLY: CONVERT ─────────────────────────────────────────────
+  function convertMonthly() {
+    const month    = document.getElementById('m_month').value.trim();
+    const omni     = parseFloat(document.getElementById('m_omni').value);
+    const camp     = parseFloat(document.getElementById('m_camp').value) || null;
+    const auto     = parseFloat(document.getElementById('m_auto').value) || null;
+    const store    = parseFloat(document.getElementById('m_store').value) || null;
+    const emailSubs= parseInt(document.getElementById('m_emailSubs').value) || null;
+    const newNet   = parseInt(document.getElementById('m_newNet').value) || null;
+    const unsub    = parseInt(document.getElementById('m_unsub').value)  || null;
+
+    const warnings = [];
+    if (!month)       warnings.push({ type:'err',  msg:'Month label is required (e.g. Mar \'26)' });
+    if (isNaN(omni))  warnings.push({ type:'err',  msg:'Omnisend revenue is required' });
+    if (!camp)        warnings.push({ type:'warn', msg:'Campaigns revenue is empty' });
+    if (!auto)        warnings.push({ type:'warn', msg:'Automation revenue is empty' });
+    if (!store)       warnings.push({ type:'warn', msg:'Store revenue is empty' });
+    if (!emailSubs)   warnings.push({ type:'warn', msg:'Email subscribers total is empty — enter exact number' });
+    if (!newNet)      warnings.push({ type:'warn', msg:'Net new subscribers is empty' });
+    if (!unsub)       warnings.push({ type:'warn', msg:'Unsubscribes is empty' });
+
+    const hasError = warnings.some(w => w.type === 'err');
+    if (hasError) {
+      document.getElementById('m_statusBadge').className = 'output-badge error';
+      document.getElementById('m_statusBadge').textContent = '⚠ Fix errors first';
+      renderMonthlyValidation(warnings);
+      showToast('⚠️ Fix required fields first', 'error');
+      return;
+    }
+
+    const obj = { month, omni, camp, auto, store, emailSubs, newNet, unsub };
+    lastMonthly = obj;
+
+    const pretty = JSON.stringify(obj);
+    document.getElementById('m_outputJson').innerHTML = highlight(pretty);
+    document.getElementById('m_statusBadge').className = 'output-badge success';
+    document.getElementById('m_statusBadge').textContent = `✅ ${month} converted`;
+    renderMonthlyValidation(warnings);
+    showToast(`✅ ${month} converted`, 'success');
+  }
+
+  function renderMonthlyValidation(warnings) {
+    const panel = document.getElementById('m_validationPanel');
+    if (!warnings.length) { panel.innerHTML = ''; return; }
+    panel.innerHTML = '<div style="margin-top:1rem;border-top:1px solid var(--border);padding-top:0.85rem">' +
+      '<div style="font-size:0.6rem;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;color:var(--text-muted);margin-bottom:0.6rem">Validation</div>' +
+      warnings.map(w => `<div class="val-item"><span class="val-${w.type}">${w.type==='err'?'✕':'⚠'}</span>${w.msg}</div>`).join('') +
+      '</div>';
+  }
+
+  // ── COPY / DOWNLOAD — MONTHLY ────────────────────────────────────
+  function copyMonthlyObj() {
+    if (!lastMonthly) { showToast('Nothing to copy — convert first', 'error'); return; }
+    navigator.clipboard.writeText('    ' + JSON.stringify(lastMonthly))
+      .then(() => showToast('📋 Monthly object copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed', 'error'));
+  }
+
+  function copyMonthlyPatch() {
+    if (!lastMonthly) { showToast('Nothing to copy — convert first', 'error'); return; }
+    const patch = {
+      _meta: { source: 'Boho Blanket · Omnisend Analytics', version: '1.0', note: 'Add this object to the monthly array in your data.json', converted: new Date().toISOString().slice(0, 10) },
+      monthly_entry: lastMonthly
+    };
+    navigator.clipboard.writeText(JSON.stringify(patch, null, 2))
+      .then(() => showToast('⬇ Monthly patch copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed', 'error'));
+  }
+
+  function downloadMonthlyCSV() {
+    if (!lastMonthly) { showToast('Nothing to download — convert first', 'error'); return; }
+    const csv = buildMonthlyCSV();
+    const today = new Date().toISOString().slice(0, 10);
+    downloadCSV(csv, `monthly-${today}.csv`);
+    showToast('⬇ monthly.csv downloaded!', 'success');
+  }
+
+  function copyMonthlyCSV() {
+    if (!lastMonthly) { showToast('Nothing to copy — convert first', 'error'); return; }
+    const csv = buildMonthlyCSV();
+    navigator.clipboard.writeText(csv)
+      .then(() => showToast('📋 CSV text copied!', 'success'))
+      .catch(() => showToast('❌ Copy failed', 'error'));
+  }
+
+  function clearMonthly() {
+    document.getElementById('m_rawInput').value = '';
+    ['m_month','m_omni','m_camp','m_auto','m_store','m_emailSubs','m_newNet','m_unsub']
+      .forEach(id => { document.getElementById(id).value = ''; document.getElementById(id).classList.remove('parsed','error'); });
+    document.getElementById('m_outputJson').innerHTML = '// Output will appear here after conversion';
+    document.getElementById('m_statusBadge').className = 'output-badge';
+    document.getElementById('m_statusBadge').textContent = 'Waiting for input';
+    document.getElementById('m_validationPanel').innerHTML = '';
+    lastMonthly = null;
+  }
+
+  function loadMonthlyExample() {
+    document.getElementById('m_rawInput').value =
+`Revenue from Omnisend
+€14,073.31
+-9.51%
+780 orders
+Campaigns
+€6,133.66
+352 orders
+Automation
+€7,939.65
+428 orders
+Total store revenue
+€50,885.36
+3,073 orders
+
+Email subscribers
+33K
++1,607
+2,342 subscribed|735 unsubscribed
+SMS subscribers
+10.9K
++597
+944 subscribed|347 unsubscribed
+Push subscribers
+9,461
++625
+635 subscribed|10 unsubscribed`;
+    parseMonthlyLive();
+    document.getElementById('m_month').value = "Feb '26";
+    showToast('📋 Example loaded — set the month label', '');
+  }
+</script>
+</body>
+</html>
