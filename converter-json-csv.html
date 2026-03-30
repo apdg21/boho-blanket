@@ -334,34 +334,33 @@
 
   <div class="card">
     <div class="card-title">How to use</div>
-    <div class="card-sub">Copy your campaign data from Omnisend and paste it below. Each campaign block should follow this column order.</div>
+    <div class="card-sub">Auto-detects two formats — paste whichever you have. Encoding artifacts like <code>â€™</code> are fixed automatically.</div>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><span>In Omnisend, open your Campaigns report and select all rows for the campaigns you want to add.</span></div>
-      <div class="step"><div class="step-num">2</div><span>Copy (<code>Ctrl+C</code>) and paste into the text area below. Tab-separated or line-by-line both work.</span></div>
-      <div class="step"><div class="step-num">3</div><span>Set the <strong>Starting ID</strong> to continue from your last campaign (e.g. if you have 14, set it to 15).</span></div>
-      <div class="step"><div class="step-num">4</div><span>Click <strong>Convert</strong> — review the output, then copy JSON or <strong>Download CSV</strong> to get a <code>.csv</code> file matching your template.</span></div>
+      <div class="step"><div class="step-num">1</div><span><strong>Tabular (spreadsheet copy):</strong> Select rows from your spreadsheet or Omnisend table and paste — tab-separated columns are detected automatically.</span></div>
+      <div class="step"><div class="step-num">2</div><span><strong>Vertical (Omnisend raw block):</strong> Copy the raw campaign detail block from Omnisend (12 rows per campaign) and paste — the vertical layout is handled too.</span></div>
+      <div class="step"><div class="step-num">3</div><span>Set the <strong>Starting ID</strong> to continue from your last campaign (e.g. if you have 17, set it to 18).</span></div>
+      <div class="step"><div class="step-num">4</div><span>Click <strong>Convert</strong> — review the output, then copy JSON or <strong>Download CSV</strong> matching your template.</span></div>
     </div>
 
-    <div class="card-title" style="margin-bottom:0.5rem">Expected column order per campaign block</div>
+    <div class="card-title" style="margin-bottom:0.5rem">Tabular format — column order (tab-separated, e.g. copied from spreadsheet)</div>
     <div class="col-map">
-      <div class="col-item"><strong>Row 1</strong><span>Campaign Name</span></div>
-      <div class="col-item"><strong>Row 2</strong><span>Segment / Audience</span></div>
-      <div class="col-item"><strong>Row 3</strong><span>Channel (Email / SMS)</span></div>
-      <div class="col-item"><strong>Row 4</strong><span>"Sent" (status label)</span></div>
-      <div class="col-item"><strong>Row 5</strong><span>Date & time (e.g. Mar 21, 2026 at 8:00 AM)</span></div>
-      <div class="col-item"><strong>Row 6</strong><span>Recipients sent (number)</span></div>
-      <div class="col-item"><strong>Row 7</strong><span>Open rate % (or N/A for SMS)</span></div>
-      <div class="col-item"><strong>Row 8</strong><span>Open count (number)</span></div>
-      <div class="col-item"><strong>Row 9</strong><span>Click rate %</span></div>
-      <div class="col-item"><strong>Row 10</strong><span>Click count (number)</span></div>
-      <div class="col-item"><strong>Row 11</strong><span>Revenue (€)</span></div>
-      <div class="col-item"><strong>Row 12</strong><span>Orders (number)</span></div>
+      <div class="col-item"><strong>Col 1</strong><span>Date (M/D/YYYY)</span></div>
+      <div class="col-item"><strong>Col 2</strong><span>Campaign Name</span></div>
+      <div class="col-item"><strong>Col 3</strong><span>Channel (Email / SMS)</span></div>
+      <div class="col-item"><strong>Col 4</strong><span>Sent (number)</span></div>
+      <div class="col-item"><strong>Col 5</strong><span>Open rate % (blank for SMS)</span></div>
+      <div class="col-item"><strong>Col 6</strong><span>Open count (blank for SMS)</span></div>
+      <div class="col-item"><strong>Col 7</strong><span>Click rate %</span></div>
+      <div class="col-item"><strong>Col 8</strong><span>Click count</span></div>
+      <div class="col-item"><strong>Col 9</strong><span>Revenue</span></div>
+      <div class="col-item"><strong>Col 10</strong><span>Orders</span></div>
+      <div class="col-item"><strong>Col 11</strong><span>Segment(s)</span></div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-title">Paste Campaign Data</div>
-    <div class="card-sub">One or multiple campaigns — each block is 12 rows. Blank lines between campaigns are ignored.</div>
+    <div class="card-sub">Paste tab-separated rows from your spreadsheet, or vertical Omnisend blocks — the format is detected automatically.</div>
     <textarea id="inputData" placeholder="Paste Omnisend campaign data here...
 
 Example:
@@ -729,83 +728,170 @@ SMS subscribers
     URL.revokeObjectURL(url);
   };
 
+  // ── ENCODING FIX ─────────────────────────────────────────────────
+  // Fix mojibake from UTF-8 misread as Latin-1 (e.g. â€™ → ', â€" → —)
+  const fixEncoding = str => str
+    .replace(/â€™/g, '\u2019')   // '
+    .replace(/â€˜/g, '\u2018')   // '
+    .replace(/â€œ/g, '\u201C')   // "
+    .replace(/â€/g,  '\u201D')   // "
+    .replace(/â€"/g, '\u2014')   // —
+    .replace(/â€"/g, '\u2013')   // –
+    .replace(/Ã©/g,  'é')
+    .replace(/Ã /g,  'à')
+    .replace(/Ã¨/g,  'è')
+    .replace(/Ã«/g,  'ë');
+
+  // ── DATE PARSER — handles M/D/YYYY and "Mar 21, 2026 at ..." ────
+  const parseDateOnly = str => {
+    if (!str) return '';
+    const s = str.trim();
+    // M/D/YYYY or MM/DD/YYYY
+    const slash = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (slash) {
+      return slash[3] + '-' + String(slash[1]).padStart(2,'0') + '-' + String(slash[2]).padStart(2,'0');
+    }
+    // "Mar 21, 2026 at 8:00 AM" — strip time part first
+    const atIdx = s.indexOf(' at ');
+    const datePart = atIdx > -1 ? s.slice(0, atIdx).trim() : s;
+    try {
+      const d = new Date(datePart);
+      if (isNaN(d)) return '';
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    } catch(e) { return ''; }
+  };
+
+  // ── DETECT INPUT FORMAT ───────────────────────────────────────────
+  // Returns 'tabular' if first non-empty line contains a tab, else 'vertical'
+  const detectFormat = raw => {
+    const firstLine = raw.split('\n').find(l => l.trim().length > 0) || '';
+    return firstLine.includes('\t') ? 'tabular' : 'vertical';
+  };
+
+  // ── TABULAR PARSER ────────────────────────────────────────────────
+  // Expects tab-separated rows: date \t name \t channel \t sent \t openPct \t openN \t clickPct \t clickN \t rev \t orders \t segment
+  function parseTabular(raw, startId) {
+    const campaigns = [];
+    const warnings  = [];
+    let id = startId;
+
+    const lines = raw.split('\n').map(l => fixEncoding(l.trimEnd())).filter(l => l.trim());
+
+    for (let i = 0; i < lines.length; i++) {
+      const cols = lines[i].split('\t');
+      if (cols.length < 4) { warnings.push(`Row ${i+1}: too few columns — skipped`); continue; }
+
+      const [rawDate, rawName, rawChannel, rawSent, rawOpenPct, rawOpenN, rawClickPct, rawClickN, rawRev, rawOrders, ...segParts] = cols;
+
+      const date    = parseDateOnly(rawDate.trim());
+      const name    = fixEncoding(rawName.trim());
+      const channel = detectChannel(rawChannel.trim()) || 'Email';
+      const isSMS   = channel === 'SMS';
+      const sent    = cleanInt(rawSent);
+      const openPct = isSMS ? null : cleanNum(rawOpenPct);
+      const openN   = isSMS ? null : cleanInt(rawOpenN);
+      const clickPct = cleanNum(rawClickPct);
+      const clickN  = cleanInt(rawClickN);
+      const rev     = cleanNum(rawRev);
+      const orders  = cleanInt(rawOrders);
+      const segment = segParts.join(', ').trim() || '';
+
+      if (!name) { warnings.push(`Row ${i+1}: empty name — skipped`); continue; }
+      if (!date) warnings.push(`"${name}": could not parse date "${rawDate}"`);
+      if (rev === null) warnings.push(`"${name}": revenue is null`);
+
+      campaigns.push({ id, date, time: '00:00', name, channel, sent, openPct, openN, clickPct, clickN, rev, orders, segment });
+      id++;
+    }
+    return { campaigns, warnings };
+  }
+
   // ── CONVERT ──────────────────────────────────────────────────────
   function convertData() {
-    const raw = document.getElementById('inputData').value;
+    const rawInput = document.getElementById('inputData').value;
     const startId = parseInt(document.getElementById('startId').value) || 1;
     const defaultChannel = document.getElementById('defaultChannel').value;
 
-    const normalize = raw.split('\n').flatMap(raw => {
-      const l = raw.trim();
-      if (!l) return [];
-      const pctCount = l.match(/^([\d.]+%)\s*\(([\d,]+)\)$/);
-      if (pctCount) return [pctCount[1], pctCount[2]];
-      if (/^N\/A$/i.test(l)) return [l];
-      const revOrders = l.match(/^(€[\d,]+\.?\d*)\s*\(([\d,]+)\)$/);
-      if (revOrders) return [revOrders[1], revOrders[2]];
-      return [l];
-    });
-
-    if (!normalize.length) {
+    if (!rawInput.trim()) {
       showToast('⚠️ Nothing to convert — paste your data first.', 'error');
       return;
     }
 
-    const campaigns = [];
-    const warnings  = [];
-    let id = startId;
-    let i = 0;
+    const format = detectFormat(rawInput);
+    let campaigns, warnings;
 
-    while (i < normalize.length) {
-      let sentIdx = -1;
-      for (let j = i; j < Math.min(i + 6, normalize.length); j++) {
-        if (normalize[j].trim() === 'Sent') { sentIdx = j; break; }
-      }
-      if (sentIdx === -1) { i++; continue; }
+    if (format === 'tabular') {
+      ({ campaigns, warnings } = parseTabular(rawInput, startId));
+    } else {
+      // ── VERTICAL (original Omnisend block) parser ──
+      const raw = rawInput;
+      const normalize = raw.split('\n').flatMap(raw => {
+        const l = fixEncoding(raw.trim());
+        if (!l) return [];
+        const pctCount = l.match(/^([\d.]+%)\s*\(([\d,]+)\)$/);
+        if (pctCount) return [pctCount[1], pctCount[2]];
+        if (/^N\/A$/i.test(l)) return [l];
+        const revOrders = l.match(/^(€[\d,]+\.?\d*)\s*\(([\d,]+)\)$/);
+        if (revOrders) return [revOrders[1], revOrders[2]];
+        return [l];
+      });
 
-      const channelLine = sentIdx - 1;
-      const segmentLine = sentIdx - 2;
-      const nameLine    = sentIdx - 3;
+      campaigns = [];
+      warnings  = [];
+      let id = startId;
+      let i = 0;
 
-      const name    = nameLine >= 0 ? normalize[nameLine] : '';
-      const segRaw  = segmentLine >= 0 ? normalize[segmentLine] : '';
-      const chanRaw = channelLine >= 0 ? normalize[channelLine] : '';
-
-      const segment = shortenSegment(segRaw);
-      const channel = detectChannel(chanRaw) || defaultChannel;
-      const isSMS   = channel === 'SMS';
-
-      const { date, time } = parseDateTime(normalize[sentIdx + 1] || '');
-      const sent = cleanInt(normalize[sentIdx + 2]);
-
-      let openPct = null, openN = null, clickPct = null, clickN = null, rev = null, orders = null;
-      let revIdx = -1;
-      for (let j = sentIdx + 3; j < Math.min(sentIdx + 12, normalize.length); j++) {
-        if (/^€[\d,]+\.?\d*$/.test(normalize[j])) { revIdx = j; break; }
-      }
-
-      if (revIdx > -1) {
-        orders = cleanInt(normalize[revIdx + 1]);
-        rev    = cleanNum(normalize[revIdx]);
-        clickN   = cleanInt(normalize[revIdx - 1]);
-        clickPct = cleanNum(normalize[revIdx - 2]);
-        if (!isSMS) {
-          openN   = cleanInt(normalize[revIdx - 3]);
-          openPct = cleanNum(normalize[revIdx - 4]);
+      while (i < normalize.length) {
+        let sentIdx = -1;
+        for (let j = i; j < Math.min(i + 6, normalize.length); j++) {
+          if (normalize[j].trim() === 'Sent') { sentIdx = j; break; }
         }
-      }
+        if (sentIdx === -1) { i++; continue; }
 
-      if (!name) {
-        warnings.push(`Block at line ${i + 1}: could not detect campaign name — skipped.`);
-        i = (revIdx > -1 ? revIdx + 2 : sentIdx + 10);
-        continue;
-      }
-      if (!date) warnings.push(`"${name}": could not parse date`);
-      if (rev === null) warnings.push(`"${name}": revenue is null — check formatting`);
+        const channelLine = sentIdx - 1;
+        const segmentLine = sentIdx - 2;
+        const nameLine    = sentIdx - 3;
 
-      campaigns.push({ id, date, time, name, channel, sent, openPct, openN, clickPct, clickN, rev, orders, segment });
-      id++;
-      i = revIdx > -1 ? revIdx + 2 : sentIdx + 10;
+        const name    = nameLine >= 0 ? normalize[nameLine] : '';
+        const segRaw  = segmentLine >= 0 ? normalize[segmentLine] : '';
+        const chanRaw = channelLine >= 0 ? normalize[channelLine] : '';
+
+        const segment = shortenSegment(segRaw);
+        const channel = detectChannel(chanRaw) || defaultChannel;
+        const isSMS   = channel === 'SMS';
+
+        const { date, time } = parseDateTime(normalize[sentIdx + 1] || '');
+        const sent = cleanInt(normalize[sentIdx + 2]);
+
+        let openPct = null, openN = null, clickPct = null, clickN = null, rev = null, orders = null;
+        let revIdx = -1;
+        for (let j = sentIdx + 3; j < Math.min(sentIdx + 12, normalize.length); j++) {
+          if (/^€[\d,]+\.?\d*$/.test(normalize[j])) { revIdx = j; break; }
+        }
+
+        if (revIdx > -1) {
+          orders = cleanInt(normalize[revIdx + 1]);
+          rev    = cleanNum(normalize[revIdx]);
+          clickN   = cleanInt(normalize[revIdx - 1]);
+          clickPct = cleanNum(normalize[revIdx - 2]);
+          if (!isSMS) {
+            openN   = cleanInt(normalize[revIdx - 3]);
+            openPct = cleanNum(normalize[revIdx - 4]);
+          }
+        }
+
+        if (!name) {
+          warnings.push(`Block at line ${i + 1}: could not detect campaign name — skipped.`);
+          i = (revIdx > -1 ? revIdx + 2 : sentIdx + 10);
+          continue;
+        }
+        if (!date) warnings.push(`"${name}": could not parse date`);
+        if (rev === null) warnings.push(`"${name}": revenue is null — check formatting`);
+
+        campaigns.push({ id, date, time, name, channel, sent, openPct, openN, clickPct, clickN, rev, orders, segment });
+        id++;
+        i = revIdx > -1 ? revIdx + 2 : sentIdx + 10;
+      }
     }
 
     lastConverted = campaigns;
@@ -824,7 +910,7 @@ SMS subscribers
 
     document.getElementById('outputJson').innerHTML = highlight(prettyOutput);
     document.getElementById('statusBadge').className = 'output-badge success';
-    document.getElementById('statusBadge').textContent = `✅ ${campaigns.length} campaign${campaigns.length !== 1 ? 's' : ''} converted`;
+    document.getElementById('statusBadge').textContent = `✅ ${campaigns.length} campaign${campaigns.length !== 1 ? 's' : ''} converted · ${format} format`;
     renderValidation(warnings, campaigns);
     showToast(`✅ ${campaigns.length} campaign${campaigns.length !== 1 ? 's' : ''} converted`, 'success');
   }
