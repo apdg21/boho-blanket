@@ -19,7 +19,7 @@
     { "month": "Dec '25", "omni": 9791.83, "camp": 5170.66, "auto": 4621.17, "store": 31852.92, "emailSubs": 29499, "newNet": 785, "unsub": 617 },
     { "month": "Jan '26", "omni": 15412.07, "camp": 7457.12, "auto": 7954.95, "store": 56014.00, "emailSubs": 31482, "newNet": 1983, "unsub": 715 },
     { "month": "Feb '26", "omni": 14073.31, "camp": 6133.66, "auto": 7939.65, "store": 50885.36, "emailSubs": 33089, "newNet": 1607, "unsub": 735 },
-    {"month": "Mar '26","omni": 10941.27,"camp": 5044.91,"auto": 5896.36,"store": 34952.59,"emailSubs": 33600,"newNet": 609,"unsub": 851}
+    {"month": "Mar '26","omni": 11384.4,"camp": 5281.89,"auto": 6102.51,"store": 35844.86,"emailSubs": 33700,"newNet": 623,"unsub": 857}
   ],
   "campaigns": [
     {"id": 1,"date": "2026-03-30","time": "14: 00","name": "MAR_CRAFT_GRAND_FINALE_25","channel": "SMS","sent": 6860,"openPct": null,"openN": null,"clickPct": 38.1,"clickN": 2617,"rev": 334.92,"orders": 15,"segment": "Engaged SMS Subscribers"},
